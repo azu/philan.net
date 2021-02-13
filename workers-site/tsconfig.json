@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "module": "commonjs",
+    "target": "esnext",
+    "lib": [
+      "WebWorker",
+      "ESNext",
+      "ES2018",
+      "DOM"
+    ],
+    "moduleResolution": "node",
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "declaration": true
+  },
+  "include": [
+    "./node_modules/@cloudflare/workers-types/index.d.ts",
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/",
+    "dist/"
+  ]
+}

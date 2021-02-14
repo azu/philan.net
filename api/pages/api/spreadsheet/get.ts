@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { google } from "googleapis";
-import { withError, withToken } from "../../api-utils/handler";
+import { withError, withToken } from "../../../api-utils/handler";
 import { validateGetRequestQuery } from "./api-types.validator";
 import { GetResponseBody } from "./api-types";
 

@@ -25,11 +25,11 @@ function User({ response }: { response: GetResponseBody }) {
                         </Box>
                         <StatGroup padding={2} border="1px" borderColor="gray.200" borderRadius={12}>
                             <Stat>
-                                <StatLabel>Budget</StatLabel>
+                                <StatLabel>予算</StatLabel>
                                 <StatNumber>{item.stats.budge.value}</StatNumber>
                             </Stat>
                             <Stat>
-                                <StatLabel>Used</StatLabel>
+                                <StatLabel>使用額</StatLabel>
                                 <StatNumber>{item.stats.used.value}</StatNumber>
                                 <StatHelpText>
                                     {item.stats.used.raw / item.stats.budge.raw}%
@@ -37,7 +37,7 @@ function User({ response }: { response: GetResponseBody }) {
                             </Stat>
 
                             <Stat>
-                                <StatLabel>Balance</StatLabel>
+                                <StatLabel>残高</StatLabel>
                                 <StatNumber>{item.stats.balance.value}</StatNumber>
                                 <StatHelpText>
                                     {100 - (item.stats.used.raw / item.stats.budge.raw)}%
@@ -66,7 +66,7 @@ function User({ response }: { response: GetResponseBody }) {
                                         <Spacer/>
                                         <Box fontSize={"small"} textAlign={"left"}>
                                             <time dateTime={item.date}>{dayjs(item.date).format("YYYY-MM-DD")}</time>
-                                        </Box>q
+                                        </Box>
                                     </Flex>
                                     <Text color="gray.600">{item.memo}</Text>
                                 </ListItem>

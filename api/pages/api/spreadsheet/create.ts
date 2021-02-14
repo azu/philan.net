@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { google, sheets_v4 } from "googleapis";
-import { withError, withToken } from "../../api-utils/handler";
+import { withError, withToken } from "../../../api-utils/handler";
 import { validateCreateRequestQuery } from "./api-types.validator";
 
 type Schema$RowData = sheets_v4.Schema$RowData;

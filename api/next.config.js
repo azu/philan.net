@@ -1,4 +1,9 @@
 module.exports = {
+    api: {
+        bodyParser: {
+            sizeLimit: '1mb',
+        },
+    },
     async headers() {
         return [
             {

@@ -1,12 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { google } from "googleapis";
 import { withError, withToken } from "../../api-utils/handler";
-import { validateAddRequestQuery } from "./api-types.validator";
+import { validateAddRequestBody, validateAddRequestQuery } from "./api-types.validator";
 
 const sheets = google.sheets('v4');
 // ?spreadsheetId=x&token=y
 export const handler = withError(withToken(async (req: NextApiRequest, res: NextApiResponse) => {
     const { spreadsheetId, token } = validateAddRequestQuery(req.query);
+    console.log("req.body",typeof req.body)
+    const { amount, memo, to, url } = validateAddRequestBody(req.body);
+    const nowDate = new Date().toISOString();
     const spreadsheet = await sheets.spreadsheets.values.append({
         oauth_token: token,
         spreadsheetId: spreadsheetId,
@@ -15,8 +18,8 @@ export const handler = withError(withToken(async (req: NextApiRequest, res: Next
         insertDataOption: 'INSERT_ROWS',
         requestBody: {
             values: [
-                // "", "日付", "寄付先", "金額", "URL", "Memo"
-                [new Date().toISOString(), "寄付先", 100, "https://example.com", ""],
+                // ["Date", "To", "Amount", "URL", "Memo"]
+                [nowDate, to, amount, url, memo],
             ],
         },
     });

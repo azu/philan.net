@@ -19,6 +19,18 @@ const SCHEMA = {
             ],
             "additionalProperties": false
         },
+        "CreateRequestBody": {
+            "type": "object",
+            "properties": {
+                "budget": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "budget"
+            ],
+            "additionalProperties": false
+        },
         "AddRequestQuery": {
             "type": "object",
             "properties": {
@@ -32,6 +44,30 @@ const SCHEMA = {
             "required": [
                 "token",
                 "spreadsheetId"
+            ],
+            "additionalProperties": false
+        },
+        "AddRequestBody": {
+            "type": "object",
+            "properties": {
+                "to": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "memo": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "to",
+                "amount",
+                "url",
+                "memo"
             ],
             "additionalProperties": false
         },
@@ -69,6 +105,21 @@ export function isCreateRequestQuery(payload: unknown): payload is apiTypes.Crea
   return ajvValidate(payload);
 }
 
+export function validateCreateRequestBody(payload: unknown): apiTypes.CreateRequestBody {
+  if (!isCreateRequestBody(payload)) {
+  　const error = new Error('invalid payload: CreateRequestBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isCreateRequestBody(payload: unknown): payload is apiTypes.CreateRequestBody {
+  /** Schema is defined in {@link SCHEMA.definitions.CreateRequestBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/CreateRequestBody" });
+  return ajvValidate(payload);
+}
+
 export function validateAddRequestQuery(payload: unknown): apiTypes.AddRequestQuery {
   if (!isAddRequestQuery(payload)) {
   　const error = new Error('invalid payload: AddRequestQuery');
@@ -81,6 +132,21 @@ export function validateAddRequestQuery(payload: unknown): apiTypes.AddRequestQu
 export function isAddRequestQuery(payload: unknown): payload is apiTypes.AddRequestQuery {
   /** Schema is defined in {@link SCHEMA.definitions.AddRequestQuery } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddRequestQuery" });
+  return ajvValidate(payload);
+}
+
+export function validateAddRequestBody(payload: unknown): apiTypes.AddRequestBody {
+  if (!isAddRequestBody(payload)) {
+  　const error = new Error('invalid payload: AddRequestBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isAddRequestBody(payload: unknown): payload is apiTypes.AddRequestBody {
+  /** Schema is defined in {@link SCHEMA.definitions.AddRequestBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddRequestBody" });
   return ajvValidate(payload);
 }
 

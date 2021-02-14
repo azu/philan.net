@@ -1,14 +1,19 @@
 import { useEffect, useMemo } from "react";
 import { useLocalStorage } from 'react-use';
+import * as SpreadSheetAPI from "./api/spreadsheet/api-types"
+import dynamic from "next/dynamic";
 
-function useSpreadSheet(token: string) {
+function useSpreadSheet(token?: string) {
     const [spreadsheetId, setSpreadsheetId] = useLocalStorage<string>("spreadsheetId", "");
     const handlers = useMemo(
         () => ({
             create: () => {
-                const param = new URLSearchParams([["token", token]]);
+                const param = new URLSearchParams([["token", token!]]);
                 return fetch("/api/spreadsheet/create?" + param, {
-                    method: "post"
+                    method: "post",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                 }).then(res => {
                     return res.json()
                 }).then(res => {
@@ -17,16 +22,25 @@ function useSpreadSheet(token: string) {
             },
             add: () => {
                 const param = new URLSearchParams([
-                    ["token", token],
+                    ["token", token!],
                     ["spreadsheetId", spreadsheetId!]
                 ]);
                 return fetch("/api/spreadsheet/add?" + param, {
-                    method: "post"
+                    method: "post",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        to: "philan.net",
+                        amount: 100,
+                        url: "https://philan.net",
+                        memo: "THIS IS MEMO"
+                    } as SpreadSheetAPI.AddRequestBody)
                 })
             },
             get: () => {
                 const param = new URLSearchParams([
-                    ["token", token],
+                    ["token", token!],
                     ["spreadsheetId", spreadsheetId!]
                 ],);
                 return fetch("/api/spreadsheet/get?" + param).then(res => {
@@ -45,7 +59,7 @@ function useSpreadSheet(token: string) {
 
 const DebugPage = () => {
     const [token, setToken] = useLocalStorage<string>("token", "");
-    const [spreadsheetId, handlers] = useSpreadSheet(token || "");
+    const [spreadsheetId, handlers] = useSpreadSheet(token);
     useEffect(() => {
         const code = (new URL(window.location.href)).searchParams.get("code");
         if (!code) {
@@ -63,8 +77,6 @@ const DebugPage = () => {
         })();
     }, []);
     if (token) {
-        console.log("token", token);
-        console.log("spreadsheetId", spreadsheetId);
         return <div>
             <p>Spreadsheet: <a href={`https://docs.google.com/spreadsheets/d/${spreadsheetId}/`}>{spreadsheetId}</a></p>
             <ul>
@@ -88,8 +100,11 @@ const DebugPage = () => {
         </div>
     } else {
         return <div>
-            <a href={"/api/auth?state=test"}>Authorize</a>
+            <p><a href={"/api/auth?state=test"}>Authorize</a></p>
         </div>
     }
 }
-export default DebugPage
+export default dynamic(
+    async () => DebugPage,
+    { loading: () => <p>...</p> }
+)

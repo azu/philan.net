@@ -1,15 +1,23 @@
-import { Box, ChakraProvider, Container, Flex, Heading, List, ListIcon, ListItem, Spacer } from "@chakra-ui/react"
-import { CheckCircleIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { Link } from "@chakra-ui/react"
-import dayjs from "dayjs"
 import {
+    Box,
+    ChakraProvider,
+    Container,
+    Flex,
+    Heading,
+    Link,
+    List,
+    ListIcon,
+    ListItem,
+    Spacer,
     Stat,
+    StatGroup,
+    StatHelpText,
     StatLabel,
     StatNumber,
-    StatHelpText,
-    StatGroup,
     Text
 } from "@chakra-ui/react"
+import { CheckCircleIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import dayjs from "dayjs"
 import React from "react";
 import type { GetResponseBody } from "../api/spreadsheet/api-types";
 

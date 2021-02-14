@@ -7,46 +7,54 @@ const sheets = google.sheets('v4');
 // ?spreadsheetId=x&token=y
 export const handler = withError(withToken(async (req: NextApiRequest, res: NextApiResponse) => {
     const { spreadsheetId, token } = validateAddRequestQuery(req.query);
-    console.log("req.body",typeof req.body)
     const { amount, memo, to, url } = validateAddRequestBody(req.body);
     const nowDate = new Date().toISOString();
-    const spreadsheet = await sheets.spreadsheets.values.append({
+    const spreadsheet = await sheets.spreadsheets.get({
+        oauth_token: token,
+        spreadsheetId,
+    });
+    const TITLT_IT_WILL_BE_PARAMETER = "2021";
+    const foundSheet = spreadsheet.data.sheets?.find(sheet => {
+        return sheet.properties?.title === TITLT_IT_WILL_BE_PARAMETER
+    });
+    if (!foundSheet) {
+        throw new Error("Not found sheet");
+    }
+    const foundSheetId = foundSheet?.properties?.sheetId;
+    const updateResult = await sheets.spreadsheets.batchUpdate({
         oauth_token: token,
         spreadsheetId: spreadsheetId,
-        range: "A4", // new line
-        valueInputOption: 'USER_ENTERED',
-        insertDataOption: 'INSERT_ROWS',
         requestBody: {
-            values: [
-                // ["Date", "To", "Amount", "URL", "Memo"]
-                [nowDate, to, amount, url, memo],
-            ],
+            requests: [{
+                appendCells: {
+                    sheetId: foundSheetId,
+                    fields: '*',
+                    rows: [{
+                        values: [nowDate, to, amount, url, memo].map((v) => {
+                            if (typeof v === "number") {
+                                return {
+                                    userEnteredFormat: {
+                                        numberFormat: {
+                                            type: "CURRENCY"
+                                        }
+                                    },
+                                    userEnteredValue: {
+                                        numberValue: v
+                                    }
+                                }
+                            }
+                            return {
+                                userEnteredValue: {
+                                    stringValue: v
+                                }
+                            }
+                        })
+                    }],
+                }
+            }]
         },
     });
-    /**
-     *
-     {
-  spreadsheetId: 'id',
-  properties: {
-    title: 'philan.net',
-    locale: 'ja_JP',
-    autoRecalc: 'ON_CHANGE',
-    timeZone: 'Asia/Tokyo',
-    defaultFormat: {
-      backgroundColor: [Object],
-      padding: [Object],
-      verticalAlignment: 'BOTTOM',
-      wrapStrategy: 'OVERFLOW_CELL',
-      textFormat: [Object],
-      backgroundColorStyle: [Object]
-    },
-    spreadsheetTheme: { primaryFontFamily: 'Arial', themeColors: [Array] }
-  },
-  sheets: [ { properties: [Object] } ],
-  spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit'
-}
-     */
-    res.json(spreadsheet.data);
+    res.json(updateResult.data);
 }))
 
 export default handler

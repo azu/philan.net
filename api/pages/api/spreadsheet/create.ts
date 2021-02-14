@@ -6,17 +6,14 @@ import { validateCreateRequestQuery } from "./api-types.validator";
 type Schema$RowData = sheets_v4.Schema$RowData;
 type Schema$CellData = sheets_v4.Schema$CellData;
 
-const sheets = google.sheets('v4');
-export const handler = withError(withToken(async (req: NextApiRequest, res: NextApiResponse) => {
-    const { token } = validateCreateRequestQuery(req.query);
-    const budget = 10000;
+export const createNewSheet = ({ token, budget }: { token: string; budget: number }) => {
     const DefaultData = [
-        ["Budget", "Usage", "Rest"],
+        ["Budget", "Used", "Balance"],
         // append-safe way
         // Count(A1:A) avoid curricular dependencies
         [budget, "=SUM(OFFSET(C3,1,0,Count(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,Count(A1:A)))"],
         // TODO: monthly?,
-        ["Date", "To", "Amount", ,"URL", "Memo"],
+        ["Date", "To", "Amount", "URL", "Memo"],
     ] as (string | number)[][];
     const createCell = (cell: string | number): Schema$CellData => {
         if (typeof cell === "number") {
@@ -62,7 +59,7 @@ export const handler = withError(withToken(async (req: NextApiRequest, res: Next
             })
         }
     });
-    const spreadsheet = await sheets.spreadsheets.create({
+    return sheets.spreadsheets.create({
         oauth_token: token,
         requestBody: {
             properties: {
@@ -91,6 +88,12 @@ export const handler = withError(withToken(async (req: NextApiRequest, res: Next
             ]
         },
     });
+}
+
+const sheets = google.sheets('v4');
+export const handler = withError(withToken(async (req: NextApiRequest, res: NextApiResponse) => {
+    const { token } = validateCreateRequestQuery(req.query);
+    const spreadsheet = await createNewSheet({ token, budget: 10000 })
     /**
      *
      {

@@ -1,15 +1,82 @@
-function User({ posts }: { posts: any[] }) {
-    console.log(posts);
-    return <div>
-        {posts.map(item => {
-            return <div key={item.year}>
-                <h1>{item.year}</h1>
-                {item.items.map((item: any) => {
-                    return <p key={item.date}>{item.Date}: {item.To}: {item.Amount}: {item.Url}: {item.Memo}</p>
+import { Box, ChakraProvider, Container, Flex, Heading, List, ListIcon, ListItem, Spacer } from "@chakra-ui/react"
+import { CheckCircleIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import { Link } from "@chakra-ui/react"
+import dayjs from "dayjs"
+import {
+    Stat,
+    StatLabel,
+    StatNumber,
+    StatHelpText,
+    StatGroup,
+    Text
+} from "@chakra-ui/react"
+import React from "react";
+import type { GetResponseBody } from "../api/spreadsheet/api-types";
+
+function User({ response }: { response: GetResponseBody }) {
+    console.log("response", response);
+    return <ChakraProvider>
+        <Container maxW="xl">
+            <Box padding={"2"}>
+                {response.map(item => {
+                    return <div key={item.year}>
+                        <Box maxW="32rem" padding={2}>
+                            <Heading as={"h2"} size={"2xl"}>{item.year}年</Heading>
+                        </Box>
+                        <StatGroup padding={2} border="1px" borderColor="gray.200" borderRadius={12}>
+                            <Stat>
+                                <StatLabel>Budget</StatLabel>
+                                <StatNumber>{item.stats.budge.value}</StatNumber>
+                            </Stat>
+                            <Stat>
+                                <StatLabel>Used</StatLabel>
+                                <StatNumber>{item.stats.used.value}</StatNumber>
+                                <StatHelpText>
+                                    {item.stats.used.raw / item.stats.budge.raw}%
+                                </StatHelpText>
+                            </Stat>
+
+                            <Stat>
+                                <StatLabel>Balance</StatLabel>
+                                <StatNumber>{item.stats.balance.value}</StatNumber>
+                                <StatHelpText>
+                                    {100 - (item.stats.used.raw / item.stats.budge.raw)}%
+                                </StatHelpText>
+                            </Stat>
+                        </StatGroup>
+                        <List>
+                            {item.items.slice().sort((a, b) => {
+                                return dayjs(a.date).isBefore(b.date) ? 1 : -1
+                            }).map((item) => {
+                                return <ListItem
+                                    key={item.date}
+
+                                >
+                                    <Flex alignItems={"baseline"}>
+                                        <Box padding="2">
+                                            <ListIcon as={CheckCircleIcon}
+                                                      color="green.500"/>
+                                            <Link href={item.url} borderBottom={"1px"}
+                                                  borderColor={"blue.200"}
+                                                  isExternal={true}
+                                            >{item.to}</Link>: {item.amount.value}
+                                            <ListIcon as={ChevronUpIcon}
+                                                      color="green.500"/>
+                                        </Box>
+                                        <Spacer/>
+                                        <Box fontSize={"small"} textAlign={"left"}>
+                                            <time dateTime={item.date}>{dayjs(item.date).format("YYYY-MM-DD")}</time>
+                                        </Box>q
+                                    </Flex>
+                                    <Text color="gray.600">{item.memo}</Text>
+                                </ListItem>
+                            })}
+                        </List>
+                    </div>
                 })}
-            </div>
-        })}
-    </div>
+            </Box>
+        </Container>
+    </ChakraProvider>
 }
 
 export async function getStaticPaths() {
@@ -31,11 +98,11 @@ export async function getStaticProps({ params }: { params: { slug: [string, stri
             'Content-Type': 'application/json'
         },
     })
-    const posts = await res.json()
+    const response = await res.json()
 
     return {
         props: {
-            posts,
+            response,
         },
         // Next.js will attempt to re-generate the page:
         // - When a request comes in

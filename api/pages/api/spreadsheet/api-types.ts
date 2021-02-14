@@ -1,4 +1,3 @@
-
 // POST /create
 export type CreateRequestQuery = {
     token: string;
@@ -22,3 +21,30 @@ export type GetRequestQuery = {
     token: string;
     spreadsheetId: string;
 }
+export type GetResponseBody = {
+    year: string;
+    stats: {
+        budge: {
+            raw: number;
+            value: string;
+        };
+        used: {
+            raw: number;
+            value: string;
+        };
+        balance: {
+            raw: number;
+            value: string;
+        };
+    };
+    items: {
+        date: string;
+        to: string;
+        amount: {
+            raw: number;
+            value: string;
+        };
+        url: string;
+        memo: string;
+    }[]
+}[]

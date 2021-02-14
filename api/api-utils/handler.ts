@@ -8,7 +8,7 @@ const getError = (error: Error & { code?: number }) => {
             message: error.message
         };
     }
-    // new Error('403: error!!!');
+    // new Error('400: error message');
     const matched = error.message.match(/^([0-9]{3}):(.*)/);
     if (matched && matched[1] && matched[2]) {
         return {

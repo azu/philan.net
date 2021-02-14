@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse } from "next";
 import { google, sheets_v4 } from "googleapis";
 import { withError, withToken } from "../../../api-utils/handler";
 import { validateCreateRequestQuery } from "./api-types.validator";
@@ -13,7 +13,7 @@ export const createNewSheet = ({ token, budget }: { token: string; budget: numbe
         // Count(A1:A) avoid curricular dependencies
         [budget, "=SUM(OFFSET(C3,1,0,Count(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,Count(A1:A)))"],
         // TODO: monthly?,
-        ["Date", "To", "Amount", "URL", "Memo"],
+        ["Date", "To", "Amount", "URL", "Memo"]
     ] as (string | number)[][];
     const createCell = (cell: string | number): Schema$CellData => {
         if (typeof cell === "number") {
@@ -27,8 +27,7 @@ export const createNewSheet = ({ token, budget }: { token: string; budget: numbe
                 userEnteredValue: {
                     numberValue: cell
                 }
-            }
-
+            };
         }
         if (cell.startsWith("=")) {
             return {
@@ -41,7 +40,7 @@ export const createNewSheet = ({ token, budget }: { token: string; budget: numbe
                 userEnteredValue: {
                     formulaValue: cell
                 }
-            }
+            };
         }
         return {
             userEnteredFormat: {
@@ -50,14 +49,14 @@ export const createNewSheet = ({ token, budget }: { token: string; budget: numbe
             userEnteredValue: {
                 stringValue: String(cell)
             }
-        }
-    }
-    const rowData: Schema$RowData[] = DefaultData.map(line => {
+        };
+    };
+    const rowData: Schema$RowData[] = DefaultData.map((line) => {
         return {
-            values: line.map(cellValue => {
-                return createCell(cellValue)
+            values: line.map((cellValue) => {
+                return createCell(cellValue);
             })
-        }
+        };
     });
     return sheets.spreadsheets.create({
         oauth_token: token,
@@ -86,15 +85,16 @@ export const createNewSheet = ({ token, budget }: { token: string; budget: numbe
                     ]
                 }
             ]
-        },
+        }
     });
-}
+};
 
-const sheets = google.sheets('v4');
-export const handler = withError(withToken(async (req: NextApiRequest, res: NextApiResponse) => {
-    const { token } = validateCreateRequestQuery(req.query);
-    const spreadsheet = await createNewSheet({ token, budget: 10000 })
-    /**
+const sheets = google.sheets("v4");
+export const handler = withError(
+    withToken(async (req: NextApiRequest, res: NextApiResponse) => {
+        const { token } = validateCreateRequestQuery(req.query);
+        const spreadsheet = await createNewSheet({ token, budget: 10000 });
+        /**
      *
      {
   spreadsheetId: 'id',
@@ -117,7 +117,8 @@ export const handler = withError(withToken(async (req: NextApiRequest, res: Next
   spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit'
 }
      */
-    res.json(spreadsheet.data);
-}))
+        res.json(spreadsheet.data);
+    })
+);
 
-export default handler
+export default handler;

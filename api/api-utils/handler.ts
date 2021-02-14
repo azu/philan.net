@@ -14,7 +14,7 @@ const getError = (error: Error & { code?: number }) => {
         return {
             status: Number(matched[1]),
             message: matched[2].trim()
-        }
+        };
     }
     // default is 500
     return {
@@ -29,8 +29,8 @@ export const withToken = (handler: (req: NextApiRequest, res: NextApiResponse) =
             throw new Error("400: No token");
         }
         return handler(req, res);
-    }
-}
+    };
+};
 export const withError = (handler: (req: NextApiRequest, res: NextApiResponse) => unknown) => {
     return async function errorHandler(req: NextApiRequest, res: NextApiResponse) {
         try {
@@ -42,5 +42,5 @@ export const withError = (handler: (req: NextApiRequest, res: NextApiResponse) =
                 message: e.message
             });
         }
-    }
-}
+    };
+};

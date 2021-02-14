@@ -1,6 +1,6 @@
 import { Router, Sunder } from "sunder";
-import cookie from "cookie"
-import "@cloudflare/workers-types"
+import cookie from "cookie";
+import "@cloudflare/workers-types";
 
 type User = {
     id: string;
@@ -10,7 +10,7 @@ type User = {
 };
 type UserPage = {
     id: string;
-    spreadsheetJSON: object
+    spreadsheetJSON: object;
 };
 
 declare const USER_NAMESPACE: KVNamespace;
@@ -18,13 +18,13 @@ declare const USER_NAMESPACE: KVNamespace;
 const app = new Sunder();
 const router = new Router();
 const createRandom = () => {
-    const arr = new Uint8Array((40) / 2)
-    crypto.getRandomValues(arr)
-    return Array.from(arr, (dec) => dec.toString(16).padStart(2, "0")).join('')
-}
+    const arr = new Uint8Array(40 / 2);
+    crypto.getRandomValues(arr);
+    return Array.from(arr, (dec) => dec.toString(16).padStart(2, "0")).join("");
+};
 router.get("/auth", ({ response, params }) => {
-    const uuid = createRandom()
-    response.set("Set-Cookie", `philan-state=${uuid}; Secure; HttpOnly`)
+    const uuid = createRandom();
+    response.set("Set-Cookie", `philan-state=${uuid}; Secure; HttpOnly`);
     response.redirect("https://philan-net.vercel.app/api/auth?state=" + uuid);
 });
 router.get("/auth/callback", async (ctx) => {
@@ -47,11 +47,11 @@ app.use(async (ctx, next) => {
     await next();
 
     const ms = Date.now() - start;
-    ctx.response.set('X-Response-Time', `${ms}ms`);
+    ctx.response.set("X-Response-Time", `${ms}ms`);
 });
 app.use(router.middleware);
 
-addEventListener('fetch', (event) => {
+addEventListener("fetch", (event) => {
     const fetchEvent = event; // Only required in Typescript
     // @ts-ignore
     fetchEvent.respondWith(app.handle(fetchEvent));

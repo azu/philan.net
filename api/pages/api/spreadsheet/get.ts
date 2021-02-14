@@ -12,30 +12,24 @@ export const handler = withError(withToken(async (req: NextApiRequest, res: Next
         spreadsheetId,
         includeGridData: true
     });
-    /**
-     *
-     {
-  spreadsheetId: 'id',
-  properties: {
-    title: 'philan.net',
-    locale: 'ja_JP',
-    autoRecalc: 'ON_CHANGE',
-    timeZone: 'Asia/Tokyo',
-    defaultFormat: {
-      backgroundColor: [Object],
-      padding: [Object],
-      verticalAlignment: 'BOTTOM',
-      wrapStrategy: 'OVERFLOW_CELL',
-      textFormat: [Object],
-      backgroundColorStyle: [Object]
-    },
-    spreadsheetTheme: { primaryFontFamily: 'Arial', themeColors: [Array] }
-  },
-  sheets: [ { properties: [Object] } ],
-  spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit'
-}
-     */
-    res.json(spreadsheet.data);
+    const START_OF_USER_DATA = 3;
+    const response = spreadsheet?.data?.sheets?.map(sheet => {
+        const items = sheet?.data?.[0]
+        return {
+            year: sheet?.properties?.title,
+            items: items?.rowData?.slice(START_OF_USER_DATA).map(row => {
+                const values = row.values;
+                return {
+                    "Date": values?.[0].userEnteredValue?.stringValue,
+                    "To": values?.[1].userEnteredValue?.stringValue,
+                    "Amount": values?.[2].userEnteredValue?.numberValue,
+                    "Url": values?.[3].userEnteredValue?.stringValue,
+                    "Memo": values?.[4].userEnteredValue?.stringValue
+                }
+            })
+        }
+    })
+    res.json(response);
 }))
 
 export default handler

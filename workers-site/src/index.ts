@@ -1,5 +1,19 @@
 import { Router, Sunder } from "sunder";
 import cookie from "cookie"
+import "@cloudflare/workers-types"
+
+type User = {
+    id: string;
+    name: string;
+    spreadsheetId: string;
+    google_token: string;
+};
+type UserPage = {
+    id: string;
+    spreadsheetJSON: object
+};
+
+declare const USER_NAMESPACE: KVNamespace;
 
 const app = new Sunder();
 const router = new Router();

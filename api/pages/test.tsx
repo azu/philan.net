@@ -58,18 +58,21 @@ function useSpreadSheet(token?: string) {
 
 
 const DebugPage = () => {
-    const [token, setToken] = useLocalStorage<string>("token", "");
+    const [token, setToken, removeToken] = useLocalStorage<string>("token", "");
     const [spreadsheetId, handlers] = useSpreadSheet(token);
+    const authorize = () => {
+        removeToken();
+        location.href = "/api/auth?state=test";
+    }
     useEffect(() => {
         const code = (new URL(window.location.href)).searchParams.get("code");
         if (!code) {
             return;
         }
+        if (token) {
+            return;
+        }
         (async function () {
-            const eA = localStorage.getItem("access_token");
-            if (eA) {
-                return setToken(eA);
-            }
             const res = await fetch("/api/auth/getToken?code=" + code).then(res => res.json())
             const access_token: string = res.tokens.access_token;
             setToken(access_token);
@@ -78,7 +81,8 @@ const DebugPage = () => {
     }, []);
     if (token) {
         return <div>
-            <p>Spreadsheet: <a href={`https://docs.google.com/spreadsheets/d/${spreadsheetId}/`}>{spreadsheetId}</a></p>
+            <h2>SpredSheet</h2>
+            <p>: <a href={`https://docs.google.com/spreadsheets/d/${spreadsheetId}/`}>{spreadsheetId}</a></p>
             <ul>
                 <li>
                     <button onClick={handlers.create}>Create</button>
@@ -91,10 +95,13 @@ const DebugPage = () => {
                     <button onClick={handlers.get}>Get</button>
                 </li>
             </ul>
-
+            <h2>Page</h2>
+            <ul>
+                <li><a href={`/user/${spreadsheetId}/${token}`}>User</a></li>
+            </ul>
             <footer>
                 <label>
-                    Re-Authorize: <a href={"/api/auth?state=test"}>Authorize</a>
+                    Re-Authorize: <button onClick={authorize}>Authorize</button>
                 </label>
             </footer>
         </div>

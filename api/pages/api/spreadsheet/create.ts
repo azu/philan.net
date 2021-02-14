@@ -15,7 +15,8 @@ export const handler = withError(withToken(async (req: NextApiRequest, res: Next
         // append-safe way
         // Count(A1:A) avoid curricular dependencies
         [budget, "=SUM(OFFSET(C3,1,0,Count(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,Count(A1:A)))"],
-        ["Date", "To", "Amount", "URL", "Memo"],
+        // TODO: monthly?,
+        ["Date", "To", "Amount", ,"URL", "Memo"],
     ] as (string | number)[][];
     const createCell = (cell: string | number): Schema$CellData => {
         if (typeof cell === "number") {

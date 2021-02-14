@@ -3,7 +3,9 @@ import { google } from "googleapis";
 
 const YOUR_CLIENT_ID = process.env.CLIENT_ID
 const YOUR_CLIENT_SECRET = process.env.CLIENT_SECRET
-const YOUR_REDIRECT_URL = "http://localhost:8787/auth/callback"
+const YOUR_REDIRECT_URL = process.env.NODE_ENV === "development"
+    ? "http://localhost:3000/test"
+    : "http://localhost:8787/auth/callback"
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
     const state = req.query.state;
     if (typeof state !== "string") {

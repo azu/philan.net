@@ -5,13 +5,17 @@
     "dev": "next",
     "build": "next build",
     "start": "next start",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\"",
+    "test:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --check"
   },
   "dependencies": {
+    "ajv": "^7.1.0",
     "googleapis": "^67.0.0",
     "next": "latest",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-use": "^17.1.1",
     "simple-oauth2": "^4.2.0"
   },
   "devDependencies": {
@@ -19,6 +23,7 @@
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/simple-oauth2": "^4.1.0",
+    "create-validator-ts": "1.0.1",
     "typescript": "4.1.5"
   },
   "license": "MIT"

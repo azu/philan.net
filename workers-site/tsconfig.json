@@ -4,10 +4,10 @@
     "module": "commonjs",
     "target": "esnext",
     "lib": [
+      "ES2020",
       "WebWorker",
-      "ESNext",
-      "ES2018",
-      "DOM"
+      "DOM",
+      "DOM.Iterable"
     ],
     "moduleResolution": "node",
     "alwaysStrict": true,

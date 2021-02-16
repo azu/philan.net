@@ -1,10 +1,15 @@
 {
+  "private": true,
   "name": "philan.net",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "workspaces": [
+    "worker",
+    "api"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently --names 'API,WORKER' -c 'bgBlue.bold,bgMagenta.bold' 'npm:dev:api' 'npm:dev:worker'",
+    "dev:api": "cd api && yarn dev",
+    "dev:worker": "cd worker && yarn dev",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
     "prepare": "git config --local core.hooksPath .githook"
   },
@@ -31,7 +36,9 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^5.3.0",
     "lint-staged": "^10.5.4",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.2.1"
   }
 }

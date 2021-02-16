@@ -1,6 +1,6 @@
 name = "philan-net"
 type = "webpack"
-webpack_config = "workers-site/webpack.config.js"
+webpack_config = "./webpack.config.js"
 account_id = "020f099028cabbcf02f27b4e6b39cbfc"
 workers_dev = true
 route = ""
@@ -10,4 +10,4 @@ kv_namespaces = [
 ]
 [site]
 bucket = "./public"
-entry-point = "./workers-site"
+entry-point = "./"

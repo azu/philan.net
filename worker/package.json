@@ -1,20 +1,24 @@
 {
   "private": true,
+  "name": "@philan-net/worker",
   "version": "1.0.0",
   "description": "A template for kick starting a Cloudflare Workers project",
   "license": "MIT",
+  "scripts": {
+    "dev": "wrangler dev"
+  },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "~0.0.11",
     "@types/cookie": "^0.4.0",
     "cookie": "^0.4.1",
-    "sunder": "^0.7.0"
+    "sunder": "^0.7.1"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^2.1.0",
+    "@cloudflare/wrangler": "1.12.2",
     "@types/simple-oauth2": "^4.1.0",
     "ts-loader": "^8.0.17",
     "typescript": "^4.1.5",
-    "webpack": "^5.21.2",
-    "webpack-cli": "^4.5.0"
+    "webpack": "^4.46.0"
   }
 }

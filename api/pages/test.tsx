@@ -124,4 +124,12 @@ const DebugPage = () => {
         );
     }
 };
-export default dynamic(async () => DebugPage, { loading: () => <p>...</p> });
+export default dynamic(
+    async () => {
+        if (process.env.NODE_ENV !== "development") {
+            return () => null;
+        }
+        return DebugPage;
+    },
+    { loading: () => <p>...</p> }
+);

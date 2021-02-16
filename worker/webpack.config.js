@@ -1,3 +1,4 @@
+const webpack = require("webpack");
 const path = require("path");
 const mode = process.env.NODE_ENV || "production";
 
@@ -24,5 +25,10 @@ module.exports = {
                 }
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.DefinePlugin({
+            DEBUG: JSON.stringify(process.env.DEBUG)
+        })
+    ]
 };

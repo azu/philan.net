@@ -5,7 +5,11 @@ const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 const handler = (req: NextApiRequest, res: NextApiResponse) => {
     const REDIRECT_URL =
-        process.env.NODE_ENV === "development" ? "http://localhost:3000/test" : "http://localhost:8787/auth/callback";
+        process.env.NODE_ENV === "development"
+            ? process.env.DEBUG
+                ? "http://localhost:8787/auth/callback"
+                : "http://localhost:3000/test"
+            : "http://localhost:8787/auth/callback";
     const state = req.query.state;
     if (typeof state !== "string") {
         throw new Error("No state");

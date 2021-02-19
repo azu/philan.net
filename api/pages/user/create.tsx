@@ -54,7 +54,8 @@ export default function Create() {
         fetch(WORKER_API + "/worker/user/create", {
             method: "post",
             headers: {
-                "content-type": "application/json;charset=UTF-8"
+                Accept: "application/json",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 id,

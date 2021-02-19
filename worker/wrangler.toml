@@ -6,7 +6,8 @@ workers_dev = true
 route = ""
 zone_id = ""
 kv_namespaces = [
-	 { binding = "USERS", preview_id = "b66d3106391e41bc97c977d1d9cb06bc" }
+	 { binding = "USERS", preview_id = "b66d3106391e41bc97c977d1d9cb06bc" },
+	 { binding = "SESSIONS", preview_id = "6228e0464159431390cb5af539a73c8e" }
 ]
 [site]
 bucket = "./public"

@@ -1,23 +1,30 @@
 import { Router } from "sunder";
 import cookie from "cookie";
 import { ResponseData } from "sunder/util/response";
-
-type User = {
-    name: string;
-    spreadsheetId?: string;
-    google_token: string;
-};
+import { registerUser, updateUser, User } from "./domain/User";
+import { createNewSession, loginAsUser, updateSessionWithTemp } from "./domain/Session";
+import { HeadersShorthands } from "sunder/context";
 
 declare const USERS: KVNamespace;
 declare const DEBUG: string | undefined;
 
 const API_HOST = typeof DEBUG !== "undefined" ? "https://philan-net-api.loca.lt" : "https://philan-net.vercel.app";
 
+const setCookie = (response: ResponseData, values: [key: string, value: string][]) => {
+    if (DEBUG) {
+        response.set("Set-Cookie", `${values.map(([key, value]) => `${key}=${value}`).join("; ")}; HttpOnly`);
+    } else {
+        response.set("Set-Cookie", `${values.map(([key, value]) => `${key}=${value}`).join("; ")}; Secure; HttpOnly`);
+    }
+};
 const corsHeader = (response: ResponseData) => {
     response.set("Access-Control-Allow-Origin", "*");
     response.set("Access-Control-Allow-Methods", "POST,OPTIONS");
     response.set("Access-Control-Max-Age", "86400");
     response.set("Access-Control-Allow-Headers", "Content-Type");
+};
+const getSessionIdFromCookie = (request: Request & HeadersShorthands) => {
+    return cookie.parse(request.get("Cookie") || "")["sid"];
 };
 const router = new Router();
 const createRandom = () => {
@@ -29,11 +36,41 @@ router.get("/hi", async (context) => {
     // @ts-ignore
     context.response.body = process.env.DEBUG;
 });
+router.get("/worker/login", async (context) => {
+    const sessionId = await createNewSession();
+    setCookie(context.response, [["sid", sessionId]]);
+    context.response.body = "Login";
+});
 router.post("/worker/user/create", async (context) => {
     corsHeader(context.response);
-    console.log(context.request);
-    console.log("request", JSON.stringify(context.request.body));
+    const userRequest: User = await context.request.json();
+    const sessionId = getSessionIdFromCookie(context.request);
+    const result = await registerUser(userRequest);
+    if (result instanceof Error) {
+        context.response.status = 400;
+        context.response.body = {
+            ok: false,
+            message: result.message
+        };
+        return;
+    }
     context.response.body = { ok: true };
+});
+router.post("/worker/user/:user", async (context) => {
+    corsHeader(context.response);
+    const userId = context.params.user;
+    const userRequest: User = await context.request.json();
+    const result = await updateUser(userId, userRequest);
+    if (result instanceof Error) {
+        context.response.status = 400;
+        context.response.body = {
+            ok: false,
+            message: result.message
+        };
+        return;
+    } else {
+        context.response.body = { ok: true };
+    }
 });
 // _next proxy
 router.get("/_next/(.*)", async (context) => {
@@ -90,14 +127,19 @@ router.get("/worker/user/:user", async ({ request, response, params }) => {
         response.body = "No response";
     }
 });
-router.get("/auth", ({ response, params }) => {
+router.get("/auth", async ({ response, params }) => {
     const uuid = createRandom();
-    response.set("Set-Cookie", `philan-state=${uuid}; Secure; HttpOnly`);
+    const sessionId = await createNewSession();
+    setCookie(response, [
+        [`philan-state`, uuid],
+        [`sid`, sessionId]
+    ]);
     response.redirect(`${API_HOST}/api/auth?state=${uuid}`);
 });
 router.get("/auth/callback", async (ctx) => {
     const state = ctx.url.searchParams.get("state");
     const cookieState = cookie.parse(ctx.request.get("Cookie") || "")["philan-state"];
+    const sessionId = getSessionIdFromCookie(ctx.request);
     if (state !== cookieState) {
         console.error("state is mismatched", state, cookieState);
         ctx.response.body = "state error";
@@ -107,11 +149,10 @@ router.get("/auth/callback", async (ctx) => {
     const url = `${API_HOST}/api/auth/getToken?${code}`;
     const res = await fetch(url);
     const refreshToken = await res.json();
-    const user: User = {
-        name: "azu",
-        google_token: refreshToken.tokens.access_token
-    };
-    await USERS.put("azu", JSON.stringify(user));
-    ctx.response.body = JSON.stringify(refreshToken, null, 4);
+    await updateSessionWithTemp(sessionId, {
+        googleToken: refreshToken.tokens.access_token
+    });
+    // user/create
+    ctx.response.redirect(`/docs/user/create`);
 });
 export { router };

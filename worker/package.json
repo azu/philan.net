@@ -5,7 +5,7 @@
   "description": "A template for kick starting a Cloudflare Workers project",
   "license": "MIT",
   "scripts": {
-    "dev": "wrangler dev"
+    "dev": "DEBUG=1 wrangler dev"
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "~0.0.11",

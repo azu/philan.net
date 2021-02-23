@@ -11,7 +11,6 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .get(async (req, res) => {
         const { code, state } = validateAuthorizedRequestQuery(req.query);
         // state check
-        console.log(req.session.authState, state);
         if (req.session.authState !== state) {
             throw new Error("Invalid State");
         }

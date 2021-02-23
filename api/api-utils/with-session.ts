@@ -23,9 +23,6 @@ export const withSession = () => {
             namespaceId: env.CF_namespace_session!,
             authEmail: env.CF_authEmail!,
             authKey: env.CF_authKey!
-        }),
-        cookie: {
-            secure: Boolean(process.env.VERCEL)
-        }
+        })
     });
 };

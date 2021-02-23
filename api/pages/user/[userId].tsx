@@ -19,8 +19,10 @@ import { CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import React from "react";
 import type { GetResponseBody } from "../api/spreadsheet/api-types";
+import { getSpreadSheet } from "../api/spreadsheet/get";
+import { createUserKvs } from "../../api-utils/userKvs";
 
-function User({ response }: { response: GetResponseBody }) {
+function UserPage({ response }: { response: GetResponseBody }) {
     return (
         <Container maxW="xl">
             <Box padding={"2"}>
@@ -99,24 +101,20 @@ export async function getStaticPaths() {
 // This function gets called at build time on server-side.
 // It may be called again, on a serverless function, if
 // revalidation is enabled and a new request comes in
-export async function getStaticProps({ params }: { params: { slug: [string, string] } }) {
-    const [id, token] = params.slug;
-    console.log(params);
-    const param = new URLSearchParams([
-        ["token", token],
-        ["spreadsheetId", id]
-    ]);
-    const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
-    const res = await fetch(`${HOST}/api/spreadsheet/get?${param}`, {
-        headers: {
-            "Content-Type": "application/json"
-        }
+export async function getStaticProps({ params }: { params: { userId: string } }) {
+    const userId = params.userId;
+    const userKVS = createUserKvs();
+    const user = await userKVS.findByUserId(userId);
+    if (!user) {
+        throw new Error("No user");
+    }
+    const res = await getSpreadSheet({
+        spreadsheetId: user.spreadsheetId,
+        credentials: user.credentials
     });
-    const response = await res.json();
-
     return {
         props: {
-            response
+            response: res
         },
         // Next.js will attempt to re-generate the page:
         // - When a request comes in
@@ -125,4 +123,4 @@ export async function getStaticProps({ params }: { params: { slug: [string, stri
     };
 }
 
-export default User;
+export default UserPage;

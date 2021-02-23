@@ -86,6 +86,126 @@ const SCHEMA = {
                 "spreadsheetId"
             ],
             "additionalProperties": false
+        },
+        "GetResponseBody": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "year": {
+                        "type": "string"
+                    },
+                    "stats": {
+                        "type": "object",
+                        "properties": {
+                            "budge": {
+                                "type": "object",
+                                "properties": {
+                                    "raw": {
+                                        "type": "number"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "raw",
+                                    "value"
+                                ],
+                                "additionalProperties": false
+                            },
+                            "used": {
+                                "type": "object",
+                                "properties": {
+                                    "raw": {
+                                        "type": "number"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "raw",
+                                    "value"
+                                ],
+                                "additionalProperties": false
+                            },
+                            "balance": {
+                                "type": "object",
+                                "properties": {
+                                    "raw": {
+                                        "type": "number"
+                                    },
+                                    "value": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "raw",
+                                    "value"
+                                ],
+                                "additionalProperties": false
+                            }
+                        },
+                        "required": [
+                            "budge",
+                            "used",
+                            "balance"
+                        ],
+                        "additionalProperties": false
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "date": {
+                                    "type": "string"
+                                },
+                                "to": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "object",
+                                    "properties": {
+                                        "raw": {
+                                            "type": "number"
+                                        },
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "raw",
+                                        "value"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                "url": {
+                                    "type": "string"
+                                },
+                                "memo": {
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "date",
+                                "to",
+                                "amount",
+                                "url",
+                                "memo"
+                            ],
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "required": [
+                    "year",
+                    "stats",
+                    "items"
+                ],
+                "additionalProperties": false
+            }
         }
     }
 };
@@ -162,5 +282,20 @@ export function validateGetRequestQuery(payload: unknown): apiTypes.GetRequestQu
 export function isGetRequestQuery(payload: unknown): payload is apiTypes.GetRequestQuery {
   /** Schema is defined in {@link SCHEMA.definitions.GetRequestQuery } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetRequestQuery" });
+  return ajvValidate(payload);
+}
+
+export function validateGetResponseBody(payload: unknown): apiTypes.GetResponseBody {
+  if (!isGetResponseBody(payload)) {
+  　const error = new Error('invalid payload: GetResponseBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isGetResponseBody(payload: unknown): payload is apiTypes.GetResponseBody {
+  /** Schema is defined in {@link SCHEMA.definitions.GetResponseBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetResponseBody" });
   return ajvValidate(payload);
 }

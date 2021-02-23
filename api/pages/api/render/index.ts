@@ -2,7 +2,7 @@ import next, { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "url";
 
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
+const app = next({ dev, customServer: true });
 
 const handle = app.getRequestHandler();
 const handler = (req: NextApiRequest, res: NextApiResponse) => {

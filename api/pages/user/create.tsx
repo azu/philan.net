@@ -1,4 +1,7 @@
 import {
+    Alert,
+    AlertTitle,
+    AlertIcon,
     Box,
     Button,
     Container,
@@ -49,9 +52,11 @@ function userForm() {
 
 export default function Create() {
     const { id, name, valid, budget, handlers } = userForm();
+    const [error, setError] = useState<Error | null>(null);
     const submit = () => {
-        const WORKER_API = "http://localhost:8787";
-        fetch(WORKER_API + "/worker/user/create", {
+        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+
+        fetch(HOST + "/api/user/create", {
             method: "post",
             headers: {
                 Accept: "application/json",
@@ -62,8 +67,24 @@ export default function Create() {
                 name,
                 budget
             })
-        });
+        })
+            .then((res) => {
+                if (res.ok) {
+                    return setError(null);
+                }
+                return res.text().then((text) => Promise.reject(new Error(text)));
+            })
+            .catch((error) => {
+                setError(error);
+            });
     };
+    console.log(error);
+    const errorMessage = error ? (
+        <Alert status="error">
+            <AlertIcon />
+            <AlertTitle mr={2}>{error.message}</AlertTitle>
+        </Alert>
+    ) : null;
     return (
         <Container maxW="xl">
             <Box w="100%" p={4}>
@@ -90,6 +111,7 @@ export default function Create() {
                 <Button mt={4} colorScheme="teal" isLoading={false} type="submit" disabled={!valid} onClick={submit}>
                     Submit
                 </Button>
+                {errorMessage}
             </Box>
         </Container>
     );

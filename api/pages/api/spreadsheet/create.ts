@@ -1,12 +1,26 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { google, sheets_v4 } from "googleapis";
-import { withError, withToken } from "../../../api-utils/handler";
-import { validateCreateRequestQuery } from "./api-types.validator";
+import nextConnect from "next-connect";
+import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-session";
+import { createUserKvs } from "../../../api-utils/userKvs";
+import { validateCreateUserRequestBody } from "../user/api-types.validator";
+import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { UserCredentials } from "../../../domain/User";
 
 type Schema$RowData = sheets_v4.Schema$RowData;
 type Schema$CellData = sheets_v4.Schema$CellData;
 
-export const createNewSheet = ({ token, budget }: { token: string; budget: number }) => {
+export const createNewSheet = async (
+    { budget }: { budget: number },
+    meta: {
+        credentials: UserCredentials;
+    }
+) => {
+    const client = createOAuthClient(meta.credentials);
+    const { token } = await client.getAccessToken();
+    if (!token) {
+        throw new Error("No Access Token");
+    }
     const DefaultData = [
         ["Budget", "Used", "Balance"],
         // append-safe way
@@ -90,35 +104,26 @@ export const createNewSheet = ({ token, budget }: { token: string; budget: numbe
 };
 
 const sheets = google.sheets("v4");
-export const handler = withError(
-    withToken(async (req: NextApiRequest, res: NextApiResponse) => {
-        const { token } = validateCreateRequestQuery(req.query);
-        const spreadsheet = await createNewSheet({ token, budget: 10000 });
-        /**
-     *
-     {
-  spreadsheetId: 'id',
-  properties: {
-    title: 'philan.net',
-    locale: 'ja_JP',
-    autoRecalc: 'ON_CHANGE',
-    timeZone: 'Asia/Tokyo',
-    defaultFormat: {
-      backgroundColor: [Object],
-      padding: [Object],
-      verticalAlignment: 'BOTTOM',
-      wrapStrategy: 'OVERFLOW_CELL',
-      textFormat: [Object],
-      backgroundColorStyle: [Object]
-    },
-    spreadsheetTheme: { primaryFontFamily: 'Arial', themeColors: [Array] }
-  },
-  sheets: [ { properties: [Object] } ],
-  spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/{spreadsheetId}/edit'
-}
-     */
-        res.json(spreadsheet.data);
-    })
-);
 
+const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
+    .use(withSession())
+    .get(async (req, res) => {
+        const { budget } = validateCreateUserRequestBody(req.body);
+        const userKVS = createUserKvs();
+        const user = await userKVS.findByGoogleId(req.session.googleUserId);
+        if (!user) {
+            throw new Error("No user");
+        }
+        const responseNewSheet = await createNewSheet(
+            {
+                budget
+            },
+            {
+                credentials: user.credentials
+            }
+        );
+        res.json({
+            spreadsheetId: responseNewSheet.data.spreadsheetId
+        });
+    });
 export default handler;

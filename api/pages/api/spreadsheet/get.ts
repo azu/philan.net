@@ -1,45 +1,64 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { google } from "googleapis";
-import { withError, withToken } from "../../../api-utils/handler";
-import { validateGetRequestQuery } from "./api-types.validator";
-import { GetResponseBody } from "./api-types";
+import { UserCredentials } from "../../../domain/User";
+import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import nextConnect from "next-connect";
+import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-session";
+import { createUserKvs } from "../../../api-utils/userKvs";
 
 const sheets = google.sheets("v4");
-// ?spreadsheetId=x&token=y
-export const handler = withError(
-    withToken(async (req: NextApiRequest, res: NextApiResponse<GetResponseBody>) => {
-        const { spreadsheetId, token } = validateGetRequestQuery(req.query);
-        const spreadsheet = await sheets.spreadsheets.get({
-            oauth_token: token,
-            spreadsheetId,
-            includeGridData: true
-        });
-        const START_OF_USER_DATA = 3;
-        if (!spreadsheet?.data?.sheets) {
-            throw new Error("500: No spreadsheet data");
-        }
-        const response = spreadsheet?.data?.sheets?.map((sheet) => {
-            const items = sheet?.data?.[0];
-            // ["Budget", "Used", "Balance"]
-            const statsRow = items?.rowData?.[1];
-            const rowDate = items?.rowData?.slice(START_OF_USER_DATA) ?? [];
-            return {
-                year: sheet?.properties?.title!,
-                stats: {
-                    budge: {
-                        raw: statsRow?.values?.[0]?.effectiveValue?.numberValue!,
-                        value: statsRow?.values?.[0]?.formattedValue!
-                    },
-                    used: {
-                        raw: statsRow?.values?.[1]?.effectiveValue?.numberValue!,
-                        value: statsRow?.values?.[1]?.formattedValue!
-                    },
-                    balance: {
-                        raw: statsRow?.values?.[2]?.effectiveValue?.numberValue!,
-                        value: statsRow?.values?.[2]?.formattedValue!
-                    }
+export const getSpreadSheet = async ({
+    spreadsheetId,
+    credentials
+}: {
+    spreadsheetId: string;
+    credentials: UserCredentials;
+}) => {
+    const client = createOAuthClient(credentials);
+    const { token } = await client.getAccessToken();
+    if (!token) {
+        throw new Error("No Access Token");
+    }
+    const spreadsheet = await sheets.spreadsheets.get({
+        oauth_token: token,
+        spreadsheetId,
+        includeGridData: true
+    });
+    const START_OF_USER_DATA = 3;
+    if (!spreadsheet?.data?.sheets) {
+        throw new Error("500: No spreadsheet data");
+    }
+    return spreadsheet?.data?.sheets?.map((sheet) => {
+        const items = sheet?.data?.[0];
+        // ["Budget", "Used", "Balance"]
+        const statsRow = items?.rowData?.[1];
+        const rowDate = items?.rowData?.slice(START_OF_USER_DATA) ?? [];
+        return {
+            year: sheet?.properties?.title!,
+            stats: {
+                budge: {
+                    raw: statsRow?.values?.[0]?.effectiveValue?.numberValue!,
+                    value: statsRow?.values?.[0]?.formattedValue!
                 },
-                items: rowDate?.map((row) => {
+                used: {
+                    raw: statsRow?.values?.[1]?.effectiveValue?.numberValue!,
+                    value: statsRow?.values?.[1]?.formattedValue!
+                },
+                balance: {
+                    raw: statsRow?.values?.[2]?.effectiveValue?.numberValue!,
+                    value: statsRow?.values?.[2]?.formattedValue!
+                }
+            },
+            items: rowDate
+                .filter((row) => {
+                    const values = row.values;
+                    return (
+                        values?.[0].userEnteredValue?.stringValue &&
+                        values?.[1].userEnteredValue?.stringValue &&
+                        values?.[2]?.formattedValue!
+                    );
+                })
+                ?.map((row) => {
                     const values = row.values;
                     return {
                         date: values?.[0].userEnteredValue?.stringValue!,
@@ -49,13 +68,25 @@ export const handler = withError(
                             value: values?.[2]?.formattedValue!
                         },
                         url: values?.[3].userEnteredValue?.stringValue!,
-                        memo: values?.[4].userEnteredValue?.stringValue!
+                        memo: values?.[4].userEnteredValue?.stringValue ?? ""
                     };
                 })
-            };
+        };
+    });
+};
+const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
+    .use(withSession())
+    .post(async (req, res) => {
+        const userKVS = createUserKvs();
+        const user = await userKVS.findByGoogleId(req.session.googleUserId);
+        if (!user) {
+            throw new Error("No user");
+        }
+        const response = await getSpreadSheet({
+            credentials: user.credentials,
+            spreadsheetId: user.spreadsheetId
         });
         res.json(response);
-    })
-);
+    });
 
 export default handler;

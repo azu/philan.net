@@ -26,7 +26,7 @@ export const withSession = () => {
             authKey: env.CF_authKey!
         }),
         cookie: {
-            secure: process.env.NODE_ENV === "production"
+            secure: Boolean(process.env.VERCEL)
         }
     });
 };

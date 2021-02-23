@@ -87,6 +87,22 @@ export const createKVS = <V>() => {
         has: async (key: string): Promise<boolean> => {
             const value = await storage.get(String(key));
             return value !== null;
+        },
+        list: async ({
+            prefix,
+            limit
+        }: {
+            prefix: string;
+            limit: number;
+        }): Promise<{
+            keys: { name: string; expiration?: number; metadata?: unknown }[];
+            list_complete: boolean;
+            cursor: string;
+        }> => {
+            return storage.list({
+                prefix: prefix,
+                limit
+            });
         }
     };
 };

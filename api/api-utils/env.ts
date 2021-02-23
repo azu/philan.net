@@ -6,5 +6,6 @@ export const env = {
     CF_authEmail: process.env.CF_authEmail!,
     CF_authKey: process.env.CF_authKey!,
     CF_namespace_session: process.env.CF_namespace_session!,
-    CF_namespace_user: process.env.CF_namespace_user!
+    CF_namespace_user: process.env.CF_namespace_user!,
+    SESSION_COOKIE_SECRET: process.env.SESSION_COOKIE_SECRET!
 };

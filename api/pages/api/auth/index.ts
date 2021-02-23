@@ -10,22 +10,24 @@ const createRandom = () => {
 
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
-    .get(async (req, res) => {
+    .get(async (req, res, next) => {
         const uuid = createRandom();
         req.session.authState = uuid;
-        const client = createOAuthClient();
-        const authUrl = client.generateAuthUrl({
-            access_type: "offline",
-            scope: [
-                "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive", // require to create sheet
-                "openid" // id_token
-            ],
-            state: uuid
+        // save state and redirect
+        req.session.save(() => {
+            const client = createOAuthClient();
+            const authUrl = client.generateAuthUrl({
+                access_type: "offline",
+                scope: [
+                    "https://www.googleapis.com/auth/spreadsheets",
+                    "https://www.googleapis.com/auth/drive", // require to create sheet
+                    "openid" // id_token
+                ],
+                state: uuid
+            });
+            res.redirect(authUrl);
+            next();
         });
-        // avoid ERR_STREAM_WRITE_AFTER_END
-        await req.session.commit();
-        return res.redirect(authUrl);
     });
 
 export default handler;

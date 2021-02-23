@@ -28,7 +28,6 @@
     "googleapis": "^67.0.0",
     "next": "latest",
     "next-connect": "^0.10.0",
-    "next-session": "^3.4.0",
     "node-fetch": "^2.6.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

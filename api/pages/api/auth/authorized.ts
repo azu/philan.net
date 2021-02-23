@@ -11,6 +11,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .get(async (req, res) => {
         const { code, state } = validateAuthorizedRequestQuery(req.query);
         // state check
+        console.log(req.session.authState, state);
         if (req.session.authState !== state) {
             throw new Error("Invalid State");
         }
@@ -41,8 +42,6 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
                 credentials: token.tokens as UserCredentials
             };
             req.session.authState = undefined;
-            // avoid ERR_STREAM_WRITE_AFTER_END
-            await req.session.commit();
             res.redirect("/user/create");
         } else {
             // redirect /editor
@@ -50,8 +49,6 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
                 ...user,
                 credentials: token.tokens as UserCredentials
             });
-            // avoid ERR_STREAM_WRITE_AFTER_END
-            await req.session.commit();
             res.redirect(`/user/${user.id}`);
         }
     });

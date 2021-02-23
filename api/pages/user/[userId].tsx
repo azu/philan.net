@@ -46,7 +46,7 @@ function UserPage({ response, userName }: { userName: string; userId: string; re
                                         <StatNumber>{item.stats.budge.value}</StatNumber>
                                     </Stat>
                                     <Stat>
-                                        <StatLabel>使用額</StatLabel>
+                                        <StatLabel>使用金額</StatLabel>
                                         <StatNumber>{item.stats.used.value}</StatNumber>
                                         <StatHelpText>{item.stats.used.raw / item.stats.budge.raw}%</StatHelpText>
                                     </Stat>
@@ -129,7 +129,7 @@ export async function getStaticProps({ params }: { params: { userId: string } })
         // Next.js will attempt to re-generate the page:
         // - When a request comes in
         // - At most once every second
-        revalidate: 1 // In seconds
+        revalidate: 120 // In seconds
     };
 }
 

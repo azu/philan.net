@@ -4260,7 +4260,7 @@ nano-css@^5.3.1:
     stacktrace-js "^2.0.2"
     stylis "^4.0.6"
 
-nanoid@^3.1.16, nanoid@^3.1.18:
+nanoid@^3.1.16:
   version "3.1.20"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.20.tgz#badc263c6b1dcf14b71efaa85f6ab4c1d6cfc788"
   integrity sha512-a1cQNyczgKbLX9jwbS/+d7W8fX/RfgYR7lVWwWOGIPNgK2m0MWvrGF6/m4kk6U3QcFMnZf3RIhL0v2Jgh/0Uxw==
@@ -4305,14 +4305,6 @@ next-connect@^0.10.0:
   integrity sha512-W8oiw8ylXdMQJQG/FtBaSbXQkf9YgqEPh5sjfFOx6BlZVVLd8UP7Cp7qZe32lVAuQEGnU/JlmWkyzBOdt6xVrw==
   dependencies:
     trouter "^3.1.0"
-
-next-session@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/next-session/-/next-session-3.4.0.tgz#799757624a336b752298e9771ffc1d7282d76e91"
-  integrity sha512-JBROZVndV3vBMdELMOmnm1mWNKzjSTl4niwnuVMjAhcW5Cn9UAS3YkQyOJ1I5LSiLNOxVheQ7BTuxE4nx6SDwQ==
-  dependencies:
-    cookie "^0.4.1"
-    nanoid "^3.1.18"
 
 next@latest:
   version "10.0.7"

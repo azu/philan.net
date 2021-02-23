@@ -54,7 +54,7 @@ const IndexPage = (props: { users: string[] }) => {
                                 </Text>
 
                                 <Stack mt="10" spacing="4" justify="center" direction={{ base: "column", sm: "row" }}>
-                                    <NextLink href="/docs/getting-started" passHref>
+                                    <NextLink href="/api/auth" passHref>
                                         <Button
                                             h="4rem"
                                             px="40px"
@@ -64,7 +64,7 @@ const IndexPage = (props: { users: string[] }) => {
                                             colorScheme="teal"
                                             rightIcon={<ArrowRightIcon />}
                                         >
-                                            Get Started
+                                            Login with Google
                                         </Button>
                                     </NextLink>
                                     <Button
@@ -74,9 +74,8 @@ const IndexPage = (props: { users: string[] }) => {
                                         px="40px"
                                         fontSize="1.2rem"
                                         href="https://github.com/chakra-ui/chakra-ui/"
-                                        target="__blank"
                                     >
-                                        GitHub
+                                        How to Use?
                                     </Button>
                                 </Stack>
                             </Box>
@@ -133,23 +132,15 @@ const IndexPage = (props: { users: string[] }) => {
     );
 };
 
-export async function getStaticPaths() {
-    return { paths: [], fallback: "blocking" };
-}
-
 // This function gets called at build time on server-side.
 // It may be called again, on a serverless function, if
 // revalidation is enabled and a new request comes in
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const users = await getUserList();
     return {
         props: {
             users
-        },
-        // Next.js will attempt to re-generate the page:
-        // - When a request comes in
-        // - At most once every second
-        revalidate: 60 * 60 // In seconds
+        }
     };
 }
 

@@ -3,6 +3,7 @@ import { createSessionStore } from "express-session-cloudflare-kv";
 import { NextApiRequest } from "next";
 import { UserCredentials } from "../domain/User";
 import { env } from "./env";
+
 export interface Session {
     googleUserId: string;
     authState?: string;
@@ -23,6 +24,9 @@ export const withSession = () => {
             namespaceId: env.CF_namespace_session!,
             authEmail: env.CF_authEmail!,
             authKey: env.CF_authKey!
-        })
+        }),
+        cookie: {
+            secure: process.env.NODE_ENV === "production"
+        }
     });
 };

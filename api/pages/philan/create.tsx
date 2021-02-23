@@ -16,6 +16,7 @@ import {
     NumberInputStepper
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
+import Head from "next/head";
 
 function userForm() {
     const [id, setId] = useState<string>("");
@@ -78,7 +79,6 @@ export default function Create() {
                 setError(error);
             });
     };
-    console.log(error);
     const errorMessage = error ? (
         <Alert status="error">
             <AlertIcon />
@@ -86,33 +86,46 @@ export default function Create() {
         </Alert>
     ) : null;
     return (
-        <Container maxW="xl">
-            <Box w="100%" p={4}>
-                <FormControl id="id" isRequired>
-                    <FormLabel>Your Id</FormLabel>
-                    <Input value={id} onChange={handlers.updateId} />
-                    <FormHelperText>Your account id</FormHelperText>
-                </FormControl>
-                <FormControl id="name" isRequired>
-                    <FormLabel>Your Name</FormLabel>
-                    <Input value={name} onChange={handlers.updateName} />
-                    <FormHelperText>Your display name</FormHelperText>
-                </FormControl>
-                <FormControl id="amount" isRequired>
-                    <FormLabel>Your Budget</FormLabel>
-                    <NumberInput value={budget} max={100000000000} min={100} onChange={handlers.updateBudget}>
-                        <NumberInputField />
-                        <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                        </NumberInputStepper>
-                    </NumberInput>
-                </FormControl>
-                <Button mt={4} colorScheme="teal" isLoading={false} type="submit" disabled={!valid} onClick={submit}>
-                    Submit
-                </Button>
-                {errorMessage}
-            </Box>
-        </Container>
+        <>
+            <Head>
+                <title>ユーザーを登録する - philan.net</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+            </Head>
+            <Container maxW="xl">
+                <Box w="100%" p={4}>
+                    <FormControl id="id" isRequired>
+                        <FormLabel>Your Id</FormLabel>
+                        <Input value={id} onChange={handlers.updateId} />
+                        <FormHelperText>Your account id</FormHelperText>
+                    </FormControl>
+                    <FormControl id="name" isRequired>
+                        <FormLabel>Your Name</FormLabel>
+                        <Input value={name} onChange={handlers.updateName} />
+                        <FormHelperText>Your display name</FormHelperText>
+                    </FormControl>
+                    <FormControl id="amount" isRequired>
+                        <FormLabel>Your Budget</FormLabel>
+                        <NumberInput value={budget} max={100000000000} min={100} onChange={handlers.updateBudget}>
+                            <NumberInputField />
+                            <NumberInputStepper>
+                                <NumberIncrementStepper />
+                                <NumberDecrementStepper />
+                            </NumberInputStepper>
+                        </NumberInput>
+                    </FormControl>
+                    <Button
+                        mt={4}
+                        colorScheme="teal"
+                        isLoading={false}
+                        type="submit"
+                        disabled={!valid}
+                        onClick={submit}
+                    >
+                        Submit
+                    </Button>
+                    {errorMessage}
+                </Box>
+            </Container>
+        </>
     );
 }

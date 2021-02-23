@@ -25,7 +25,7 @@ export const createNewSheet = async (
         ["Budget", "Used", "Balance"],
         // append-safe way
         // Count(A1:A) avoid curricular dependencies
-        [budget, "=SUM(OFFSET(C3,1,0,Count(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,Count(A1:A)))"],
+        [budget, "=SUM(OFFSET(C3,1,0,ROWS(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,ROWS(A1:A)))"],
         // TODO: monthly?,
         ["Date", "To", "Amount", "URL", "Memo"]
     ] as (string | number)[][];

@@ -93,14 +93,16 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         if (!user) {
             throw new Error("No user");
         }
-        const response = await addItem(
+        await addItem(
             { amount, memo, to, url },
             {
                 credentials: user.credentials,
                 spreadsheetId: user.spreadsheetId
             }
         );
-        res.json(response);
+        res.json({
+            ok: true
+        });
     });
 
 export default handler;

@@ -41,7 +41,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
                 credentials: token.tokens as UserCredentials
             };
             req.session.authState = undefined;
-            res.redirect("/user/create");
+            res.redirect("/philan/create");
         } else {
             // redirect /editor
             await kvs.updateUser(googleId, {

@@ -29,7 +29,6 @@ function userForm() {
     useEffect(() => {
         const validURL = url.length > 0 ? url.startsWith("http") : true;
         const ok = to.length > 0 && validURL && amount > 0;
-        console.log("ok", ok, to, validURL, amount);
         setValid(ok);
     }, [to, url, amount, memo]);
     const handlers = useMemo(

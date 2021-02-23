@@ -17,7 +17,9 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         req.session.save(() => {
             const client = createOAuthClient();
             const authUrl = client.generateAuthUrl({
+                // require refresh_token
                 access_type: "offline",
+                prompt: "consent",
                 scope: [
                     "https://www.googleapis.com/auth/spreadsheets",
                     "https://www.googleapis.com/auth/drive", // require to create sheet

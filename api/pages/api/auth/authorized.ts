@@ -12,6 +12,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         const { code, state } = validateAuthorizedRequestQuery(req.query);
         // state check
         if (req.session.authState !== state) {
+            console.log(req.session.authState, state);
             throw new Error("Invalid State. Please retry login.");
         }
         const client = createOAuthClient();

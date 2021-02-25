@@ -8,7 +8,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .get(async (req, res) => {
         const userKVS = createUserKvs();
-        logger.log("Google UserId", req.session.get("googleUserId"));
+        logger.info("Google UserId", req.session.get("googleUserId"));
         const user = await userKVS.findByGoogleId(req.session.get("googleUserId"));
         if (!user) {
             return res.send({

@@ -12,6 +12,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .get(async (_req, res, next) => {
         const uuid = createRandom();
+        // workaround: KV latency
         res.setHeader("Set-Cookie", `philan-state=${uuid}; HttpOnly`);
         const client = createOAuthClient();
         const authUrl = client.generateAuthUrl({

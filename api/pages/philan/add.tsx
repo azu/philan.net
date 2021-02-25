@@ -68,6 +68,7 @@ function userForm() {
 
 export default function Create() {
     const { url, amount, memo, to, valid, handlers } = userForm();
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);
     const submit = () => {
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
@@ -77,6 +78,7 @@ export default function Create() {
             memo,
             to
         };
+        setLoading(true);
         fetch(HOST + "/api/spreadsheet/add", {
             method: "post",
             headers: {
@@ -87,12 +89,19 @@ export default function Create() {
         })
             .then((res) => {
                 if (res.ok) {
-                    return setError(null);
+                    return res.json();
                 }
                 return res.text().then((text) => Promise.reject(new Error(text)));
             })
+            .then((json) => {
+                setError(null);
+                window.location.href = json.pageURL;
+            })
             .catch((error) => {
                 setError(error);
+            })
+            .finally(() => {
+                setLoading(false);
             });
     };
     const errorMessage = error ? (
@@ -162,7 +171,7 @@ export default function Create() {
                                 colorScheme="teal"
                                 isLoading={false}
                                 type="submit"
-                                disabled={!valid}
+                                disabled={!valid || loading}
                                 onClick={submit}
                             >
                                 Submit

@@ -83,7 +83,7 @@ function HeaderContent() {
         window.location.href = "/philan/add";
     }, []);
     const Logout = useCallback(() => {
-        fetch("/api/user/logout", {
+        fetch("/api/auth/logout", {
             method: "post"
         })
             .catch((error) => {
@@ -94,7 +94,7 @@ function HeaderContent() {
             });
     }, []);
     useEffect(() => {
-        fetch("/api/auth/get")
+        fetch("/api/user/get")
             .then((res) => res.json())
             .then((json) => {
                 if (json.login) {

@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/auth/index.ts": {
+      "memory": 3008
+    },
+    "api/auth/authorized.ts": {
+      "memory": 3008
+    }
+  }
+}

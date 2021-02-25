@@ -94,7 +94,7 @@ function HeaderContent() {
             });
     }, []);
     useEffect(() => {
-        fetch("/api/user/get")
+        fetch("/api/auth/get")
             .then((res) => res.json())
             .then((json) => {
                 if (json.login) {

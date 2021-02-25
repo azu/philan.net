@@ -5,7 +5,8 @@ import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .post(async (req, res) => {
-        await req.session.destroy();
+        req.session.destroy();
+        res.setHeader("Clear-Site-Data", `"cache", "cookies"`);
         res.send({ ok: true });
     });
 

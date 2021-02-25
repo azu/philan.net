@@ -38,6 +38,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         }
         // update session.userId
         const kvs = createUserKvs();
+        console.log("googleId", googleId);
         req.session.set("googleUserId", googleId);
         const user = await kvs.findByGoogleId(googleId);
         if (!user) {

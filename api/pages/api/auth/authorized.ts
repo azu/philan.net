@@ -28,12 +28,12 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         const payload = await client.verifyIdToken({
             idToken: idToken
         });
-        const kvs = createUserKvs();
         const googleId = payload.getUserId();
         if (!googleId) {
             throw new Error("Not found userId");
         }
         // update session.userId
+        const kvs = createUserKvs();
         req.session.set("googleUserId", googleId);
         const user = await kvs.findByGoogleId(googleId);
         if (!user) {
@@ -48,6 +48,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
                 ...user,
                 credentials: token.tokens as UserCredentials
             });
+            await req.session.save();
             res.redirect(`/user/${user.id}`);
         }
     });

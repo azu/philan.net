@@ -16,16 +16,12 @@ import {
     NumberInputField,
     NumberInputStepper,
     Text,
-    Textarea,
-    useColorModeValue,
-    VStack
+    Textarea
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { AddRequestBody } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
-import NextLink from "next/link";
-import { ArrowRightIcon } from "@chakra-ui/icons";
 
 function userForm() {
     const [to, setTo] = useState<string>("");

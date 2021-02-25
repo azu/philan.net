@@ -25,7 +25,7 @@ export type GetResponseBody = {
     year: string;
     README: string;
     stats: {
-        budge: {
+        budget: {
             raw: number;
             value: string;
         };

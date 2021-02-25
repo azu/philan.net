@@ -96,8 +96,12 @@ function HeaderContent() {
     useEffect(() => {
         fetch("/api/user/get")
             .then((res) => res.json())
-            .then(() => {
-                setLoginState("login");
+            .then((json) => {
+                if (json.login) {
+                    setLoginState("login");
+                } else {
+                    setLoginState("logout");
+                }
             })
             .catch(() => {
                 setLoginState("logout");

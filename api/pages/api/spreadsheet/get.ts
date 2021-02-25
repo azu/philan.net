@@ -79,7 +79,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .post(async (req, res) => {
         const userKVS = createUserKvs();
-        const user = await userKVS.findByGoogleId(req.session.googleUserId);
+        const user = await userKVS.findByGoogleId(req.session.get("googleUserId"));
         if (!user) {
             throw new Error("No user");
         }

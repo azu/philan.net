@@ -4,14 +4,9 @@ import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-
 
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
-    .post(async (req, res, next) => {
-        req.session.destroy((error) => {
-            if (error) {
-                return next(error);
-            }
-            res.send({ ok: true });
-            next();
-        });
+    .post(async (req, res) => {
+        await req.session.destroy();
+        res.send({ ok: true });
     });
 
 export default handler;

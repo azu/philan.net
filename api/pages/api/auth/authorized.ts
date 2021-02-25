@@ -11,8 +11,8 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .get(async (req, res) => {
         const { code, state } = validateAuthorizedRequestQuery(req.query);
         // state check
-        if (req.cookies["philan-state"] !== state) {
-            console.log(req.cookies["philan-state"], state);
+        if (req.session.get("authState") !== state) {
+            console.log(req.session.get("authState"), state);
             throw new Error("Invalid State. Please retry login.");
         }
         const client = createOAuthClient();
@@ -34,14 +34,13 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             throw new Error("Not found userId");
         }
         // update session.userId
-        req.session.googleUserId = googleId;
+        req.session.set("googleUserId", googleId);
         const user = await kvs.findByGoogleId(googleId);
         if (!user) {
             // redirect /user/create
-            req.session.temporaryRegistration = {
-                credentials: token.tokens as UserCredentials
-            };
-            res.setHeader("Set-Cookie", `philan-state=""; HttpOnly`);
+            req.session.set("tempCredentials", token.tokens as UserCredentials);
+            req.session.unset("authState");
+            await req.session.save();
             res.redirect("/philan/create");
         } else {
             // redirect /editor

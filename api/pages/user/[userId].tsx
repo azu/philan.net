@@ -29,11 +29,11 @@ import Head from "next/head";
 import { createMarkdown } from "safe-marked";
 import { BiDonateHeart } from "react-icons/bi";
 
-const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+// const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
 
 function UserPage({
     response,
-    userId,
+    // userId,
     userName,
     README
 }: {

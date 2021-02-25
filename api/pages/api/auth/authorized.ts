@@ -11,8 +11,8 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .get(async (req, res) => {
         const { code, state } = validateAuthorizedRequestQuery(req.query);
         // state check
-        if (req.session.authState !== state) {
-            console.log(req.session.authState, state);
+        if (req.cookies["philan-state"] !== state) {
+            console.log(req.cookies["philan-state"], state);
             throw new Error("Invalid State. Please retry login.");
         }
         const client = createOAuthClient();
@@ -41,7 +41,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             req.session.temporaryRegistration = {
                 credentials: token.tokens as UserCredentials
             };
-            req.session.authState = undefined;
+            res.setHeader("Set-Cookie", `philan-state=""; HttpOnly`);
             res.redirect("/philan/create");
         } else {
             // redirect /editor

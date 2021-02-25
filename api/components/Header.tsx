@@ -82,6 +82,17 @@ function HeaderContent() {
     const AddNewRecord = useCallback(() => {
         window.location.href = "/philan/add";
     }, []);
+    const Logout = useCallback(() => {
+        fetch("/api/user/logout", {
+            method: "post"
+        })
+            .catch((error) => {
+                console.error("Fail to logout", error);
+            })
+            .finally(() => {
+                window.location.href = "/";
+            });
+    }, []);
     useEffect(() => {
         fetch("/api/user/get")
             .then((res) => res.json())
@@ -95,7 +106,7 @@ function HeaderContent() {
     const LogInOut =
         loginState !== "loading" ? (
             loginState === "login" ? (
-                <Link aria-label={"Logout from philan.net"} href={"/api/auth/logout"}>
+                <Link aria-label={"Logout from philan.net"} onClick={Logout}>
                     Logout
                 </Link>
             ) : (

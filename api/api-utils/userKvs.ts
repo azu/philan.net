@@ -4,7 +4,10 @@ import { createKVS } from "./kvs";
 export const createUserKvs = () => {
     const kvs = createKVS<User>();
     return {
-        findByGoogleId(id: string) {
+        findByGoogleId(id?: string) {
+            if (!id) {
+                return;
+            }
             return kvs.get(id);
         },
         findByUserId(userId: string) {

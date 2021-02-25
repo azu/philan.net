@@ -10,10 +10,10 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .post(async (req, res) => {
         const { id, name, budget } = validateCreateUserRequestBody(req.body);
-        if (!req.session.temporaryRegistration) {
+        if (!req.session.get("tempCredentials")) {
             throw new Error("Authorize before create");
         }
-        const credentials = req.session.temporaryRegistration.credentials;
+        const credentials = req.session.get("tempCredentials");
         const client = createOAuthClient(credentials);
         const verifiedIdTokenResponse = await client.verifyIdToken({
             idToken: credentials.id_token
@@ -47,7 +47,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             spreadsheetId: spreadSheet.data.spreadsheetId
         });
         // remove temporary
-        delete req.session.temporaryRegistration;
+        await req.session.unset("tempCredentials");
         res.json({
             ok: true
         });

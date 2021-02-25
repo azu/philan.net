@@ -98,7 +98,7 @@ const SCHEMA = {
                     "stats": {
                         "type": "object",
                         "properties": {
-                            "budge": {
+                            "budget": {
                                 "type": "object",
                                 "properties": {
                                     "raw": {

@@ -17,6 +17,7 @@ export const withSession = () => {
     return session({
         secret: env.SESSION_COOKIE_SECRET,
         resave: true,
+        // NOTE: touch implementation require
         saveUninitialized: true,
         store: createSessionStore({
             accountId: env.CF_accountId!,

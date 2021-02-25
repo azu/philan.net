@@ -35,8 +35,9 @@ export const getSpreadSheet = async ({
         const rowDate = items?.rowData?.slice(START_OF_USER_DATA) ?? [];
         return {
             year: sheet?.properties?.title!,
+            README: statsRow?.values?.[3]?.formattedValue!,
             stats: {
-                budge: {
+                budget: {
                     raw: statsRow?.values?.[0]?.effectiveValue?.numberValue!,
                     value: statsRow?.values?.[0]?.formattedValue!
                 },

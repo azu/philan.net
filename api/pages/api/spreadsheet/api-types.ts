@@ -23,6 +23,7 @@ export type GetRequestQuery = {
 };
 export type GetResponseBody = {
     year: string;
+    README: string;
     stats: {
         budge: {
             raw: number;

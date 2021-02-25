@@ -7,5 +7,6 @@ export const env = {
     CF_authKey: process.env.CF_authKey!,
     CF_namespace_session: process.env.CF_namespace_session!,
     CF_namespace_user: process.env.CF_namespace_user!,
-    SESSION_COOKIE_SECRET: process.env.SESSION_COOKIE_SECRET!
+    SESSION_COOKIE_SECRET: process.env.SESSION_COOKIE_SECRET!,
+    LOGFLARE_API_KEY: process.env.LOGFLARE_API_KEY!
 };

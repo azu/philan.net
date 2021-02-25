@@ -5,6 +5,7 @@ import { NextApiResponse } from "next";
 import { createOAuthClient } from "../../../api-utils/create-OAuth";
 import { validateAuthorizedRequestQuery } from "./api-types.validator";
 import { createUserKvs } from "../../../api-utils/userKvs";
+import { logger } from "../../../api-utils/logger";
 
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
@@ -12,7 +13,10 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         const { code, state } = validateAuthorizedRequestQuery(req.query);
         // state check
         if (req.session.get("authState") !== state) {
-            console.log(req.session.get("authState"), state);
+            logger.warn("mismatch authState", {
+                session: req.session.get("authState"),
+                state
+            });
             throw new Error("Invalid State. Please retry login.");
         }
         const client = createOAuthClient();

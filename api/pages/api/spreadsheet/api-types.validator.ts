@@ -95,6 +95,9 @@ const SCHEMA = {
                     "year": {
                         "type": "string"
                     },
+                    "README": {
+                        "type": "string"
+                    },
                     "stats": {
                         "type": "object",
                         "properties": {
@@ -148,7 +151,7 @@ const SCHEMA = {
                             }
                         },
                         "required": [
-                            "budge",
+                            "budget",
                             "used",
                             "balance"
                         ],
@@ -201,6 +204,7 @@ const SCHEMA = {
                 },
                 "required": [
                     "year",
+                    "README",
                     "stats",
                     "items"
                 ],

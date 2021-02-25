@@ -151,7 +151,7 @@ function HeaderContent() {
                         <Link
                             isExternal
                             aria-label="Go to philan.net GitHub Repository"
-                            href={"https://github.com/azu/philan-net"}
+                            href={"https://github.com/azu/philan.net"}
                         >
                             <Icon
                                 as={GithubIcon}

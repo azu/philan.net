@@ -47,7 +47,7 @@ function UserPage({
             <Head>
                 <title>{userName} - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-                <meta property="og:image" content={`${HOST}/api/ogp/${userId}`} />
+                {/*<meta property="og:image" content={`${HOST}/api/ogp/${userId}`} />*/}
             </Head>
             <Header />
             <Box mb={20}>

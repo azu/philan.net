@@ -11,7 +11,6 @@ export const logger = pino(
     {
         browser: {
             transmit: {
-                level: "info",
                 // @ts-expect-error
                 send: send
             }

@@ -5,7 +5,7 @@ import { createUserKvs } from "../../../api-utils/userKvs";
 
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
-    .post(async (req, res) => {
+    .get(async (req, res) => {
         const userKVS = createUserKvs();
         const user = await userKVS.findByGoogleId(req.session.googleUserId);
         if (!user) {

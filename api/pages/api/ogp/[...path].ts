@@ -1,8 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as playwright from "playwright-aws-lambda";
-import React from "react";
-import ReactDOMServer from "react-dom/server";
-import { OGPTemplate } from "../../../components/OGPTemplate";
 import { createUserKvs } from "../../../api-utils/userKvs";
 import { getSpreadSheet } from "../spreadsheet/get";
 

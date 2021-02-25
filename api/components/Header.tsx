@@ -14,9 +14,10 @@ import {
 } from "@chakra-ui/react";
 import { useViewportScroll } from "framer-motion";
 import NextLink from "next/link";
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import { RiAddFill } from "react-icons/ri";
 
 const GithubIcon = (props: any) => (
     <svg viewBox="0 0 20 20" {...props}>
@@ -77,6 +78,44 @@ function HeaderContent() {
         mobileNavBtnRef.current?.focus();
     }, [mobileNav.isOpen]);
 
+    const [loginState, setLoginState] = useState<"login" | "loading" | "logout">("loading");
+    const AddNewRecord = useCallback(() => {
+        window.location.href = "/philan/add";
+    }, []);
+    useEffect(() => {
+        fetch("/api/user/get")
+            .then((res) => res.json())
+            .then(() => {
+                setLoginState("login");
+            })
+            .catch(() => {
+                setLoginState("logout");
+            });
+    }, []);
+    const LogInOut =
+        loginState !== "loading" ? (
+            loginState === "login" ? (
+                <Link aria-label={"Logout from philan.net"} href={"/api/auth/logout"}>
+                    Logout
+                </Link>
+            ) : (
+                <Link aria-label={"Login with Google"} href={"/api/auth"}>
+                    Login
+                </Link>
+            )
+        ) : null;
+    const addNewDonation =
+        loginState !== "loading" ? (
+            loginState === "login" ? (
+                <IconButton
+                    onClick={AddNewRecord}
+                    variant="outline"
+                    colorScheme="teal"
+                    aria-label="Add new donation record"
+                    icon={<RiAddFill />}
+                />
+            ) : null
+        ) : null;
     return (
         <>
             <Flex w="100%" h="100%" px="6" align="center" justify="space-between">
@@ -89,6 +128,10 @@ function HeaderContent() {
                 </Flex>
 
                 <Flex justify="flex-end" w="100%" maxW="824px" align="center" color="gray.400">
+                    <HStack paddingRight="5" spacing="5" display={{ base: "flex" }}>
+                        {LogInOut}
+                        {addNewDonation}
+                    </HStack>
                     <HStack spacing="5" display={{ base: "none", md: "flex" }}>
                         <Link
                             isExternal

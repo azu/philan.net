@@ -13,10 +13,13 @@ import {
     NumberIncrementStepper,
     NumberInput,
     NumberInputField,
-    NumberInputStepper
+    NumberInputStepper,
+    chakra,
+    Text
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
+import { Header } from "../../components/Header";
 
 function userForm() {
     const [id, setId] = useState<string>("");
@@ -91,41 +94,73 @@ export default function Create() {
                 <title>ユーザーを登録する - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <Container maxW="xl">
-                <Box w="100%" p={4}>
-                    <FormControl id="id" isRequired>
-                        <FormLabel>Your Id</FormLabel>
-                        <Input value={id} onChange={handlers.updateId} />
-                        <FormHelperText>Your account id</FormHelperText>
-                    </FormControl>
-                    <FormControl id="name" isRequired>
-                        <FormLabel>Your Name</FormLabel>
-                        <Input value={name} onChange={handlers.updateName} />
-                        <FormHelperText>Your display name</FormHelperText>
-                    </FormControl>
-                    <FormControl id="amount" isRequired>
-                        <FormLabel>Your Budget</FormLabel>
-                        <NumberInput value={budget} max={100000000000} min={100} onChange={handlers.updateBudget}>
-                            <NumberInputField />
-                            <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                            </NumberInputStepper>
-                        </NumberInput>
-                    </FormControl>
-                    <Button
-                        mt={4}
-                        colorScheme="teal"
-                        isLoading={false}
-                        type="submit"
-                        disabled={!valid}
-                        onClick={submit}
-                    >
-                        Submit
-                    </Button>
-                    {errorMessage}
+            <Header />
+            <Box mb={20}>
+                <Box as="section" pt={{ base: "10rem", md: "12rem" }} pb={{ base: "0", md: "1rem" }}>
+                    <Box textAlign="center">
+                        <chakra.h1
+                            maxW="16ch"
+                            mx="auto"
+                            fontSize={{ base: "2.25rem", sm: "2rem", lg: "3rem" }}
+                            fontFamily="heading"
+                            letterSpacing="tighter"
+                            fontWeight="extrabold"
+                            marginBottom="16px"
+                            lineHeight="1.2"
+                        >
+                            ユーザーを登録
+                        </chakra.h1>
+                        <Text maxW="560px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">
+                            philan.netにユーザーアカウントを作成します。
+                            <br />
+                            アカウントに必要な情報を入力してください。
+                        </Text>
+                    </Box>
+                    <Container maxW="xl">
+                        <Box w="100%" p={4}>
+                            <FormControl id="id" isRequired>
+                                <FormLabel>ユーザーID</FormLabel>
+                                <Input value={id} onChange={handlers.updateId} />
+                                <FormHelperText>
+                                    ユーザーIDはphilan.net全体でユニークである必要があります。
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl id="name" isRequired>
+                                <FormLabel>ユーザー名</FormLabel>
+                                <Input value={name} onChange={handlers.updateName} />
+                                <FormHelperText>ユーザー名は表示のために使われる名前です</FormHelperText>
+                            </FormControl>
+                            <FormControl id="amount" isRequired>
+                                <FormLabel>寄付の予算</FormLabel>
+                                <NumberInput
+                                    value={budget}
+                                    max={100000000000}
+                                    min={100}
+                                    onChange={handlers.updateBudget}
+                                >
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                                <FormHelperText>今年の寄付の予算額を入力してください。</FormHelperText>
+                            </FormControl>
+                            <Button
+                                mt={4}
+                                colorScheme="teal"
+                                isLoading={false}
+                                type="submit"
+                                disabled={!valid}
+                                onClick={submit}
+                            >
+                                登録
+                            </Button>
+                            {errorMessage}
+                        </Box>
+                    </Container>
                 </Box>
-            </Container>
+            </Box>
         </>
     );
 }

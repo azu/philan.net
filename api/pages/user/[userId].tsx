@@ -64,7 +64,7 @@ function UserPage({
                                 marginBottom="16px"
                                 lineHeight="1.2"
                             >
-                                <Box as="span" paddingLeft={"-1em"} color={useColorModeValue("teal.500", "teal.300")}>
+                                <Box as="span" color={useColorModeValue("teal.500", "teal.300")}>
                                     <Icon as={BiDonateHeart} />
                                     {userName}
                                 </Box>

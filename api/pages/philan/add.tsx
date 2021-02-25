@@ -4,6 +4,7 @@ import {
     AlertTitle,
     Box,
     Button,
+    chakra,
     Container,
     FormControl,
     FormHelperText,
@@ -14,11 +15,17 @@ import {
     NumberInput,
     NumberInputField,
     NumberInputStepper,
-    Textarea
+    Text,
+    Textarea,
+    useColorModeValue,
+    VStack
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { AddRequestBody } from "../api/spreadsheet/api-types";
 import Head from "next/head";
+import { Header } from "../../components/Header";
+import NextLink from "next/link";
+import { ArrowRightIcon } from "@chakra-ui/icons";
 
 function userForm() {
     const [to, setTo] = useState<string>("");
@@ -97,49 +104,74 @@ export default function Create() {
     return (
         <>
             <Head>
-                <title>新しい寄付先を追加する - philan.net</title>
+                <title>新しい寄付の記録を追加する - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <Container maxW="xl">
-                <Box w="100%" p={4}>
-                    <FormControl id="to" isRequired>
-                        <FormLabel>To:</FormLabel>
-                        <Input value={to} onChange={handlers.updateTo} />
-                        <FormHelperText>寄付先を入力してください</FormHelperText>
-                    </FormControl>
-                    <FormControl id="url">
-                        <FormLabel>URL:</FormLabel>
-                        <Input value={url} onChange={handlers.updateUrl} />
-                        <FormHelperText>httpから始まる寄付先に関連するURLを入力してください</FormHelperText>
-                    </FormControl>
-                    <FormControl id="amount" isRequired>
-                        <FormLabel>寄付額</FormLabel>
-                        <NumberInput value={amount} max={100000000000} min={1} onChange={handlers.updateAmount}>
-                            <NumberInputField />
-                            <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                            </NumberInputStepper>
-                        </NumberInput>
-                    </FormControl>
-                    <FormControl id="memo">
-                        <FormLabel>Memo:</FormLabel>
-                        <FormHelperText>メモ欄(Markdown)</FormHelperText>
-                        <Textarea value={memo} onChange={handlers.updateMemo} />
-                    </FormControl>
-                    <Button
-                        mt={4}
-                        colorScheme="teal"
-                        isLoading={false}
-                        type="submit"
-                        disabled={!valid}
-                        onClick={submit}
-                    >
-                        Submit
-                    </Button>
-                    {errorMessage}
+            <Header />
+            <Box mb={20}>
+                <Box as="section" pt={{ base: "10rem", md: "12rem" }} pb={{ base: "0", md: "1rem" }}>
+                    <Box textAlign="center">
+                        <chakra.h1
+                            maxW="16ch"
+                            mx="auto"
+                            fontSize={{ base: "2.25rem", sm: "2rem", lg: "3rem" }}
+                            fontFamily="heading"
+                            letterSpacing="tighter"
+                            fontWeight="extrabold"
+                            marginBottom="16px"
+                            lineHeight="1.2"
+                        >
+                            新しい寄付の記録を追加
+                        </chakra.h1>
+                        <Text maxW="560px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">
+                            新しい寄付の記録を追加してみよう。
+                            <br />
+                            寄付の記録の一覧に追加されます。
+                        </Text>
+                    </Box>
+
+                    <Container maxW="xl">
+                        <Box w="100%" p={4}>
+                            <FormControl id="to" isRequired>
+                                <FormLabel>寄付先:</FormLabel>
+                                <Input value={to} onChange={handlers.updateTo} />
+                                <FormHelperText>寄付先の名前(法人、人、場所など)を入力してください</FormHelperText>
+                            </FormControl>
+                            <FormControl id="url">
+                                <FormLabel>URL:</FormLabel>
+                                <Input value={url} onChange={handlers.updateUrl} />
+                                <FormHelperText>寄付先に関連するhttpから始まるURLを入力してください</FormHelperText>
+                            </FormControl>
+                            <FormControl id="amount" isRequired>
+                                <FormLabel>寄付額</FormLabel>
+                                <NumberInput value={amount} max={100000000000} min={1} onChange={handlers.updateAmount}>
+                                    <NumberInputField />
+                                    <NumberInputStepper>
+                                        <NumberIncrementStepper />
+                                        <NumberDecrementStepper />
+                                    </NumberInputStepper>
+                                </NumberInput>
+                            </FormControl>
+                            <FormControl id="memo">
+                                <FormLabel>Memo:</FormLabel>
+                                <FormHelperText>メモ欄(Markdown)</FormHelperText>
+                                <Textarea value={memo} onChange={handlers.updateMemo} />
+                            </FormControl>
+                            <Button
+                                mt={4}
+                                colorScheme="teal"
+                                isLoading={false}
+                                type="submit"
+                                disabled={!valid}
+                                onClick={submit}
+                            >
+                                Submit
+                            </Button>
+                            {errorMessage}
+                        </Box>
+                    </Container>
                 </Box>
-            </Container>
+            </Box>
         </>
     );
 }

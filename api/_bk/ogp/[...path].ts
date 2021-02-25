@@ -1,3 +1,4 @@
+export {};
 // import type { NextApiRequest, NextApiResponse } from "next";
 // import * as playwright from "playwright-aws-lambda";
 // import { createUserKvs } from "../../../api-utils/userKvs";

@@ -9,7 +9,9 @@ class CustomDocument extends Document<Props> {
     render() {
         return (
             <Html lang={"ja-JP"}>
-                <Head />
+                <Head>
+                    <meta name="description" content="Philan.netは、自身の寄付内容を公開、管理できるサービスです。" />
+                </Head>
                 <body>
                     <Main />
 

@@ -15,7 +15,7 @@ export type CookieSchema = {
 };
 export const withSession = () => {
     return ironSession({
-        cookieName: "sid",
+        cookieName: "irsid",
         password: env.SESSION_COOKIE_SECRET,
         cookieOptions: {
             secure: process.env.NODE_ENV === "production"

@@ -9,3 +9,16 @@ export type UpdateUserRequestBody = {
     name: string;
     budget: number;
 };
+
+//
+export type GetUserResponseBody =
+    | {
+          isLogin: true;
+          id: string;
+          name: string;
+          avatarUrl: string;
+          spreadsheetUrl: string;
+      }
+    | {
+          isLogin: false;
+      };

@@ -159,6 +159,13 @@ function UserPage({
                                                     ) : (
                                                         <ListIcon as={BellIcon} color="orange.500" />
                                                     );
+                                                const Amount =
+                                                    item.meta.type === "checked" ? (
+                                                        <span>
+                                                            : {item.amount.value}
+                                                            <ListIcon as={ChevronUpIcon} color="green.500" />
+                                                        </span>
+                                                    ) : null;
                                                 return (
                                                     <ListItem key={item.date}>
                                                         <Flex alignItems={"baseline"}>
@@ -172,8 +179,7 @@ function UserPage({
                                                                 >
                                                                     {item.to}
                                                                 </Link>
-                                                                : {item.amount.value}
-                                                                <ListIcon as={ChevronUpIcon} color="green.500" />
+                                                                {Amount}
                                                             </Box>
                                                             <Spacer />
                                                             <Box fontSize={"small"} textAlign={"left"}>
@@ -229,7 +235,7 @@ export async function getStaticProps({ params }: { params: { userId: string } })
         // Next.js will attempt to re-generate the page:
         // - When a request comes in
         // - At most once every second
-        revalidate: 120 // In seconds
+        revalidate: 60 // In seconds
     };
 }
 

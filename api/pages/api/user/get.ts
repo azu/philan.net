@@ -19,7 +19,8 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             isLogin: true,
             id: user.id,
             name: user.name,
-            avatarUrl: user.avatarUrl
+            avatarUrl: user.avatarUrl,
+            spreadsheetUrl: `https://docs.google.com/spreadsheets/d/${user.spreadsheetId}`
         });
     });
 export default handler;

@@ -22,7 +22,7 @@ import {
     useRadioGroup
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
-import { AddRequestBody } from "../api/spreadsheet/api-types";
+import { AddRequestBody, AddResponseBody } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
 import { UseRadioProps } from "@chakra-ui/radio/dist/types/use-radio";
@@ -146,9 +146,10 @@ export default function Create() {
                 }
                 return res.text().then((text) => Promise.reject(new Error(text)));
             })
-            .then((json) => {
+            .then((json: AddResponseBody) => {
                 setError(null);
-                window.location.href = json.pageURL;
+                const query = new URLSearchParams([["id", json.userId]]);
+                window.location.href = "/philan/added?" + query.toString();
             })
             .catch((error) => {
                 setError(error);

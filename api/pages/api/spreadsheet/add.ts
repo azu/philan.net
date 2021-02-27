@@ -94,9 +94,9 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
                 spreadsheetId: user.spreadsheetId
             }
         );
-        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
         res.json({
-            pageURL: `${HOST}/user/${user.id}`
+            ok: true,
+            userId: user.id
         });
     });
 

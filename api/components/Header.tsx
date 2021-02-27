@@ -11,7 +11,11 @@ import {
     useColorModeValue,
     useDisclosure,
     useUpdateEffect,
-    Avatar
+    Avatar,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList
 } from "@chakra-ui/react";
 import { useViewportScroll } from "framer-motion";
 import NextLink from "next/link";
@@ -19,7 +23,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { RiAddFill } from "react-icons/ri";
-import { User } from "../domain/User";
+import { GetUserResponseBody } from "../pages/api/user/api-types";
 
 const GithubIcon = (props: any) => (
     <svg viewBox="0 0 20 20" {...props}>
@@ -80,7 +84,7 @@ function HeaderContent() {
         mobileNavBtnRef.current?.focus();
     }, [mobileNav.isOpen]);
     const [loginState, setLoginState] = useState<"login" | "loading" | "logout">("loading");
-    const [loginUser, setLoginUser] = useState<null | Partial<User>>(null);
+    const [loginUser, setLoginUser] = useState<null | GetUserResponseBody>(null);
     const AddNewRecord = useCallback(() => {
         window.location.href = "/philan/add";
     }, []);
@@ -101,11 +105,7 @@ function HeaderContent() {
             .then((json) => {
                 if (json.isLogin) {
                     setLoginState("login");
-                    setLoginUser({
-                        id: json.id,
-                        name: json.name,
-                        avatarUrl: json.avatarUrl
-                    });
+                    setLoginUser(json);
                 } else {
                     setLoginState("logout");
                 }
@@ -140,10 +140,21 @@ function HeaderContent() {
         ) : null;
     const myPageLink =
         loginState !== "loading" ? (
-            loginState === "login" && loginUser ? (
-                <Link href={`/user/${loginUser.id}`}>
-                    <Avatar size="sm" name={loginUser.name} src={loginUser.avatarUrl} />
-                </Link>
+            loginState === "login" && loginUser?.isLogin ? (
+                <Menu>
+                    <MenuButton
+                        as={IconButton}
+                        aria-label="Options"
+                        icon={<Avatar size="sm" name={loginUser.name} src={loginUser.avatarUrl} />}
+                        backgroundColor={"transparent"}
+                    />
+                    <MenuList>
+                        <MenuItem onClick={() => (location.href = `/user/${loginUser.id}`)}>Open My Page</MenuItem>
+                        <MenuItem onClick={() => window.open(loginUser.spreadsheetUrl, "_blank")}>
+                            Open SpreadSheet
+                        </MenuItem>
+                    </MenuList>
+                </Menu>
             ) : null
         ) : null;
     return (

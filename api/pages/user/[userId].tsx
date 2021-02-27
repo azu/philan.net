@@ -79,6 +79,10 @@ function UserPage({
                 <Container>
                     <Box padding={"2"}>
                         {response.map((item) => {
+                            const balancePercent =
+                                item.stats.used.raw < item.stats.budget.raw
+                                    ? 100 - item.stats.used.raw / item.stats.budget.raw
+                                    : 0;
                             return (
                                 <div key={item.year}>
                                     <Box maxW="32rem" padding={2}>
@@ -100,9 +104,7 @@ function UserPage({
                                         <Stat>
                                             <StatLabel>残高</StatLabel>
                                             <StatNumber>{item.stats.balance.value}</StatNumber>
-                                            <StatHelpText>
-                                                {100 - item.stats.used.raw / item.stats.budget.raw}%
-                                            </StatHelpText>
+                                            <StatHelpText>{balancePercent}%</StatHelpText>
                                         </Stat>
                                     </StatGroup>
                                     <List>

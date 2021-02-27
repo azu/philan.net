@@ -16,6 +16,14 @@ This application is based on Cloudflare Workers + Next.js(Vercel).
 
 - Next.js → Cloudflare Workers →　Next.js API 
 
+## Permission
+
+次の目的のために、それぞれのパーミッションをしていている。
+
+- SpreadSheetの読み書き: "https://www.googleapis.com/auth/spreadsheets"
+- SpreadSheetファイルの作成: "https://www.googleapis.com/auth/drive"
+- ユーザーID: "openid"
+- ユーザーアバター画像: "profile"
 
 ## KV 
 

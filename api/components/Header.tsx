@@ -10,7 +10,8 @@ import {
     useColorMode,
     useColorModeValue,
     useDisclosure,
-    useUpdateEffect
+    useUpdateEffect,
+    Avatar
 } from "@chakra-ui/react";
 import { useViewportScroll } from "framer-motion";
 import NextLink from "next/link";
@@ -18,6 +19,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
 import { RiAddFill } from "react-icons/ri";
+import { User } from "../domain/User";
 
 const GithubIcon = (props: any) => (
     <svg viewBox="0 0 20 20" {...props}>
@@ -77,8 +79,8 @@ function HeaderContent() {
     useUpdateEffect(() => {
         mobileNavBtnRef.current?.focus();
     }, [mobileNav.isOpen]);
-
     const [loginState, setLoginState] = useState<"login" | "loading" | "logout">("loading");
+    const [loginUser, setLoginUser] = useState<null | Partial<User>>(null);
     const AddNewRecord = useCallback(() => {
         window.location.href = "/philan/add";
     }, []);
@@ -97,8 +99,13 @@ function HeaderContent() {
         fetch("/api/user/get")
             .then((res) => res.json())
             .then((json) => {
-                if (json.login) {
+                if (json.isLogin) {
                     setLoginState("login");
+                    setLoginUser({
+                        id: json.id,
+                        name: json.name,
+                        avatarUrl: json.avatarUrl
+                    });
                 } else {
                     setLoginState("logout");
                 }
@@ -131,6 +138,14 @@ function HeaderContent() {
                 />
             ) : null
         ) : null;
+    const myPageLink =
+        loginState !== "loading" ? (
+            loginState === "login" && loginUser ? (
+                <Link href={`/user/${loginUser.id}`}>
+                    <Avatar size="sm" name={loginUser.name} src={loginUser.avatarUrl} />
+                </Link>
+            ) : null
+        ) : null;
     return (
         <>
             <Flex w="100%" h="100%" px="6" align="center" justify="space-between">
@@ -146,6 +161,7 @@ function HeaderContent() {
                     <HStack paddingRight="5" spacing="5" display={{ base: "flex" }}>
                         {LogInOut}
                         {addNewDonation}
+                        {myPageLink}
                     </HStack>
                     <HStack spacing="5" display={{ base: "none", md: "flex" }}>
                         <Link

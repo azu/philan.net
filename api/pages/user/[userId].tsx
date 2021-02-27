@@ -1,6 +1,5 @@
 import {
     Box,
-    chakra,
     Container,
     Flex,
     Heading,
@@ -15,8 +14,8 @@ import {
     StatLabel,
     StatNumber,
     Text,
-    Icon,
-    useColorModeValue
+    useColorModeValue,
+    Avatar
 } from "@chakra-ui/react";
 import { Header } from "../../components/Header";
 import { CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
@@ -27,7 +26,6 @@ import { getSpreadSheet } from "../api/spreadsheet/get";
 import { createUserKvs } from "../../api-utils/userKvs";
 import Head from "next/head";
 import { createMarkdown } from "safe-marked";
-import { BiDonateHeart } from "react-icons/bi";
 
 // const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
 
@@ -35,10 +33,12 @@ function UserPage({
     response,
     // userId,
     userName,
+    userAvatarUrl,
     README
 }: {
     README: string;
     userName: string;
+    userAvatarUrl?: string;
     userId: string;
     response: GetResponseBody;
 }) {
@@ -54,21 +54,16 @@ function UserPage({
                 <Box as="section" pt={{ base: "10rem", md: "12rem" }} pb={{ base: "0", md: "1rem" }}>
                     <Container>
                         <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
-                            <chakra.h1
-                                maxW="16ch"
-                                mx="auto"
-                                fontSize={{ base: "2.25rem", sm: "3rem", lg: "4rem" }}
-                                fontFamily="heading"
-                                letterSpacing="tighter"
-                                fontWeight="extrabold"
-                                marginBottom="16px"
-                                lineHeight="1.2"
-                            >
-                                <Box as="span" color={useColorModeValue("teal.500", "teal.300")}>
-                                    <Icon as={BiDonateHeart} />
-                                    {userName}
+                            <Flex paddingY={4}>
+                                <Box>
+                                    <Avatar size="xl" name={userName} src={userAvatarUrl} />
                                 </Box>
-                            </chakra.h1>
+                                <Box paddingX={4}>
+                                    <Heading as="h1" size="xl" mt="1em" mb="0.5em">
+                                        {userName}
+                                    </Heading>
+                                </Box>
+                            </Flex>
                             <Box maxW="32rem">
                                 <div
                                     dangerouslySetInnerHTML={{
@@ -181,6 +176,7 @@ export async function getStaticProps({ params }: { params: { userId: string } })
         props: {
             userName: user.name,
             userId: user.id,
+            userAvatarUrl: user.avatarUrl,
             response: res,
             README: markdown(res[0].README)
         },

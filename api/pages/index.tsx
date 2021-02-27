@@ -20,7 +20,7 @@ import {
     VStack
 } from "@chakra-ui/react";
 import React from "react";
-import { ArrowForwardIcon, ArrowRightIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, ArrowRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdAccessibility, MdGrain, MdPalette } from "react-icons/md";
 import NextLink from "next/link";
 import { Header } from "../components/Header";
@@ -50,7 +50,7 @@ const IndexPage = (props: { users: string[] }) => {
             </Head>
             <Header />
             <Box mb={20}>
-                <Box padding={"2"}>
+                <Box>
                     <Box as="section" pt={{ base: "10rem", md: "12rem" }} pb={{ base: "0", md: "5rem" }}>
                         <Container>
                             <Box textAlign="center">
@@ -98,7 +98,17 @@ const IndexPage = (props: { users: string[] }) => {
                                     >
                                         <AlertIcon />
                                         <Text opacity={0.7} fontSize={{ base: "s" }}>
-                                            SpreadSheetにデータを記録するため、Googleアカウントが必要です
+                                            SpreadSheetにデータを記録するため、Googleアカウントが必要です。
+                                            必要なパーミッションの解説は
+                                            <Link
+                                                color="teal.500"
+                                                isExternal={true}
+                                                href={"https://github.com/azu/philan.net#permission"}
+                                            >
+                                                README
+                                                <ExternalLinkIcon verticalAlign={"baseline"} mx="2px" />
+                                            </Link>
+                                            を参照してください。
                                         </Text>
                                     </Alert>
                                 </VStack>
@@ -106,7 +116,7 @@ const IndexPage = (props: { users: string[] }) => {
                         </Container>
                     </Box>
                 </Box>
-                <Box padding={"8"}>
+                <Box>
                     <Container maxW="1280px">
                         <Box textAlign="center">
                             <chakra.h1
@@ -124,7 +134,7 @@ const IndexPage = (props: { users: string[] }) => {
                                 </Box>
                             </chakra.h1>
                         </Box>
-                        <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={4} padding={10}>
+                        <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={4} padding={4}>
                             <Feature icon={MdAccessibility} title="寄付の予算">
                                 寄付をする年間の予算を決定できます。
                                 <br />

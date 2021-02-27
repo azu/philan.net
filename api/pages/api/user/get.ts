@@ -12,11 +12,14 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         const user = await userKVS.findByGoogleId(req.session.get("googleUserId"));
         if (!user) {
             return res.send({
-                login: false
+                isLogin: false
             });
         }
         res.json({
-            login: true
+            isLogin: true,
+            id: user.id,
+            name: user.name,
+            avatarUrl: user.avatarUrl
         });
     });
 export default handler;

@@ -41,15 +41,17 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         req.session.set("googleUserId", googleId);
         const user = await kvs.findByGoogleId(googleId);
         if (!user) {
-            // redirect /user/create
+            // redirect /philan/create
             req.session.set("tempCredentials", token.tokens as UserCredentials);
             req.session.unset("authState");
             await req.session.save();
             res.redirect("/philan/create");
         } else {
-            // redirect /editor
+            // redirect /user/{id}
+            const picture = payload.getPayload()?.["picture"];
             await kvs.updateUser(googleId, {
                 ...user,
+                avatarUrl: picture,
                 credentials: token.tokens as UserCredentials
             });
             await req.session.save();

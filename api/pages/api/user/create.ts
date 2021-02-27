@@ -22,6 +22,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         if (!userId) {
             throw new Error("Not found userId");
         }
+        const picture = verifiedIdTokenResponse.getPayload()?.["picture"];
         // check DB
         const kvs = createUserKvs();
         const oldUser = await kvs.findByGoogleId(id);
@@ -44,6 +45,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             id,
             name,
             credentials,
+            avatarUrl: picture,
             spreadsheetId: spreadSheet.data.spreadsheetId
         });
         // remove temporary

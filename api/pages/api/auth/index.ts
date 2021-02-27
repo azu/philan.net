@@ -23,7 +23,8 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             scope: [
                 "https://www.googleapis.com/auth/spreadsheets",
                 "https://www.googleapis.com/auth/drive", // require to create sheet
-                "openid" // id_token
+                "openid", // id_token
+                "profile" // aviator, default name, default id
             ],
             state: uuid
         });

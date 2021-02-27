@@ -13,7 +13,6 @@ import {
     StatHelpText,
     StatLabel,
     StatNumber,
-    Text,
     useColorModeValue,
     Avatar
 } from "@chakra-ui/react";
@@ -26,8 +25,33 @@ import { getSpreadSheet } from "../api/spreadsheet/get";
 import { createUserKvs } from "../../api-utils/userKvs";
 import Head from "next/head";
 import { createMarkdown } from "safe-marked";
-
 // const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+const markdown = createMarkdown();
+const Summarize = (props: { children: string }) => {
+    const lines = props.children.split(/\n/);
+    if (lines.length <= 1) {
+        return (
+            <div
+                className="UserContent"
+                dangerouslySetInnerHTML={{
+                    __html: markdown(props.children)
+                }}
+            />
+        );
+    }
+    const firstLine = lines[0] ?? "";
+    const restLines = lines.slice(1).join("\n");
+    return (
+        <details className="UserContent">
+            <summary>{firstLine}</summary>
+            <div
+                dangerouslySetInnerHTML={{
+                    __html: markdown(restLines)
+                }}
+            />
+        </details>
+    );
+};
 
 function UserPage({
     response,
@@ -66,6 +90,7 @@ function UserPage({
                             </Flex>
                             <Box maxW="32rem">
                                 <div
+                                    className={"UserContent"}
                                     dangerouslySetInnerHTML={{
                                         __html: README
                                     }}
@@ -138,9 +163,9 @@ function UserPage({
                                                                 </time>
                                                             </Box>
                                                         </Flex>
-                                                        <Text color={useColorModeValue("gray.500", "gray.300")}>
-                                                            {item.memo}
-                                                        </Text>
+                                                        <Box color={useColorModeValue("gray.500", "gray.300")}>
+                                                            <Summarize>{item.memo}</Summarize>
+                                                        </Box>
                                                     </ListItem>
                                                 );
                                             })}

@@ -1,4 +1,4 @@
-import { Box, chakra, Container, Link, List, ListItem, Spinner, Text, UnorderedList } from "@chakra-ui/react";
+import { Box, chakra, Container, Link, ListItem, Spinner, Text, UnorderedList } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import { Header } from "../../components/Header";

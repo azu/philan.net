@@ -2,11 +2,11 @@ import { NextApiResponse } from "next";
 import { google } from "googleapis";
 import { validateAddRequestBody } from "./api-types.validator";
 import nextConnect from "next-connect";
-import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-session";
-import { createUserKvs } from "../../../api-utils/userKvs";
+import { withSession } from "../../../api-utils/with-session";
 import { createOAuthClient } from "../../../api-utils/create-OAuth";
 import { UserCredentials } from "../../../domain/User";
 import dayjs from "dayjs";
+import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 
 const sheets = google.sheets("v4");
 
@@ -83,16 +83,12 @@ export const addItem = async (
         }
     });
 };
-const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
+const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
+    .use(requireLogin())
     .post(async (req, res) => {
         const { amount, memo, to, url } = validateAddRequestBody(req.body);
-
-        const userKVS = createUserKvs();
-        const user = await userKVS.findByGoogleId(req.session.get("googleUserId"));
-        if (!user) {
-            throw new Error("No user");
-        }
+        const user = req.user;
         await addItem(
             { amount, memo, to, url },
             {

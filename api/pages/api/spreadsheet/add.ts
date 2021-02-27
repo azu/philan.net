@@ -7,21 +7,12 @@ import { createOAuthClient } from "../../../api-utils/create-OAuth";
 import { UserCredentials } from "../../../domain/User";
 import dayjs from "dayjs";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
+import { AddRequestBody } from "./api-types";
 
 const sheets = google.sheets("v4");
 
 export const addItem = async (
-    {
-        amount,
-        memo,
-        to,
-        url
-    }: {
-        amount: number;
-        memo: string;
-        to: string;
-        url: string;
-    },
+    item: AddRequestBody,
     meta: {
         spreadsheetId: string;
         credentials: UserCredentials;
@@ -56,7 +47,14 @@ export const addItem = async (
                         fields: "*",
                         rows: [
                             {
-                                values: [nowDate, to, amount, url, memo].map((v) => {
+                                values: [
+                                    nowDate,
+                                    item.to,
+                                    item.amount,
+                                    item.url,
+                                    item.memo,
+                                    JSON.stringify(item.meta ?? {})
+                                ].map((v) => {
                                     if (typeof v === "number") {
                                         return {
                                             userEnteredFormat: {
@@ -87,10 +85,10 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
     .use(requireLogin())
     .post(async (req, res) => {
-        const { amount, memo, to, url } = validateAddRequestBody(req.body);
+        const { amount, memo, to, url, meta } = validateAddRequestBody(req.body);
         const user = req.user;
         await addItem(
-            { amount, memo, to, url },
+            { amount, memo, to, url, meta },
             {
                 credentials: user.credentials,
                 spreadsheetId: user.spreadsheetId

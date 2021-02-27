@@ -1,4 +1,10 @@
 import {
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
+    Avatar,
     Box,
     Container,
     Flex,
@@ -13,11 +19,10 @@ import {
     StatHelpText,
     StatLabel,
     StatNumber,
-    useColorModeValue,
-    Avatar
+    useColorModeValue
 } from "@chakra-ui/react";
 import { Header } from "../../components/Header";
-import { CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import React from "react";
 import type { GetResponseBody } from "../api/spreadsheet/api-types";
@@ -42,14 +47,22 @@ const Summarize = (props: { children: string }) => {
     const firstLine = lines[0] ?? "";
     const restLines = lines.slice(1).join("\n");
     return (
-        <details className="UserContent">
-            <summary>{firstLine}</summary>
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: markdown(restLines)
-                }}
-            />
-        </details>
+        <Accordion className="UserContent" allowToggle>
+            <AccordionItem>
+                <AccordionButton>
+                    <Box flex="1" textAlign="left">
+                        {firstLine}
+                    </Box>
+                    <AccordionIcon />
+                </AccordionButton>
+                <AccordionPanel
+                    pb={4}
+                    dangerouslySetInnerHTML={{
+                        __html: markdown(restLines)
+                    }}
+                ></AccordionPanel>
+            </AccordionItem>
+        </Accordion>
     );
 };
 
@@ -140,11 +153,17 @@ function UserPage({
                                             })
                                             .map((item) => {
                                                 const safeUrl = /https?:/.test(item.url) ? item.url : "";
+                                                const Icon =
+                                                    item.meta.type === "checked" ? (
+                                                        <ListIcon as={CheckCircleIcon} color="green.500" />
+                                                    ) : (
+                                                        <ListIcon as={BellIcon} color="orange.500" />
+                                                    );
                                                 return (
                                                     <ListItem key={item.date}>
                                                         <Flex alignItems={"baseline"}>
                                                             <Box padding="2">
-                                                                <ListIcon as={CheckCircleIcon} color="green.500" />
+                                                                {Icon}
                                                                 <Link
                                                                     href={safeUrl}
                                                                     borderBottom={"1px"}

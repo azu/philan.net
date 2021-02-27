@@ -61,6 +61,7 @@ export const getSpreadSheet = async ({
                 })
                 ?.map((row) => {
                     const values = row.values;
+                    const meta = JSON.parse(values?.[5]?.userEnteredValue?.stringValue ?? "{}");
                     return {
                         date: values?.[0].userEnteredValue?.stringValue!,
                         to: values?.[1].userEnteredValue?.stringValue!,
@@ -69,7 +70,8 @@ export const getSpreadSheet = async ({
                             value: values?.[2]?.formattedValue!
                         },
                         url: values?.[3].userEnteredValue?.stringValue!,
-                        memo: values?.[4].userEnteredValue?.stringValue ?? ""
+                        memo: values?.[4].userEnteredValue?.stringValue ?? "",
+                        meta: meta
                     };
                 })
         };

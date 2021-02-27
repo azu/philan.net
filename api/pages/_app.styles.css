@@ -3,3 +3,7 @@
     border-bottom: 1px solid;
     border-color: #90cdf4;
 }
+
+.UserContent li {
+    margin-left: 1em;
+}

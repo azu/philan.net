@@ -61,13 +61,30 @@ const SCHEMA = {
                 },
                 "memo": {
                     "type": "string"
+                },
+                "meta": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "checking",
+                                "checked"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "additionalProperties": false
                 }
             },
             "required": [
                 "to",
                 "amount",
                 "url",
-                "memo"
+                "memo",
+                "meta"
             ],
             "additionalProperties": false
         },
@@ -160,45 +177,7 @@ const SCHEMA = {
                     "items": {
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "properties": {
-                                "date": {
-                                    "type": "string"
-                                },
-                                "to": {
-                                    "type": "string"
-                                },
-                                "amount": {
-                                    "type": "object",
-                                    "properties": {
-                                        "raw": {
-                                            "type": "number"
-                                        },
-                                        "value": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": [
-                                        "raw",
-                                        "value"
-                                    ],
-                                    "additionalProperties": false
-                                },
-                                "url": {
-                                    "type": "string"
-                                },
-                                "memo": {
-                                    "type": "string"
-                                }
-                            },
-                            "required": [
-                                "date",
-                                "to",
-                                "amount",
-                                "url",
-                                "memo"
-                            ],
-                            "additionalProperties": false
+                            "$ref": "#/definitions/RecordItem"
                         }
                     }
                 },
@@ -210,6 +189,51 @@ const SCHEMA = {
                 ],
                 "additionalProperties": false
             }
+        },
+        "RecordItem": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "number"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "checking",
+                                "checked"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "date",
+                "to",
+                "amount",
+                "url",
+                "memo",
+                "meta"
+            ],
+            "additionalProperties": false
         }
     }
 };

@@ -6,6 +6,7 @@ import { validateCreateUserRequestBody } from "../user/api-types.validator";
 import { createOAuthClient } from "../../../api-utils/create-OAuth";
 import { UserCredentials } from "../../../domain/User";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
+import dayjs from "dayjs";
 
 type Schema$RowData = sheets_v4.Schema$RowData;
 type Schema$CellData = sheets_v4.Schema$CellData;
@@ -27,7 +28,7 @@ export const createNewSheet = async (
         // Count(A1:A) avoid curricular dependencies
         [budget, "=SUM(OFFSET(C3,1,0,ROWS(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,ROWS(A1:A)))"],
         // TODO: monthly?,
-        ["Date", "To", "Amount", "URL", "Memo"]
+        ["Date", "To", "Amount", "URL", "Memo", "Meta"]
     ] as (string | number)[][];
     const createCell = (cell: string | number): Schema$CellData => {
         if (typeof cell === "number") {
@@ -72,6 +73,7 @@ export const createNewSheet = async (
             })
         };
     });
+    const CURRENT_YEAR = dayjs().format("YYYY");
     return sheets.spreadsheets.create({
         oauth_token: token,
         requestBody: {
@@ -86,7 +88,7 @@ export const createNewSheet = async (
             sheets: [
                 {
                     properties: {
-                        title: "2021",
+                        title: CURRENT_YEAR,
                         gridProperties: {
                             // fixed
                             frozenRowCount: 3

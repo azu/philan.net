@@ -1,4 +1,6 @@
 // POST /create
+import { RecordItem } from "./types";
+
 export type CreateRequestQuery = {
     token: string;
 };
@@ -10,12 +12,7 @@ export type AddRequestQuery = {
     token: string;
     spreadsheetId: string;
 };
-export type AddRequestBody = {
-    to: string;
-    amount: number;
-    url: string;
-    memo: string;
-};
+export type AddRequestBody = Omit<RecordItem, "date">;
 // GET /get
 export type GetRequestQuery = {
     token: string;
@@ -47,5 +44,6 @@ export type GetResponseBody = {
         };
         url: string;
         memo: string;
+        meta: RecordItem["meta"];
     }[];
 }[];

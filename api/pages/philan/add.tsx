@@ -9,6 +9,7 @@ import {
     FormControl,
     FormHelperText,
     FormLabel,
+    HStack,
     Input,
     NumberDecrementStepper,
     NumberIncrementStepper,
@@ -16,12 +17,60 @@ import {
     NumberInputField,
     NumberInputStepper,
     Text,
-    Textarea
+    Textarea,
+    useRadio,
+    useRadioGroup
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { AddRequestBody } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
+import { UseRadioProps } from "@chakra-ui/radio/dist/types/use-radio";
+
+const options = [
+    {
+        value: "checked",
+        label: "寄付済み"
+    },
+    {
+        value: "checking",
+        label: "検討中"
+    }
+] as const;
+
+type StateType = typeof options[number]["value"];
+
+function RadioCard(props: UseRadioProps & { children: string }) {
+    const { getInputProps, getCheckboxProps } = useRadio(props);
+
+    const input = getInputProps();
+    const checkbox = getCheckboxProps();
+
+    return (
+        <Box as="label">
+            <input {...input} />
+            <Box
+                {...checkbox}
+                cursor="pointer"
+                borderWidth="1px"
+                borderRadius="md"
+                boxShadow="md"
+                _checked={{
+                    bg: "teal.600",
+                    color: "white",
+                    borderColor: "teal.600"
+                }}
+                _focus={{
+                    boxShadow: "outline"
+                }}
+                px={5}
+                py={3}
+            >
+                {props.children}
+            </Box>
+        </Box>
+    );
+}
 
 function userForm() {
     const [to, setTo] = useState<string>("");
@@ -29,6 +78,7 @@ function userForm() {
     const [amount, setAmount] = useState<number>(1000);
     const [memo, setMemo] = useState<string>("");
     const [valid, setValid] = useState<boolean>(false);
+    const [type, setType] = useState<StateType>("checked");
     useEffect(() => {
         const validURL = url.length > 0 ? url.startsWith("http") : true;
         const ok = to.length > 0 && validURL && amount > 0;
@@ -42,6 +92,9 @@ function userForm() {
             updateUrl: (event: SyntheticEvent<HTMLInputElement>) => {
                 setUrl(event.currentTarget.value);
             },
+            updateType: (type: StateType) => {
+                setType(type);
+            },
             updateAmount: (_valueAsString: string, valueAsNumber: number) => {
                 setAmount(valueAsNumber);
             },
@@ -49,7 +102,7 @@ function userForm() {
                 setMemo(event.currentTarget.value);
             }
         }),
-        [to, url, amount, memo]
+        [to, url, amount, memo, type]
     );
 
     return {
@@ -57,22 +110,26 @@ function userForm() {
         url,
         amount,
         memo,
+        type,
         valid,
         handlers
     };
 }
 
 export default function Create() {
-    const { url, amount, memo, to, valid, handlers } = userForm();
+    const { url, amount, memo, to, type, valid, handlers } = userForm();
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);
     const submit = () => {
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
         const body: AddRequestBody = {
             url,
-            amount,
+            amount: type === "checked" ? amount : 0,
             memo,
-            to
+            to,
+            meta: {
+                type: type
+            }
         };
         setLoading(true);
         fetch(HOST + "/api/spreadsheet/add", {
@@ -100,6 +157,24 @@ export default function Create() {
                 setLoading(false);
             });
     };
+    const { getRootProps, getRadioProps } = useRadioGroup({
+        name: "type",
+        defaultValue: type,
+        onChange: handlers.updateType
+    });
+    const group = getRootProps();
+    const RadioGroup = (
+        <HStack {...group}>
+            {options.map(({ label, value }) => {
+                const radio = getRadioProps({ value });
+                return (
+                    <RadioCard key={value} {...radio}>
+                        {label}
+                    </RadioCard>
+                );
+            })}
+        </HStack>
+    );
     const errorMessage = error ? (
         <Alert status="error">
             <AlertIcon />
@@ -147,20 +222,35 @@ export default function Create() {
                                 <Input value={url} onChange={handlers.updateUrl} />
                                 <FormHelperText>寄付先に関連するhttpから始まるURLを入力してください</FormHelperText>
                             </FormControl>
-                            <FormControl id="amount" isRequired>
-                                <FormLabel>寄付額</FormLabel>
-                                <NumberInput value={amount} max={100000000000} min={1} onChange={handlers.updateAmount}>
-                                    <NumberInputField />
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                            </FormControl>
+                            <Box border="1px" borderColor="gray.200" borderRadius={8}>
+                                {RadioGroup}
+                                <FormControl
+                                    id="amount"
+                                    isRequired={type === "checked"}
+                                    isDisabled={type === "checking"}
+                                >
+                                    <FormLabel>寄付額</FormLabel>
+                                    <NumberInput
+                                        value={amount}
+                                        max={100000000000}
+                                        min={1}
+                                        onChange={handlers.updateAmount}
+                                    >
+                                        <NumberInputField />
+                                        {type === "checked" ? (
+                                            <NumberInputStepper>
+                                                <NumberIncrementStepper />
+                                                <NumberDecrementStepper />
+                                            </NumberInputStepper>
+                                        ) : null}
+                                    </NumberInput>
+                                    <FormHelperText>寄付済みの場合は寄付した金額を入力してください</FormHelperText>
+                                </FormControl>
+                            </Box>
                             <FormControl id="memo">
                                 <FormLabel>Memo:</FormLabel>
                                 <FormHelperText>メモ欄(Markdown)</FormHelperText>
-                                <Textarea value={memo} onChange={handlers.updateMemo} />
+                                <Textarea height={"10em"} value={memo} onChange={handlers.updateMemo} />
                             </FormControl>
                             <Button
                                 mt={4}

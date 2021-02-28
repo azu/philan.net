@@ -120,7 +120,7 @@ function HeaderContent() {
             <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<Avatar size="sm" name={user.name} src={user.avatarUrl} />}
+                icon={<Avatar loading="lazy" size="sm" name={user.name} src={user.avatarUrl} />}
                 backgroundColor={"transparent"}
             />
             <MenuList>

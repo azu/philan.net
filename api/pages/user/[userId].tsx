@@ -93,7 +93,7 @@ function UserPage({
                         <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
                             <Flex paddingY={4}>
                                 <Box>
-                                    <Avatar size="xl" name={userName} src={userAvatarUrl} />
+                                    <Avatar loading="eager" size="xl" name={userName} src={userAvatarUrl} />
                                 </Box>
                                 <Box paddingX={4}>
                                     <Heading as="h1" size="xl" mt="1em" mb="0.5em">

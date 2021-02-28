@@ -2,12 +2,13 @@ export type CreateUserRequestBody = {
     id: string;
     name: string;
     budget: number;
+    defaultCurrency: string;
 };
 
 export type UpdateUserRequestBody = {
-    id: string;
     name: string;
     budget: number;
+    defaultCurrency: string;
 };
 
 export type UserResponseObject = {

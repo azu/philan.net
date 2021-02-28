@@ -9,7 +9,7 @@ import { createUserKvs } from "../../../api-utils/userKvs";
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .post(async (req, res) => {
-        const { id, name, budget } = validateCreateUserRequestBody(req.body);
+        const { id, name, budget, defaultCurrency } = validateCreateUserRequestBody(req.body);
         if (!req.session.get("tempCredentials")) {
             throw new Error("Authorize before create");
         }
@@ -45,6 +45,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             id,
             name,
             credentials,
+            defaultCurrency,
             avatarUrl: picture,
             spreadsheetId: spreadSheet.data.spreadsheetId
         });

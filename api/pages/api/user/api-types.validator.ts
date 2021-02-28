@@ -18,32 +18,36 @@ const SCHEMA = {
                 },
                 "budget": {
                     "type": "number"
+                },
+                "defaultCurrency": {
+                    "type": "string"
                 }
             },
             "required": [
                 "id",
                 "name",
-                "budget"
+                "budget",
+                "defaultCurrency"
             ],
             "additionalProperties": false
         },
         "UpdateUserRequestBody": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
                 },
                 "budget": {
                     "type": "number"
+                },
+                "defaultCurrency": {
+                    "type": "string"
                 }
             },
             "required": [
-                "id",
                 "name",
-                "budget"
+                "budget",
+                "defaultCurrency"
             ],
             "additionalProperties": false
         },

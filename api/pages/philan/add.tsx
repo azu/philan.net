@@ -82,15 +82,17 @@ function userForm(user: LoginUser | null) {
     const [memo, setMemo] = useState<string>("");
     const [valid, setValid] = useState<boolean>(false);
     const [type, setType] = useState<StateType>("checked");
-    const [currencyCode, setCurrencyCode] = useState<string>("JPY");
+    const [currency, setCurrencyCode] = useState<string>("JPY");
     useEffect(() => {
         const validURL = url.length > 0 ? url.startsWith("http") : true;
         const ok = to.length > 0 && validURL && amount > 0;
         setValid(ok);
+    }, [to, url, amount, memo, currency]);
+    useEffect(() => {
         if (user) {
             setCurrencyCode(user.defaultCurrency);
         }
-    }, [to, url, amount, memo, user]);
+    }, [user]);
     const handlers = useMemo(
         () => ({
             updateTo: (event: SyntheticEvent<HTMLInputElement>) => {
@@ -112,7 +114,7 @@ function userForm(user: LoginUser | null) {
                 setCurrencyCode(event.currentTarget.value);
             }
         }),
-        [to, url, amount, memo, type]
+        [to, url, amount, memo, type, currency]
     );
 
     return {
@@ -121,7 +123,7 @@ function userForm(user: LoginUser | null) {
         amount,
         memo,
         type,
-        currency: currencyCode,
+        currency,
         valid,
         handlers
     };
@@ -132,7 +134,7 @@ export default function Create() {
     const { url, amount, memo, to, type, currency, valid, handlers } = userForm(user);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);
-    console.log("currency", currency);
+    const [success, setSuccess] = useState<boolean>(false);
     const submit = useCallback(() => {
         if (!user) {
             return setError(new Error("require login"));
@@ -164,6 +166,7 @@ export default function Create() {
                 return res.text().then((text) => Promise.reject(new Error(text)));
             })
             .then(() => {
+                setSuccess(true);
                 setError(null);
                 const query = new URLSearchParams([["id", user.id]]);
                 window.location.href = "/philan/added?" + query.toString();
@@ -199,6 +202,14 @@ export default function Create() {
             <AlertTitle mr={2}>{error.message}</AlertTitle>
         </Alert>
     ) : null;
+    const successMessage =
+        !error && success ? (
+            <Alert status="success">
+                <AlertIcon />
+                <AlertTitle mr={2}>Success to update!</AlertTitle>
+            </Alert>
+        ) : null;
+
     return (
         <>
             <Head>
@@ -298,6 +309,7 @@ export default function Create() {
                                 Submit
                             </Button>
                             {errorMessage}
+                            {successMessage}
                         </Box>
                     </Container>
                 </Box>

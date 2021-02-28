@@ -1,33 +1,39 @@
 import {
     Alert,
-    AlertTitle,
     AlertIcon,
+    AlertTitle,
     Box,
     Button,
+    chakra,
     Container,
     FormControl,
     FormHelperText,
     FormLabel,
     Input,
+    Link,
     NumberDecrementStepper,
     NumberIncrementStepper,
     NumberInput,
     NumberInputField,
     NumberInputStepper,
-    chakra,
+    Select,
     Text
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import { Header } from "../../components/Header";
+import COUNTRY_CURRENCY from "country-to-currency";
+
+const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 
 function userForm() {
     const [id, setId] = useState<string>("");
     const [name, setName] = useState<string>("");
+    const [defaultCurrency, setDefaultCurrency] = useState<string>("JPY");
     const [budget, setBudget] = useState<number>(10000);
     const [valid, setValid] = useState<boolean>(false);
     useEffect(() => {
-        const ok = id.length > 0 && name.length > 0 && budget > 0;
+        const ok = id.length > 0 && name.length > 0 && budget > 0 && defaultCurrency.length === 3;
         setValid(ok);
     }, [id, name, budget]);
     const handlers = useMemo(
@@ -40,6 +46,9 @@ function userForm() {
             },
             updateBudget: (_valueAsString: string, valueAsNumber: number) => {
                 setBudget(valueAsNumber);
+            },
+            updateDefaultCurrency: (event: SyntheticEvent<HTMLSelectElement>) => {
+                setDefaultCurrency(event.currentTarget.value);
             }
         }),
         [id, name, budget]
@@ -49,13 +58,14 @@ function userForm() {
         id,
         name,
         budget,
+        defaultCurrency,
         valid,
         handlers
     };
 }
 
 export default function Create() {
-    const { id, name, valid, budget, handlers } = userForm();
+    const { id, name, valid, budget, defaultCurrency, handlers } = userForm();
     const [error, setError] = useState<Error | null>(null);
     const submit = () => {
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
@@ -69,7 +79,8 @@ export default function Create() {
             body: JSON.stringify({
                 id,
                 name,
-                budget
+                budget,
+                defaultCurrency
             })
         })
             .then((res) => {
@@ -145,6 +156,27 @@ export default function Create() {
                                     </NumberInputStepper>
                                 </NumberInput>
                                 <FormHelperText>今年の寄付の予算額を入力してください。</FormHelperText>
+                            </FormControl>
+                            <FormControl is={"defaultCurrency"} isRequired>
+                                <FormLabel>デフォルトの通貨</FormLabel>
+                                <Select value={defaultCurrency} onChange={handlers.updateDefaultCurrency}>
+                                    {CURRENCY_CODES.map((currencyCode, index) => {
+                                        return (
+                                            <option key={currencyCode + index} value={currencyCode}>
+                                                {currencyCode}
+                                            </option>
+                                        );
+                                    })}
+                                </Select>
+                                <FormHelperText>
+                                    金額を入力する際のデフォルトの通貨の単位を入力してください。
+                                    <br />
+                                    通貨コードは
+                                    <Link color="teal.500" href={"https://en.wikipedia.org/wiki/ISO_4217#Active_codes"}>
+                                        ISO 4217
+                                    </Link>
+                                    に基づきます。日本円はJPYです。
+                                </FormHelperText>
                             </FormControl>
                             <Button
                                 mt={4}

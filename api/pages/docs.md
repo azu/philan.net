@@ -24,4 +24,4 @@
 - [国税庁法人番号公表サイト](https://www.houjin-bangou.nta.go.jp/)
 - [国・都道府県公式公益法人行政総合情報サイト 公益法人information](https://www.koeki-info.go.jp/pictis-info/csa0001!show#prepage2)
 - [その寄付先は信用できる？怪しい？「寄付してはいけない」団体と、信頼できるNPOを見分ける5つのポイント | 寄付ナビ](https://kifunavi.jp/donation/confidence_5points/)
-
+- [非営利組織評価センター](https://jcne.or.jp/)

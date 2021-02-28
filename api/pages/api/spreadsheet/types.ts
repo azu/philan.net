@@ -5,14 +5,6 @@ export type RecordItem = {
     url: string;
     memo: string;
     meta: {
-        type: "checking" | "checked";
+        type: "checking" | "checked" | "not-money";
     };
 };
-export type RowLineTypes = [
-    string: "Date",
-    string: "To",
-    string: "Amount",
-    string: "URL",
-    string: "Memo",
-    object: "Meta"
-];

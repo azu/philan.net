@@ -10,15 +10,18 @@ export type UpdateUserRequestBody = {
     budget: number;
 };
 
+export type UserResponseObject = {
+    isLogin: true;
+    id: string;
+    name: string;
+    defaultCurrency: string;
+    avatarUrl?: string;
+    spreadsheetUrl: string;
+};
+
 //
 export type GetUserResponseBody =
-    | {
-          isLogin: true;
-          id: string;
-          name: string;
-          avatarUrl: string;
-          spreadsheetUrl: string;
-      }
+    | UserResponseObject
     | {
           isLogin: false;
       };

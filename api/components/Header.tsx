@@ -1,29 +1,28 @@
 import {
+    Avatar,
+    Box,
+    BoxProps,
     chakra,
     Flex,
-    BoxProps,
     HStack,
+    Icon,
     IconButton,
     Link,
-    Box,
-    Icon,
-    useColorMode,
-    useColorModeValue,
-    useDisclosure,
-    useUpdateEffect,
-    Avatar,
     Menu,
     MenuButton,
     MenuItem,
-    MenuList
+    MenuList,
+    useColorMode,
+    useColorModeValue,
+    useDisclosure,
+    useUpdateEffect
 } from "@chakra-ui/react";
 import { useViewportScroll } from "framer-motion";
 import NextLink from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
+import React, { useCallback } from "react";
+import { FaHeart, FaMoon, FaSun } from "react-icons/fa";
 import { RiAddFill } from "react-icons/ri";
-import { GetUserResponseBody } from "../pages/api/user/api-types";
+import { useLoginUser } from "./useLoginUser";
 
 const GithubIcon = (props: any) => (
     <svg viewBox="0 0 20 20" {...props}>
@@ -72,19 +71,18 @@ const SponsorButton = (props: BoxProps) => (
     </Box>
 );
 
+type HeaderProps = {};
+
 function HeaderContent() {
     const mobileNav = useDisclosure();
-
     const { toggleColorMode: toggleMode } = useColorMode();
     const text = useColorModeValue("dark", "light");
     const SwitchIcon = useColorModeValue(FaMoon, FaSun);
     const mobileNavBtnRef = React.useRef<HTMLButtonElement>();
-
+    const user = useLoginUser();
     useUpdateEffect(() => {
         mobileNavBtnRef.current?.focus();
     }, [mobileNav.isOpen]);
-    const [loginState, setLoginState] = useState<"login" | "loading" | "logout">("loading");
-    const [loginUser, setLoginUser] = useState<null | GetUserResponseBody>(null);
     const AddNewRecord = useCallback(() => {
         window.location.href = "/philan/add";
     }, []);
@@ -99,64 +97,38 @@ function HeaderContent() {
                 window.location.href = "/";
             });
     }, []);
-    useEffect(() => {
-        fetch("/api/user/get")
-            .then((res) => res.json())
-            .then((json) => {
-                if (json.isLogin) {
-                    setLoginState("login");
-                    setLoginUser(json);
-                } else {
-                    setLoginState("logout");
-                }
-            })
-            .catch(() => {
-                setLoginState("logout");
-            });
-    }, []);
-    const LogInOut =
-        loginState !== "loading" ? (
-            loginState === "login" ? (
-                <Link aria-label={"Logout from philan.net"} onClick={Logout}>
-                    Logout
-                </Link>
-            ) : (
-                <Link aria-label={"Login with Google"} href={"/api/auth"}>
-                    Login
-                </Link>
-            )
-        ) : null;
-    const addNewDonation =
-        loginState !== "loading" ? (
-            loginState === "login" ? (
-                <IconButton
-                    onClick={AddNewRecord}
-                    variant="outline"
-                    colorScheme="teal"
-                    aria-label="Add new donation record"
-                    icon={<RiAddFill />}
-                />
-            ) : null
-        ) : null;
-    const myPageLink =
-        loginState !== "loading" ? (
-            loginState === "login" && loginUser?.isLogin ? (
-                <Menu>
-                    <MenuButton
-                        as={IconButton}
-                        aria-label="Options"
-                        icon={<Avatar size="sm" name={loginUser.name} src={loginUser.avatarUrl} />}
-                        backgroundColor={"transparent"}
-                    />
-                    <MenuList>
-                        <MenuItem onClick={() => (location.href = `/user/${loginUser.id}`)}>Open My Page</MenuItem>
-                        <MenuItem onClick={() => window.open(loginUser.spreadsheetUrl, "_blank")}>
-                            Open SpreadSheet
-                        </MenuItem>
-                    </MenuList>
-                </Menu>
-            ) : null
-        ) : null;
+    const LogInOut = user ? (
+        <Link aria-label={"Logout from philan.net"} onClick={Logout}>
+            Logout
+        </Link>
+    ) : (
+        <Link aria-label={"Login with Google"} href={"/api/auth"}>
+            Login
+        </Link>
+    );
+    const addNewDonation = user ? (
+        <IconButton
+            onClick={AddNewRecord}
+            variant="outline"
+            colorScheme="teal"
+            aria-label="Add new donation record"
+            icon={<RiAddFill />}
+        />
+    ) : null;
+    const myPageLink = user ? (
+        <Menu>
+            <MenuButton
+                as={IconButton}
+                aria-label="Options"
+                icon={<Avatar size="sm" name={user.name} src={user.avatarUrl} />}
+                backgroundColor={"transparent"}
+            />
+            <MenuList>
+                <MenuItem onClick={() => (location.href = `/user/${user.id}`)}>Open My Page</MenuItem>
+                <MenuItem onClick={() => window.open(user.spreadsheetUrl, "_blank")}>Open SpreadSheet</MenuItem>
+            </MenuList>
+        </Menu>
+    ) : null;
     return (
         <>
             <Flex w="100%" h="100%" px="6" align="center" justify="space-between">
@@ -207,9 +179,9 @@ function HeaderContent() {
     );
 }
 
-export function Header(props: any) {
+export function Header(props: HeaderProps) {
     const bg = useColorModeValue("white", "gray.800");
-    const ref = React.useRef<HTMLHeadingElement>();
+    const ref = React.useRef<HTMLHeadingElement>(null);
     const [y, setY] = React.useState(0);
     const { height = 0 } = ref.current?.getBoundingClientRect() ?? {};
 
@@ -232,10 +204,9 @@ export function Header(props: any) {
             borderTop="6px solid"
             borderTopColor="teal.400"
             width="full"
-            {...props}
         >
             <chakra.div height="4.5rem" mx="auto" maxW="1200px">
-                <HeaderContent />
+                <HeaderContent {...props} />
             </chakra.div>
         </chakra.header>
     );

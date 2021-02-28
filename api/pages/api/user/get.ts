@@ -3,8 +3,9 @@ import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-
 import { NextApiResponse } from "next";
 import { createUserKvs } from "../../../api-utils/userKvs";
 import { logger } from "../../../api-utils/logger";
+import { GetUserResponseBody } from "./api-types";
 
-const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
+const handler = nextConnect<NextApiRequestWithSession, NextApiResponse<GetUserResponseBody>>()
     .use(withSession())
     .get(async (req, res) => {
         const userKVS = createUserKvs();
@@ -19,6 +20,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             isLogin: true,
             id: user.id,
             name: user.name,
+            defaultCurrency: user.defaultCurrency,
             avatarUrl: user.avatarUrl,
             spreadsheetUrl: `https://docs.google.com/spreadsheets/d/${user.spreadsheetId}`
         });

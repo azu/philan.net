@@ -46,6 +46,58 @@ const SCHEMA = {
                 "budget"
             ],
             "additionalProperties": false
+        },
+        "UserResponseObject": {
+            "type": "object",
+            "properties": {
+                "isLogin": {
+                    "type": "boolean",
+                    "const": true
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "defaultCurrency": {
+                    "type": "string"
+                },
+                "avatarUrl": {
+                    "type": "string"
+                },
+                "spreadsheetUrl": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "isLogin",
+                "id",
+                "name",
+                "defaultCurrency",
+                "spreadsheetUrl"
+            ],
+            "additionalProperties": false
+        },
+        "GetUserResponseBody": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/UserResponseObject"
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "isLogin": {
+                            "type": "boolean",
+                            "const": false
+                        }
+                    },
+                    "required": [
+                        "isLogin"
+                    ],
+                    "additionalProperties": false
+                }
+            ]
         }
     }
 };
@@ -77,5 +129,35 @@ export function validateUpdateUserRequestBody(payload: unknown): apiTypes.Update
 export function isUpdateUserRequestBody(payload: unknown): payload is apiTypes.UpdateUserRequestBody {
   /** Schema is defined in {@link SCHEMA.definitions.UpdateUserRequestBody } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/UpdateUserRequestBody" });
+  return ajvValidate(payload);
+}
+
+export function validateUserResponseObject(payload: unknown): apiTypes.UserResponseObject {
+  if (!isUserResponseObject(payload)) {
+  　const error = new Error('invalid payload: UserResponseObject');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isUserResponseObject(payload: unknown): payload is apiTypes.UserResponseObject {
+  /** Schema is defined in {@link SCHEMA.definitions.UserResponseObject } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/UserResponseObject" });
+  return ajvValidate(payload);
+}
+
+export function validateGetUserResponseBody(payload: unknown): apiTypes.GetUserResponseBody {
+  if (!isGetUserResponseBody(payload)) {
+  　const error = new Error('invalid payload: GetUserResponseBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isGetUserResponseBody(payload: unknown): payload is apiTypes.GetUserResponseBody {
+  /** Schema is defined in {@link SCHEMA.definitions.GetUserResponseBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetUserResponseBody" });
   return ajvValidate(payload);
 }

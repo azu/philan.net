@@ -6,27 +6,30 @@ import {
     Button,
     chakra,
     Container,
+    Flex,
     FormControl,
     FormHelperText,
     FormLabel,
     HStack,
     Input,
-    NumberDecrementStepper,
-    NumberIncrementStepper,
     NumberInput,
     NumberInputField,
-    NumberInputStepper,
+    Select,
     Text,
     Textarea,
+    Tooltip,
     useRadio,
     useRadioGroup
 } from "@chakra-ui/react";
-import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
-import { AddRequestBody, AddResponseBody } from "../api/spreadsheet/api-types";
+import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { AddRequestBody } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
 import { UseRadioProps } from "@chakra-ui/radio/dist/types/use-radio";
+import COUNTRY_CURRENCY from "country-to-currency";
+import { LoginUser, useLoginUser } from "../../components/useLoginUser";
 
+const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 const options = [
     {
         value: "checked",
@@ -72,18 +75,22 @@ function RadioCard(props: UseRadioProps & { children: string }) {
     );
 }
 
-function userForm() {
+function userForm(user: LoginUser | null) {
     const [to, setTo] = useState<string>("");
     const [url, setUrl] = useState<string>("https://");
     const [amount, setAmount] = useState<number>(1000);
     const [memo, setMemo] = useState<string>("");
     const [valid, setValid] = useState<boolean>(false);
     const [type, setType] = useState<StateType>("checked");
+    const [currencyCode, setCurrencyCode] = useState<string>("JPY");
     useEffect(() => {
         const validURL = url.length > 0 ? url.startsWith("http") : true;
         const ok = to.length > 0 && validURL && amount > 0;
         setValid(ok);
-    }, [to, url, amount, memo]);
+        if (user) {
+            setCurrencyCode(user.defaultCurrency);
+        }
+    }, [to, url, amount, memo, user]);
     const handlers = useMemo(
         () => ({
             updateTo: (event: SyntheticEvent<HTMLInputElement>) => {
@@ -100,6 +107,9 @@ function userForm() {
             },
             updateMemo: (event: SyntheticEvent<HTMLTextAreaElement>) => {
                 setMemo(event.currentTarget.value);
+            },
+            updateCurrency: (event: SyntheticEvent<HTMLSelectElement>) => {
+                setCurrencyCode(event.currentTarget.value);
             }
         }),
         [to, url, amount, memo, type]
@@ -111,22 +121,29 @@ function userForm() {
         amount,
         memo,
         type,
+        currency: currencyCode,
         valid,
         handlers
     };
 }
 
 export default function Create() {
-    const { url, amount, memo, to, type, valid, handlers } = userForm();
+    const user = useLoginUser();
+    const { url, amount, memo, to, type, currency, valid, handlers } = userForm(user);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);
-    const submit = () => {
+    console.log("currency", currency);
+    const submit = useCallback(() => {
+        if (!user) {
+            return setError(new Error("require login"));
+        }
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
         const body: AddRequestBody = {
             url,
             amount: type === "checked" ? amount : 0,
             memo,
             to,
+            currency,
             meta: {
                 type: type
             }
@@ -146,9 +163,9 @@ export default function Create() {
                 }
                 return res.text().then((text) => Promise.reject(new Error(text)));
             })
-            .then((json: AddResponseBody) => {
+            .then(() => {
                 setError(null);
-                const query = new URLSearchParams([["id", json.userId]]);
+                const query = new URLSearchParams([["id", user.id]]);
                 window.location.href = "/philan/added?" + query.toString();
             })
             .catch((error) => {
@@ -157,7 +174,7 @@ export default function Create() {
             .finally(() => {
                 setLoading(false);
             });
-    };
+    }, [url, amount, memo, to, currency]);
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: "type",
         defaultValue: type,
@@ -231,20 +248,37 @@ export default function Create() {
                                     isDisabled={type === "checking"}
                                 >
                                     <FormLabel>寄付額</FormLabel>
-                                    <NumberInput
-                                        value={amount}
-                                        max={100000000000}
-                                        min={1}
-                                        onChange={handlers.updateAmount}
-                                    >
-                                        <NumberInputField />
-                                        {type === "checked" ? (
-                                            <NumberInputStepper>
-                                                <NumberIncrementStepper />
-                                                <NumberDecrementStepper />
-                                            </NumberInputStepper>
-                                        ) : null}
-                                    </NumberInput>
+                                    <Flex>
+                                        <NumberInput
+                                            value={amount}
+                                            max={100000000000}
+                                            min={1}
+                                            onChange={handlers.updateAmount}
+                                            flex="1"
+                                        >
+                                            <NumberInputField />
+                                        </NumberInput>
+                                        {
+                                            <Tooltip
+                                                label="通貨コードはISO 4217に基づきます。日本円はJPYです"
+                                                fontSize="md"
+                                            >
+                                                <Select
+                                                    value={currency}
+                                                    width={"6em"}
+                                                    onChange={handlers.updateCurrency}
+                                                >
+                                                    {CURRENCY_CODES.map((currencyCode, index) => {
+                                                        return (
+                                                            <option key={currencyCode + index} value={currencyCode}>
+                                                                {currencyCode}
+                                                            </option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Tooltip>
+                                        }
+                                    </Flex>
                                     <FormHelperText>寄付済みの場合は寄付した金額を入力してください</FormHelperText>
                                 </FormControl>
                             </Box>

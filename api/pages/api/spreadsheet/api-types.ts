@@ -12,10 +12,11 @@ export type AddRequestQuery = {
     token: string;
     spreadsheetId: string;
 };
-export type AddRequestBody = Omit<RecordItem, "date">;
+export type AddRequestBody = Omit<RecordItem, "date"> & {
+    currency: string;
+};
 export type AddResponseBody = {
     ok: true;
-    userId: string;
 };
 // GET /get
 export type GetRequestQuery = {

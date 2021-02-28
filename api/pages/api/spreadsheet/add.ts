@@ -7,12 +7,17 @@ import { createOAuthClient } from "../../../api-utils/create-OAuth";
 import { UserCredentials } from "../../../domain/User";
 import dayjs from "dayjs";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
-import { AddRequestBody } from "./api-types";
+import { RecordItem } from "./types";
 
 const sheets = google.sheets("v4");
 
 export const addItem = async (
-    item: AddRequestBody,
+    item: Omit<RecordItem, "date"> & {
+        currency: {
+            from: string;
+            to: string;
+        };
+    },
     meta: {
         spreadsheetId: string;
         credentials: UserCredentials;
@@ -56,16 +61,33 @@ export const addItem = async (
                                     JSON.stringify(item.meta ?? {})
                                 ].map((v) => {
                                     if (typeof v === "number") {
-                                        return {
-                                            userEnteredFormat: {
-                                                numberFormat: {
-                                                    type: "CURRENCY"
+                                        const shouldTransformCurrency = item.currency.from !== item.currency.to;
+                                        if (shouldTransformCurrency) {
+                                            const date = dayjs(nowDate).format("YYYY/MM/DD");
+                                            // price * finance rate
+                                            const value = `= ${v} * index(GOOGLEFINANCE("CURRENCY:${item.currency.from}${item.currency.to}", "price", "${date}"), 2, 2)`;
+                                            return {
+                                                userEnteredFormat: {
+                                                    numberFormat: {
+                                                        type: "CURRENCY"
+                                                    }
+                                                },
+                                                userEnteredValue: {
+                                                    formulaValue: value
                                                 }
-                                            },
-                                            userEnteredValue: {
-                                                numberValue: v
-                                            }
-                                        };
+                                            };
+                                        } else {
+                                            return {
+                                                userEnteredFormat: {
+                                                    numberFormat: {
+                                                        type: "CURRENCY"
+                                                    }
+                                                },
+                                                userEnteredValue: {
+                                                    numberValue: v
+                                                }
+                                            };
+                                        }
                                     }
                                     return {
                                         userEnteredValue: {
@@ -85,18 +107,27 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
     .use(requireLogin())
     .post(async (req, res) => {
-        const { amount, memo, to, url, meta } = validateAddRequestBody(req.body);
+        const { amount, memo, to, url, currency, meta } = validateAddRequestBody(req.body);
         const user = req.user;
         await addItem(
-            { amount, memo, to, url, meta },
+            {
+                amount,
+                memo,
+                to,
+                url,
+                currency: {
+                    from: currency,
+                    to: user.defaultCurrency
+                },
+                meta
+            },
             {
                 credentials: user.credentials,
                 spreadsheetId: user.spreadsheetId
             }
         );
         res.json({
-            ok: true,
-            userId: user.id
+            ok: true
         });
     });
 

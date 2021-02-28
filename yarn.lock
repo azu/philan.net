@@ -2264,6 +2264,11 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
+country-to-currency@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/country-to-currency/-/country-to-currency-1.0.2.tgz#e57362d98d7de372a71f66b2b9cb07a0639de12b"
+  integrity sha512-Bu365svaXstq052u3O16jzefT67vQ1PmZSTQ40M//4a59KdAi+TneImg06QPdvFlsPcFeKCBOaemSqC6oxMkUw==
+
 create-ecdh@^4.0.0:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/create-ecdh/-/create-ecdh-4.0.4.tgz#d6e7f4bffa66736085a0762fd3a632684dabcc4e"

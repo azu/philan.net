@@ -1,6 +1,18 @@
-import { Box, chakra, Container, Link, ListItem, Spinner, Text, UnorderedList } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import {
+    Box,
+    IconButton,
+    chakra,
+    Container,
+    Link,
+    ListItem,
+    Spinner,
+    Text,
+    UnorderedList,
+    Editable
+} from "@chakra-ui/react";
+import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
+import { SiTwitter } from "react-icons/si";
 import { Header } from "../../components/Header";
 
 const Messages = [
@@ -38,15 +50,31 @@ const Messages = [
     </Box>
 ] as const;
 export default function Created() {
+    const [userId, setUserId] = useState<string>("");
     const [message, setMessage] = useState<string | JSX.Element>("");
+    const [tweet, setTweet] = useState<string>("");
     useEffect(() => {
         setMessage(Messages[Math.floor(Math.random() * Messages.length)]);
         const url = new URL(location.href);
         const id = url.searchParams.get("id");
-        setTimeout(() => {
-            location.href = `/user/${id}`;
-        }, 60 * 1000);
+        if (!id) {
+            return;
+        }
+        setUserId(id);
+        const to = url.searchParams.get("to");
+        // const amount = url.searchParams.get("amount");
+        setTweet(`${to} に対して寄付をしました！`);
+        // setTimeout(() => {
+        //     location.href = `/user/${id}`;
+        // }, 60 * 1000);
     }, []);
+    const goToTweet = useCallback(() => {
+        const userPage = `https://philan.net/user/${userId}`;
+        const url = `https://twitter.com/intent/tweet?url=${encodeURIComponent(userPage)}&text=${encodeURIComponent(
+            tweet
+        )}&hashtags=philannet`;
+        window.open(url, "_blank");
+    }, [userId, tweet]);
     return (
         <>
             <Head>
@@ -69,7 +97,25 @@ export default function Created() {
                         >
                             新しい寄付の記録に成功しました🎉
                         </chakra.h1>
-                        <Box maxW="560px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} my="4">
+                        <Box
+                            mx="auto"
+                            fontSize={{ base: "lg", lg: "xl" }}
+                            my="4"
+                            padding={12}
+                            border="1px"
+                            borderColor="gray.200"
+                            borderRadius={8}
+                        >
+                            <Editable color="gray.500">{tweet}</Editable>
+                            <IconButton
+                                colorScheme="blue"
+                                aria-label="Tweet!"
+                                icon={<SiTwitter />}
+                                onClick={goToTweet}
+                            />
+                        </Box>
+
+                        <Box mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} my="4">
                             <Text>
                                 ユーザーページを生成中です（最大1~2分程度かかります）
                                 <Spinner as="span" label={"ユーザーページの再構築中"}></Spinner>

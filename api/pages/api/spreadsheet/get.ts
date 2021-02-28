@@ -28,6 +28,7 @@ export const getSpreadSheet = async ({
     if (!spreadsheet?.data?.sheets) {
         throw new Error("500: No spreadsheet data");
     }
+    // const locale = spreadsheet.data.properties?.locale;
     return spreadsheet?.data?.sheets?.map((sheet) => {
         const items = sheet?.data?.[0];
         // ["Budget", "Used", "Balance"]
@@ -66,7 +67,7 @@ export const getSpreadSheet = async ({
                         date: values?.[0].userEnteredValue?.stringValue!,
                         to: values?.[1].userEnteredValue?.stringValue!,
                         amount: {
-                            raw: values?.[2].userEnteredValue?.numberValue!,
+                            raw: values?.[2].effectiveValue?.numberValue!,
                             value: values?.[2]?.formattedValue!
                         },
                         url: values?.[3].userEnteredValue?.stringValue!,

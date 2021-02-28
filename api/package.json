@@ -20,6 +20,7 @@
     "@emotion/styled": "^11.1.5",
     "ajv": "^7.1.0",
     "cloudflare-kv-storage-rest": "^1.0.2",
+    "country-to-currency": "^1.0.2",
     "dayjs": "^1.10.4",
     "express-session": "^1.17.1",
     "express-session-cloudflare-kv": "^1.0.1",

@@ -49,7 +49,11 @@ const SCHEMA = {
         },
         "AddRequestBody": {
             "type": "object",
+            "additionalProperties": false,
             "properties": {
+                "currency": {
+                    "type": "string"
+                },
                 "to": {
                     "type": "string"
                 },
@@ -69,7 +73,8 @@ const SCHEMA = {
                             "type": "string",
                             "enum": [
                                 "checking",
-                                "checked"
+                                "checked",
+                                "not-money"
                             ]
                         }
                     },
@@ -80,11 +85,24 @@ const SCHEMA = {
                 }
             },
             "required": [
-                "to",
                 "amount",
-                "url",
+                "currency",
                 "memo",
-                "meta"
+                "meta",
+                "to",
+                "url"
+            ]
+        },
+        "AddResponseBody": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "boolean",
+                    "const": true
+                }
+            },
+            "required": [
+                "ok"
             ],
             "additionalProperties": false
         },
@@ -177,7 +195,63 @@ const SCHEMA = {
                     "items": {
                         "type": "array",
                         "items": {
-                            "$ref": "#/definitions/RecordItem"
+                            "type": "object",
+                            "properties": {
+                                "date": {
+                                    "type": "string"
+                                },
+                                "to": {
+                                    "type": "string"
+                                },
+                                "amount": {
+                                    "type": "object",
+                                    "properties": {
+                                        "raw": {
+                                            "type": "number"
+                                        },
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "raw",
+                                        "value"
+                                    ],
+                                    "additionalProperties": false
+                                },
+                                "url": {
+                                    "type": "string"
+                                },
+                                "memo": {
+                                    "type": "string"
+                                },
+                                "meta": {
+                                    "type": "object",
+                                    "properties": {
+                                        "type": {
+                                            "type": "string",
+                                            "enum": [
+                                                "checking",
+                                                "checked",
+                                                "not-money"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "type"
+                                    ],
+                                    "additionalProperties": false
+                                }
+                            },
+                            "required": [
+                                "date",
+                                "to",
+                                "amount",
+                                "url",
+                                "memo",
+                                "meta"
+                            ],
+                            "additionalProperties": false
                         }
                     }
                 },
@@ -189,51 +263,6 @@ const SCHEMA = {
                 ],
                 "additionalProperties": false
             }
-        },
-        "RecordItem": {
-            "type": "object",
-            "properties": {
-                "date": {
-                    "type": "string"
-                },
-                "to": {
-                    "type": "string"
-                },
-                "amount": {
-                    "type": "number"
-                },
-                "url": {
-                    "type": "string"
-                },
-                "memo": {
-                    "type": "string"
-                },
-                "meta": {
-                    "type": "object",
-                    "properties": {
-                        "type": {
-                            "type": "string",
-                            "enum": [
-                                "checking",
-                                "checked"
-                            ]
-                        }
-                    },
-                    "required": [
-                        "type"
-                    ],
-                    "additionalProperties": false
-                }
-            },
-            "required": [
-                "date",
-                "to",
-                "amount",
-                "url",
-                "memo",
-                "meta"
-            ],
-            "additionalProperties": false
         }
     }
 };
@@ -295,6 +324,21 @@ export function validateAddRequestBody(payload: unknown): apiTypes.AddRequestBod
 export function isAddRequestBody(payload: unknown): payload is apiTypes.AddRequestBody {
   /** Schema is defined in {@link SCHEMA.definitions.AddRequestBody } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddRequestBody" });
+  return ajvValidate(payload);
+}
+
+export function validateAddResponseBody(payload: unknown): apiTypes.AddResponseBody {
+  if (!isAddResponseBody(payload)) {
+  　const error = new Error('invalid payload: AddResponseBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isAddResponseBody(payload: unknown): payload is apiTypes.AddResponseBody {
+  /** Schema is defined in {@link SCHEMA.definitions.AddResponseBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddResponseBody" });
   return ajvValidate(payload);
 }
 

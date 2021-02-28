@@ -12,7 +12,7 @@ import { RecordItem } from "./types";
 const sheets = google.sheets("v4");
 
 export const addItem = async (
-    item: Omit<RecordItem, "date"> & {
+    item: RecordItem & {
         currency: {
             from: string;
             to: string;
@@ -28,7 +28,6 @@ export const addItem = async (
     if (!token) {
         throw new Error("No Access Token");
     }
-    const nowDate = new Date().toISOString();
     const spreadsheet = await sheets.spreadsheets.get({
         oauth_token: token,
         spreadsheetId: meta.spreadsheetId
@@ -53,7 +52,7 @@ export const addItem = async (
                         rows: [
                             {
                                 values: [
-                                    nowDate,
+                                    item.date,
                                     item.to,
                                     item.amount,
                                     item.url,
@@ -63,7 +62,7 @@ export const addItem = async (
                                     if (typeof v === "number") {
                                         const shouldTransformCurrency = item.currency.from !== item.currency.to;
                                         if (shouldTransformCurrency) {
-                                            const date = dayjs(nowDate).format("YYYY/MM/DD");
+                                            const date = dayjs(item.date).format("YYYY/MM/DD");
                                             // price * finance rate
                                             const value = `= ${v} * index(GOOGLEFINANCE("CURRENCY:${item.currency.from}${item.currency.to}", "price", "${date}"), 2, 2)`;
                                             return {
@@ -109,8 +108,10 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .post(async (req, res) => {
         const { amount, memo, to, url, currency, meta } = validateAddRequestBody(req.body);
         const user = req.user;
+        const date = new Date().toISOString();
         await addItem(
             {
+                date,
                 amount,
                 memo,
                 to,

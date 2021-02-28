@@ -132,6 +132,12 @@ function userForm(user: LoginUser | null) {
 export default function Create() {
     const user = useLoginUser();
     const { url, amount, memo, to, type, currency, valid, handlers } = userForm(user);
+    const formattedAmount = useMemo(() => {
+        return new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
+            style: "currency",
+            currency: currency
+        }).format(amount);
+    }, [amount, currency]);
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<Error | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
@@ -260,35 +266,31 @@ export default function Create() {
                                 >
                                     <FormLabel>寄付額</FormLabel>
                                     <Flex>
-                                        <NumberInput
-                                            value={amount}
-                                            max={100000000000}
-                                            min={1}
-                                            onChange={handlers.updateAmount}
-                                            flex="1"
-                                        >
-                                            <NumberInputField />
-                                        </NumberInput>
-                                        {
-                                            <Tooltip
-                                                label="通貨コードはISO 4217に基づきます。日本円はJPYです"
-                                                fontSize="md"
+                                        <Tooltip label={formattedAmount} fontSize="md">
+                                            <NumberInput
+                                                value={amount}
+                                                max={100000000000}
+                                                min={1}
+                                                onChange={handlers.updateAmount}
+                                                flex="1"
                                             >
-                                                <Select
-                                                    value={currency}
-                                                    width={"6em"}
-                                                    onChange={handlers.updateCurrency}
-                                                >
-                                                    {CURRENCY_CODES.map((currencyCode, index) => {
-                                                        return (
-                                                            <option key={currencyCode + index} value={currencyCode}>
-                                                                {currencyCode}
-                                                            </option>
-                                                        );
-                                                    })}
-                                                </Select>
-                                            </Tooltip>
-                                        }
+                                                <NumberInputField />
+                                            </NumberInput>
+                                        </Tooltip>
+                                        <Tooltip
+                                            label="通貨コードはISO 4217に基づきます。日本円はJPYです"
+                                            fontSize="md"
+                                        >
+                                            <Select value={currency} width={"6em"} onChange={handlers.updateCurrency}>
+                                                {CURRENCY_CODES.map((currencyCode, index) => {
+                                                    return (
+                                                        <option key={currencyCode + index} value={currencyCode}>
+                                                            {currencyCode}
+                                                        </option>
+                                                    );
+                                                })}
+                                            </Select>
+                                        </Tooltip>
                                     </Flex>
                                     <FormHelperText>寄付済みの場合は寄付した金額を入力してください</FormHelperText>
                                 </FormControl>

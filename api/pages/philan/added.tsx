@@ -62,8 +62,22 @@ export default function Created() {
         }
         setUserId(id);
         const to = url.searchParams.get("to");
-        // const amount = url.searchParams.get("amount");
-        setTweet(`${to} に対して寄付をしました！`);
+        const amount = url.searchParams.get("amount");
+        const currency = url.searchParams.get("currency");
+        const formattedAmount =
+            amount && currency
+                ? new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
+                      style: "currency",
+                      currency: currency
+                  }).format(Number(amount))
+                : "";
+        if (to && formattedAmount) {
+            setTweet(`${to} に対して ${formattedAmount} 寄付しました！`);
+        } else if (to) {
+            setTweet(`${to} に対して寄付しました！`);
+        } else {
+            setTweet(`寄付しました！`);
+        }
         // setTimeout(() => {
         //     location.href = `/user/${id}`;
         // }, 60 * 1000);
@@ -115,7 +129,7 @@ export default function Created() {
                             />
                         </Box>
 
-                        <Box mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} my="4">
+                        <Box opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} my="4">
                             <Text>
                                 ユーザーページを生成中です（最大1~2分程度かかります）
                                 <Spinner as="span" label={"ユーザーページの再構築中"}></Spinner>

@@ -174,7 +174,12 @@ export default function Create() {
             .then(() => {
                 setSuccess(true);
                 setError(null);
-                const query = new URLSearchParams([["id", user.id]]);
+                const query = new URLSearchParams([
+                    ["id", user.id],
+                    ["to", to],
+                    ["amount", String(amount)],
+                    ["currency", currency]
+                ]);
                 window.location.href = "/philan/added?" + query.toString();
             })
             .catch((error) => {

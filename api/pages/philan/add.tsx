@@ -191,7 +191,7 @@ export default function Create() {
     });
     const group = getRootProps();
     const RadioGroup = (
-        <HStack {...group}>
+        <HStack {...group} paddingY={4}>
             {options.map(({ label, value }) => {
                 const radio = getRadioProps({ value });
                 return (
@@ -247,22 +247,26 @@ export default function Create() {
 
                     <Container maxW="xl">
                         <Box w="100%" p={4}>
-                            <FormControl id="to" isRequired>
+                            <FormControl id="to" isRequired marginBottom={6}>
                                 <FormLabel>寄付先:</FormLabel>
                                 <Input value={to} onChange={handlers.updateTo} />
                                 <FormHelperText>寄付先の名前(法人、人、場所など)を入力してください</FormHelperText>
                             </FormControl>
-                            <FormControl id="url">
+                            <FormControl id="url" paddingBottom={6}>
                                 <FormLabel>URL:</FormLabel>
                                 <Input value={url} onChange={handlers.updateUrl} />
                                 <FormHelperText>寄付先に関連するhttpから始まるURLを入力してください</FormHelperText>
                             </FormControl>
-                            <Box border="1px" borderColor="gray.200" borderRadius={8}>
+                            <Box marginBottom={6}>
                                 {RadioGroup}
                                 <FormControl
                                     id="amount"
                                     isRequired={type === "checked"}
                                     isDisabled={type === "checking"}
+                                    borderLeft="1px"
+                                    borderColor="gray.200"
+                                    borderRadius={8}
+                                    paddingLeft={4}
                                 >
                                     <FormLabel>寄付額</FormLabel>
                                     <Flex>
@@ -295,7 +299,7 @@ export default function Create() {
                                     <FormHelperText>寄付済みの場合は寄付した金額を入力してください</FormHelperText>
                                 </FormControl>
                             </Box>
-                            <FormControl id="memo">
+                            <FormControl id="memo" paddingBottom={6}>
                                 <FormLabel>Memo:</FormLabel>
                                 <FormHelperText>メモ欄(Markdown)</FormHelperText>
                                 <Textarea height={"10em"} value={memo} onChange={handlers.updateMemo} />

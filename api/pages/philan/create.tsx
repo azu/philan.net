@@ -155,7 +155,11 @@ export default function Create() {
                                         <NumberDecrementStepper />
                                     </NumberInputStepper>
                                 </NumberInput>
-                                <FormHelperText>今年の寄付の予算額を入力してください。</FormHelperText>
+                                <FormHelperText>
+                                    今年の寄付の予算額を入力してください。
+                                    <br />
+                                    年収の１〜２%程度を一つの目安にしてみてください。
+                                </FormHelperText>
                             </FormControl>
                             <FormControl is={"defaultCurrency"} isRequired>
                                 <FormLabel>デフォルトの通貨</FormLabel>

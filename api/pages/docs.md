@@ -13,6 +13,7 @@
 ## 差寄付先の探し方
 
 - [NPO法人ポータルサイト - 内閣府](https://www.npo-homepage.go.jp/npoportal/index)
+- [団体情報／団体一覧 | CANPAN](http://fields.canpan.info/organization/)
 - [Give One（ギブワン）](https://giveone.net/)
 - [Syncable（シンカブル）｜ファンドレイジングプラットフォーム](https://syncable.biz/)
 - [寄付型クラウドファンディング - CAMPFIRE (キャンプファイヤー)](https://camp-fire.jp/donate)

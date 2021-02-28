@@ -24,6 +24,7 @@ import { ArrowForwardIcon, ArrowRightIcon, ExternalLinkIcon } from "@chakra-ui/i
 import { MdAccessibility, MdGrain, MdPalette } from "react-icons/md";
 import NextLink from "next/link";
 import { Header } from "../components/Header";
+import { Footer } from "../components/Footer";
 
 const Feature = ({ title, icon, children, ...props }: any) => {
     return (
@@ -248,6 +249,7 @@ const IndexPage = (props: { users: string[] }) => {
                         </Box>
                     </Container>
                 </Box>
+                <Footer />
             </Box>
         </>
     );

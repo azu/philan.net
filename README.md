@@ -1,5 +1,9 @@
 # philan.net
 
+## Misson
+
+- 寄付が特別な状態ではないことを目指す
+- 自身の寄付の状況を公開することで透明性を出す
 
 ## Architectures
 

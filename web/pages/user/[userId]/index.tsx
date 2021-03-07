@@ -68,7 +68,7 @@ const Summarize = (props: { children: string }) => {
 
 function UserPage({
     response,
-    // userId,
+    userId,
     userName,
     userAvatarUrl,
     README
@@ -79,11 +79,14 @@ function UserPage({
     userId: string;
     response: GetResponseBody;
 }) {
+    const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
+    const feedURL = `${HOST}/user/${userId}/feed`;
     return (
         <>
             <Head>
                 <title>{userName} - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                <link rel="alternate" type="application/rss+xml" href={feedURL} />
                 {/*<meta property="og:image" content={`${HOST}/api/ogp/${userId}`} />*/}
             </Head>
             <Header />
@@ -146,54 +149,49 @@ function UserPage({
                                         </Stat>
                                     </StatGroup>
                                     <List>
-                                        {item.items
-                                            .slice()
-                                            .sort((a, b) => {
-                                                return dayjs(a.date).isBefore(b.date) ? 1 : -1;
-                                            })
-                                            .map((item) => {
-                                                const safeUrl = /https?:/.test(item.url) ? item.url : "";
-                                                const Icon =
-                                                    item.meta.type === "checked" ? (
-                                                        <ListIcon as={CheckCircleIcon} color="green.500" />
-                                                    ) : (
-                                                        <ListIcon as={BellIcon} color="orange.500" />
-                                                    );
-                                                const Amount =
-                                                    item.meta.type === "checked" ? (
-                                                        <span>
-                                                            : {item.amount.value}
-                                                            <ListIcon as={ChevronUpIcon} color="green.500" />
-                                                        </span>
-                                                    ) : null;
-                                                return (
-                                                    <ListItem key={item.date}>
-                                                        <Flex alignItems={"baseline"}>
-                                                            <Box padding="2">
-                                                                {Icon}
-                                                                <Link
-                                                                    href={safeUrl}
-                                                                    borderBottom={"1px"}
-                                                                    borderColor={"blue.200"}
-                                                                    isExternal={true}
-                                                                >
-                                                                    {item.to}
-                                                                </Link>
-                                                                {Amount}
-                                                            </Box>
-                                                            <Spacer />
-                                                            <Box fontSize={"small"} textAlign={"left"}>
-                                                                <time dateTime={item.date}>
-                                                                    {dayjs(item.date).format("YYYY-MM-DD")}
-                                                                </time>
-                                                            </Box>
-                                                        </Flex>
-                                                        <Box color={useColorModeValue("gray.500", "gray.300")}>
-                                                            <Summarize>{item.memo}</Summarize>
-                                                        </Box>
-                                                    </ListItem>
+                                        {item.items.map((item) => {
+                                            const safeUrl = /https?:/.test(item.url) ? item.url : "";
+                                            const Icon =
+                                                item.meta.type === "checked" ? (
+                                                    <ListIcon as={CheckCircleIcon} color="green.500" />
+                                                ) : (
+                                                    <ListIcon as={BellIcon} color="orange.500" />
                                                 );
-                                            })}
+                                            const Amount =
+                                                item.meta.type === "checked" ? (
+                                                    <span>
+                                                        : {item.amount.value}
+                                                        <ListIcon as={ChevronUpIcon} color="green.500" />
+                                                    </span>
+                                                ) : null;
+                                            return (
+                                                <ListItem key={item.date}>
+                                                    <Flex alignItems={"baseline"}>
+                                                        <Box padding="2">
+                                                            {Icon}
+                                                            <Link
+                                                                href={safeUrl}
+                                                                borderBottom={"1px"}
+                                                                borderColor={"blue.200"}
+                                                                isExternal={true}
+                                                            >
+                                                                {item.to}
+                                                            </Link>
+                                                            {Amount}
+                                                        </Box>
+                                                        <Spacer />
+                                                        <Box fontSize={"small"} textAlign={"left"}>
+                                                            <time dateTime={item.date}>
+                                                                {dayjs(item.date).format("YYYY-MM-DD")}
+                                                            </time>
+                                                        </Box>
+                                                    </Flex>
+                                                    <Box color={useColorModeValue("gray.500", "gray.300")}>
+                                                        <Summarize>{item.memo}</Summarize>
+                                                    </Box>
+                                                </ListItem>
+                                            );
+                                        })}
                                     </List>
                                 </div>
                             );
@@ -212,7 +210,13 @@ export async function getStaticPaths() {
 // This function gets called at build time on server-side.
 // It may be called again, on a serverless function, if
 // revalidation is enabled and a new request comes in
-export async function getStaticProps({ params }: { params: { userId: string } }) {
+export async function getStaticProps({
+    params
+}: {
+    params: {
+        userId: string;
+    };
+}) {
     const userId = params.userId;
     const userKVS = await createUserKvs();
     const user = await userKVS.findByUserId(userId);

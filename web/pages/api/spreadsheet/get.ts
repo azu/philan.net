@@ -5,6 +5,7 @@ import { createOAuthClient } from "../../../api-utils/create-OAuth";
 import nextConnect from "next-connect";
 import { withSession } from "../../../api-utils/with-session";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
+import dayjs from "dayjs";
 
 const sheets = google.sheets("v4");
 export const getSpreadSheet = async ({
@@ -75,6 +76,9 @@ export const getSpreadSheet = async ({
                         memo: values?.[4].userEnteredValue?.stringValue ?? "",
                         meta: meta
                     };
+                })
+                .sort((a, b) => {
+                    return dayjs(a.date).isBefore(b.date) ? 1 : -1;
                 })
         };
     });

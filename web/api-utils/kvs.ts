@@ -2,7 +2,10 @@
 import KvStorage from "cloudflare-kv-storage-rest";
 import fetch from "node-fetch";
 import FormData from "form-data";
-import { env } from "./env";
+import { env, hasCloudFlareEnv } from "./env";
+import { kvsEnvStorage } from "@kvs/env";
+import * as fs from "fs";
+import path from "path";
 
 export type KVValue<Value> = Promise<Value | null>;
 export type KVValueWithMetadata<Value, Metadata> = Promise<{
@@ -57,29 +60,56 @@ export interface KVNamespace {
     }>;
 }
 
-export const createKVS = <V>() => {
-    const storage = new KvStorage({
-        namespace: env.CF_namespace_user!,
-        accountId: env.CF_accountId!,
-        authEmail: env.CF_authEmail,
-        authKey: env.CF_authKey!,
-        fetch,
-        FormData
-    }) as KVNamespace;
+type Storage<V> = {
+    /**
+     * Returns the value associated to the key.
+     * If the key does not exist, returns `undefined`.
+     */
+    get: (key: string) => Promise<V | undefined>;
+    /**
+     * Sets the value for the key in the storage. Returns the storage.
+     */
+    set: (key: string, value: V) => Promise<void>;
+    /**
+     * Returns a boolean asserting whether a value has been associated to the key in the storage.
+     */
+    has: (key: string) => Promise<boolean>;
+    list: ({
+        prefix,
+        limit
+    }: {
+        prefix: string;
+        limit: number;
+    }) => Promise<{
+        keys: { name: string; expiration?: number; metadata?: unknown }[];
+        list_complete: boolean;
+        cursor: string;
+    }>;
+};
+const createLocalStorage = async <V>(): Promise<Storage<V>> => {
+    const cacheDir = path.resolve(process.cwd(), ".cache", "kvs");
+    await fs.promises.mkdir(cacheDir, {
+        recursive: true
+    });
+    const storage = await kvsEnvStorage<any>({
+        name: "KVS",
+        version: 1,
+        storeFilePath: cacheDir
+    });
     return {
         /**
          * Returns the value associated to the key.
          * If the key does not exist, returns `undefined`.
          */
         get: async (key: string): Promise<V | undefined> => {
-            const value = await storage.get(String(key));
-            return value !== null ? JSON.parse(value) : undefined;
+            return storage.get(key);
         },
         /**
          * Sets the value for the key in the storage. Returns the storage.
          */
         set: async (key: string, value: V): Promise<void> => {
-            return storage.put(String(key), JSON.stringify(value));
+            await storage.set(String(key), value);
+            return;
         },
         /**
          * Returns a boolean asserting whether a value has been associated to the key in the storage.
@@ -99,7 +129,68 @@ export const createKVS = <V>() => {
             list_complete: boolean;
             cursor: string;
         }> => {
-            return storage.list({
+            const out: { name: string; expiration?: number; metadata?: unknown }[] = [];
+            for await (const [key] of storage) {
+                if (key.startsWith(prefix) && out.length < limit)
+                    out.push({
+                        name: key
+                    });
+            }
+            return {
+                keys: out,
+                list_complete: true,
+                cursor: ""
+            };
+        }
+    };
+};
+export const createKVS = async <V>(): Promise<Storage<V>> => {
+    if (!hasCloudFlareEnv()) {
+        console.info("Use file system instead of Cloudflare KV Storage");
+        return createLocalStorage<V>();
+    }
+    const kvStorage = new KvStorage({
+        namespace: env.CF_namespace_user!,
+        accountId: env.CF_accountId!,
+        authEmail: env.CF_authEmail,
+        authKey: env.CF_authKey!,
+        fetch,
+        FormData
+    }) as KVNamespace;
+    return {
+        /**
+         * Returns the value associated to the key.
+         * If the key does not exist, returns `undefined`.
+         */
+        get: async (key: string): Promise<V | undefined> => {
+            const value = await kvStorage.get(String(key));
+            return value !== null ? JSON.parse(value) : undefined;
+        },
+        /**
+         * Sets the value for the key in the storage. Returns the storage.
+         */
+        set: async (key: string, value: V): Promise<void> => {
+            return kvStorage.put(String(key), JSON.stringify(value));
+        },
+        /**
+         * Returns a boolean asserting whether a value has been associated to the key in the storage.
+         */
+        has: async (key: string): Promise<boolean> => {
+            const value = await kvStorage.get(String(key));
+            return value !== null;
+        },
+        list: async ({
+            prefix,
+            limit
+        }: {
+            prefix: string;
+            limit: number;
+        }): Promise<{
+            keys: { name: string; expiration?: number; metadata?: unknown }[];
+            list_complete: boolean;
+            cursor: string;
+        }> => {
+            return kvStorage.list({
                 prefix: prefix,
                 limit
             });

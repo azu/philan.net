@@ -9,7 +9,7 @@ export type NextApiRequestWithUserSession = NextApiRequestWithSession & {
 };
 export const requireLogin = () => {
     return async (req: NextApiRequestWithSession, _res: NextApiResponse, next: NextHandler) => {
-        const userKVS = createUserKvs();
+        const userKVS = await createUserKvs();
         const user = await userKVS.findByGoogleId(req.session.get("googleUserId"));
         if (!user) {
             return next(new Error("No user"));

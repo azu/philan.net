@@ -9,7 +9,7 @@ import { createUserKvs } from "../../../api-utils/userKvs";
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .post(async (req, res) => {
-        const { id, name, budget, defaultCurrency } = validateCreateUserRequestBody(req.body);
+        const { id, name, budget, README, defaultCurrency } = validateCreateUserRequestBody(req.body);
         if (!req.session.get("tempCredentials")) {
             throw new Error("Authorize before create");
         }
@@ -24,14 +24,15 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         }
         const picture = verifiedIdTokenResponse.getPayload()?.["picture"];
         // check DB
-        const kvs = createUserKvs();
+        const kvs = await createUserKvs();
         const oldUser = await kvs.findByGoogleId(id);
         if (oldUser !== undefined) {
             throw new Error("Already used");
         }
         const spreadSheet = await createNewSheet(
             {
-                budget
+                budget,
+                README
             },
             {
                 credentials: credentials

@@ -1,8 +1,8 @@
 import { User } from "../domain/User";
 import { createKVS } from "./kvs";
 
-export const createUserKvs = () => {
-    const kvs = createKVS<User>();
+export const createUserKvs = async () => {
+    const kvs = await createKVS<User>();
     return {
         findByGoogleId(googleID?: string) {
             if (!googleID) {

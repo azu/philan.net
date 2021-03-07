@@ -24,7 +24,7 @@ export {};
 //     if (typeof userId !== "string") {
 //         return;
 //     }
-//     const userKVS = createUserKvs();
+//     const userKVS = await createUserKvs();
 //     const user = await userKVS.findByUserId(userId);
 //     if (!user) {
 //         throw new Error("No user");

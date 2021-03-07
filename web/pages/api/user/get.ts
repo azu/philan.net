@@ -7,7 +7,7 @@ import { GetUserResponseBody } from "./api-types";
 const handler = nextConnect<NextApiRequestWithSession, NextApiResponse<GetUserResponseBody>>()
     .use(withSession())
     .get(async (req, res) => {
-        const userKVS = createUserKvs();
+        const userKVS = await createUserKvs();
         const user = await userKVS.findByGoogleId(req.session.get("googleUserId"));
         if (!user) {
             return res.send({

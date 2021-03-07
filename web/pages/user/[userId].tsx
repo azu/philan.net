@@ -214,7 +214,7 @@ export async function getStaticPaths() {
 // revalidation is enabled and a new request comes in
 export async function getStaticProps({ params }: { params: { userId: string } }) {
     const userId = params.userId;
-    const userKVS = createUserKvs();
+    const userKVS = await createUserKvs();
     const user = await userKVS.findByUserId(userId);
     if (!user) {
         throw new Error("No user");
@@ -224,7 +224,6 @@ export async function getStaticProps({ params }: { params: { userId: string } })
         credentials: user.credentials
     });
     const markdown = createMarkdown();
-    console.log("res[0].README", res[0]);
     return {
         props: {
             userName: user.name,

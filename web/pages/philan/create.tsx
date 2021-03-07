@@ -17,7 +17,8 @@ import {
     NumberInputField,
     NumberInputStepper,
     Select,
-    Text
+    Text,
+    Textarea
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
@@ -30,6 +31,7 @@ const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 function userForm() {
     const [id, setId] = useState<string>("");
     const [name, setName] = useState<string>("");
+    const [README, setREADME] = useState<string>("");
     const [defaultCurrency, setDefaultCurrency] = useState<string>("JPY");
     const [budget, setBudget] = useState<number>(10000);
     const [valid, setValid] = useState<boolean>(false);
@@ -45,6 +47,9 @@ function userForm() {
             updateName: (event: SyntheticEvent<HTMLInputElement>) => {
                 setName(event.currentTarget.value);
             },
+            updateREADME: (event: SyntheticEvent<HTMLTextAreaElement>) => {
+                setREADME(event.currentTarget.value);
+            },
             updateBudget: (_valueAsString: string, valueAsNumber: number) => {
                 setBudget(valueAsNumber);
             },
@@ -58,6 +63,7 @@ function userForm() {
     return {
         id,
         name,
+        README,
         budget,
         defaultCurrency,
         valid,
@@ -66,7 +72,7 @@ function userForm() {
 }
 
 export default function Create() {
-    const { id, name, valid, budget, defaultCurrency, handlers } = userForm();
+    const { id, name, valid, budget, README, defaultCurrency, handlers } = userForm();
     const [error, setError] = useState<Error | null>(null);
     const submit = () => {
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
@@ -80,6 +86,7 @@ export default function Create() {
                 id,
                 name,
                 budget,
+                README,
                 defaultCurrency
             })
         })
@@ -134,14 +141,14 @@ export default function Create() {
                     </Box>
                     <Container maxW="xl">
                         <Box w="100%" p={4}>
-                            <FormControl id="id" isRequired>
+                            <FormControl id="id" isRequired marginBottom={6}>
                                 <FormLabel>ユーザーID</FormLabel>
                                 <Input value={id} onChange={handlers.updateId} />
                                 <FormHelperText>
                                     ユーザーIDはphilan.net全体でユニークである必要があります。
                                 </FormHelperText>
                             </FormControl>
-                            <FormControl id="name" isRequired>
+                            <FormControl id="name" isRequired marginBottom={6}>
                                 <FormLabel>ユーザー名</FormLabel>
                                 <Input value={name} onChange={handlers.updateName} />
                                 <FormHelperText>ユーザー名は表示のために使われる名前です</FormHelperText>
@@ -163,10 +170,10 @@ export default function Create() {
                                 <FormHelperText>
                                     今年の寄付の予算額を入力してください。
                                     <br />
-                                    年収の１〜２%程度を一つの目安にしてみてください。
+                                    年収の１〜２%程度を一つの目安にしてみてください。（後から変更できます）
                                 </FormHelperText>
                             </FormControl>
-                            <FormControl is={"defaultCurrency"} isRequired>
+                            <FormControl id={"defaultCurrency"} isRequired marginBottom={6}>
                                 <FormLabel>デフォルトの通貨</FormLabel>
                                 <Select value={defaultCurrency} onChange={handlers.updateDefaultCurrency}>
                                     {CURRENCY_CODES.map((currencyCode, index) => {
@@ -186,6 +193,13 @@ export default function Create() {
                                     </Link>
                                     に基づきます。日本円はJPYです。
                                 </FormHelperText>
+                            </FormControl>
+                            <FormControl id="README" marginBottom={6}>
+                                <FormLabel>README</FormLabel>
+                                <FormHelperText>
+                                    あなたの自己紹介を入力してください(Markdown形式、後から変更できます)
+                                </FormHelperText>
+                                <Textarea height={"10em"} value={README} onChange={handlers.updateREADME} />
                             </FormControl>
                             <Button
                                 mt={4}

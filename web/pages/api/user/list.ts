@@ -1,6 +1,6 @@
 import { createUserKvs } from "../../../api-utils/userKvs";
 
-export const getUserList = () => {
-    const userKVS = createUserKvs();
+export const getUserList = async () => {
+    const userKVS = await createUserKvs();
     return userKVS.someUserNames();
 };

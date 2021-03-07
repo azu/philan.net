@@ -12,7 +12,7 @@ type Schema$RowData = sheets_v4.Schema$RowData;
 type Schema$CellData = sheets_v4.Schema$CellData;
 
 export const createNewSheet = async (
-    { budget }: { budget: number },
+    { budget, README }: { budget: number; README: string },
     meta: {
         credentials: UserCredentials;
     }
@@ -23,10 +23,10 @@ export const createNewSheet = async (
         throw new Error("No Access Token");
     }
     const DefaultData = [
-        ["Budget", "Used", "Balance"],
+        ["Budget", "Used", "Balance", "README"],
         // append-safe way
         // Count(A1:A) avoid curricular dependencies
-        [budget, "=SUM(OFFSET(C3,1,0,ROWS(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,ROWS(A1:A)))"],
+        [budget, "=SUM(OFFSET(C3,1,0,ROWS(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,ROWS(A1:A)))", README],
         // TODO: monthly?,
         ["Date", "To", "Amount", "URL", "Why?", "Meta"]
     ] as (string | number)[][];
@@ -111,14 +111,15 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
     .use(requireLogin())
     .get(async (req, res) => {
-        const { budget } = validateCreateUserRequestBody(req.body);
+        const { budget, README } = validateCreateUserRequestBody(req.body);
         const user = req.user;
         if (!user) {
             throw new Error("No user");
         }
         const responseNewSheet = await createNewSheet(
             {
-                budget
+                budget,
+                README
             },
             {
                 credentials: user.credentials

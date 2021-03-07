@@ -37,7 +37,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             throw new Error("Not found userId");
         }
         // update session.userId
-        const kvs = createUserKvs();
+        const kvs = await createUserKvs();
         req.session.set("googleUserId", googleId);
         const user = await kvs.findByGoogleId(googleId);
         if (!user) {

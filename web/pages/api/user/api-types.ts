@@ -1,6 +1,7 @@
 export type CreateUserRequestBody = {
     id: string;
     name: string;
+    README: string;
     budget: number;
     defaultCurrency: string;
 };

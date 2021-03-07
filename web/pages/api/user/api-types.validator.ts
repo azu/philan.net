@@ -16,6 +16,9 @@ const SCHEMA = {
                 "name": {
                     "type": "string"
                 },
+                "README": {
+                    "type": "string"
+                },
                 "budget": {
                     "type": "number"
                 },
@@ -26,6 +29,7 @@ const SCHEMA = {
             "required": [
                 "id",
                 "name",
+                "README",
                 "budget",
                 "defaultCurrency"
             ],

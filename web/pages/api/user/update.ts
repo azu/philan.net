@@ -10,7 +10,7 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(requireLogin())
     .post(async (req, res) => {
         const { name, defaultCurrency, spreadsheetId } = validateUpdateUserRequestBody(req.body);
-        const userKVS = createUserKvs();
+        const userKVS = await createUserKvs();
         // check DB
         const currentUser = req.user;
         await userKVS.updateUser(req.session.get("googleUserId")!, {

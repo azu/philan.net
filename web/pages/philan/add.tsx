@@ -257,7 +257,7 @@ export default function Create() {
                                 <Input value={to} onChange={handlers.updateTo} />
                                 <FormHelperText>寄付先の名前(法人、人、場所など)を入力してください</FormHelperText>
                             </FormControl>
-                            <FormControl id="url" paddingBottom={6}>
+                            <FormControl id="url" marginBottom={6}>
                                 <FormLabel>URL:</FormLabel>
                                 <Input value={url} onChange={handlers.updateUrl} />
                                 <FormHelperText>寄付先に関連するURLを入力してください</FormHelperText>

@@ -28,6 +28,7 @@ import { Header } from "../../components/Header";
 import { UseRadioProps } from "@chakra-ui/radio/dist/types/use-radio";
 import COUNTRY_CURRENCY from "country-to-currency";
 import { LoginUser, useLoginUser } from "../../components/useLoginUser";
+import dayjs from "dayjs";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 const options = [
@@ -76,6 +77,7 @@ function RadioCard(props: UseRadioProps & { children: string }) {
 }
 
 function userForm(user: LoginUser | null) {
+    const [date, setDate] = useState<Date>(new Date());
     const [to, setTo] = useState<string>("");
     const [url, setUrl] = useState<string>("https://");
     const [amount, setAmount] = useState<number>(1000);
@@ -95,6 +97,11 @@ function userForm(user: LoginUser | null) {
     }, [user]);
     const handlers = useMemo(
         () => ({
+            updateDate: (event: SyntheticEvent<HTMLInputElement>) => {
+                if (event.currentTarget.valueAsDate) {
+                    setDate(event.currentTarget.valueAsDate);
+                }
+            },
             updateTo: (event: SyntheticEvent<HTMLInputElement>) => {
                 setTo(event.currentTarget.value);
             },
@@ -105,7 +112,11 @@ function userForm(user: LoginUser | null) {
                 setType(type);
             },
             updateAmount: (_valueAsString: string, valueAsNumber: number) => {
-                setAmount(valueAsNumber);
+                if (Number.isNaN(amount)) {
+                    setAmount(0);
+                } else {
+                    setAmount(valueAsNumber);
+                }
             },
             updateMemo: (event: SyntheticEvent<HTMLTextAreaElement>) => {
                 setMemo(event.currentTarget.value);
@@ -118,6 +129,7 @@ function userForm(user: LoginUser | null) {
     );
 
     return {
+        date,
         to,
         url,
         amount,
@@ -131,7 +143,7 @@ function userForm(user: LoginUser | null) {
 
 export default function Create() {
     const user = useLoginUser();
-    const { url, amount, memo, to, type, currency, valid, handlers } = userForm(user);
+    const { date, url, amount, memo, to, type, currency, valid, handlers } = userForm(user);
     const formattedAmount = useMemo(() => {
         return new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
             style: "currency",
@@ -146,9 +158,11 @@ export default function Create() {
             return setError(new Error("require login"));
         }
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
+        const finalAmount = type === "checked" ? amount : 0;
         const body: AddRequestBody = {
+            isoDate: date.toISOString(),
             url,
-            amount: type === "checked" ? amount : 0,
+            amount: finalAmount,
             memo,
             to,
             currency,
@@ -177,7 +191,8 @@ export default function Create() {
                 const query = new URLSearchParams([
                     ["id", user.id],
                     ["to", to],
-                    ["amount", String(amount)],
+                    ["type", type],
+                    ["amount", String(finalAmount)],
                     ["currency", currency]
                 ]);
                 window.location.href = "/philan/added?" + query.toString();
@@ -252,6 +267,15 @@ export default function Create() {
 
                     <Container maxW="xl">
                         <Box w="100%" p={4}>
+                            <FormControl id="date" isRequired marginBottom={6}>
+                                <FormLabel>日付:</FormLabel>
+                                <Input
+                                    type="date"
+                                    value={dayjs(date).format("YYYY-MM-DD")}
+                                    onChange={handlers.updateDate}
+                                />
+                                <FormHelperText>寄付した日付</FormHelperText>
+                            </FormControl>
                             <FormControl id="to" isRequired marginBottom={6}>
                                 <FormLabel>寄付先:</FormLabel>
                                 <Input value={to} onChange={handlers.updateTo} />

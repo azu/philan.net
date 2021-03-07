@@ -51,6 +51,9 @@ const SCHEMA = {
             "type": "object",
             "additionalProperties": false,
             "properties": {
+                "isoDate": {
+                    "type": "string"
+                },
                 "currency": {
                     "type": "string"
                 },
@@ -87,6 +90,7 @@ const SCHEMA = {
             "required": [
                 "amount",
                 "currency",
+                "isoDate",
                 "memo",
                 "meta",
                 "to",

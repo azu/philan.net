@@ -13,6 +13,7 @@ export type AddRequestQuery = {
     spreadsheetId: string;
 };
 export type AddRequestBody = Omit<RecordItem, "date"> & {
+    isoDate: string; // iso date
     currency: string;
 };
 export type AddResponseBody = {

@@ -106,9 +106,9 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
     .use(requireLogin())
     .post(async (req, res) => {
-        const { amount, memo, to, url, currency, meta } = validateAddRequestBody(req.body);
+        const { isoDate, amount, memo, to, url, currency, meta } = validateAddRequestBody(req.body);
         const user = req.user;
-        const date = new Date().toISOString();
+        const date = isoDate ?? new Date().toISOString();
         await addItem(
             {
                 date,

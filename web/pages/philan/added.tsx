@@ -62,6 +62,7 @@ export default function Added() {
         }
         setUserId(id);
         const to = url.searchParams.get("to");
+        const type = url.searchParams.get("type");
         const amount = url.searchParams.get("amount");
         const currency = url.searchParams.get("currency");
         const formattedAmount =
@@ -71,7 +72,9 @@ export default function Added() {
                       currency: currency
                   }).format(Number(amount))
                 : "";
-        if (to && formattedAmount) {
+        if (type === "checking") {
+            setTweet(`${to} に対して寄付を検討中です`);
+        } else if (to && formattedAmount) {
             setTweet(`${to} に対して ${formattedAmount} 寄付しました！`);
         } else if (to) {
             setTweet(`${to} に対して寄付しました！`);

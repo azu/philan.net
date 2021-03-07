@@ -13,6 +13,7 @@ export type UpdateUserRequestBody = {
     name: string;
     budget: number;
     defaultCurrency: string;
+    spreadsheetId: string;
 };
 
 export type UserResponseObject = {

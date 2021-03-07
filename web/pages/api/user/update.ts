@@ -9,14 +9,15 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
     .use(requireLogin())
     .post(async (req, res) => {
-        const { name, defaultCurrency } = validateUpdateUserRequestBody(req.body);
+        const { name, defaultCurrency, spreadsheetId } = validateUpdateUserRequestBody(req.body);
         const userKVS = createUserKvs();
         // check DB
         const currentUser = req.user;
         await userKVS.updateUser(req.session.get("googleUserId")!, {
             ...currentUser,
             name,
-            defaultCurrency
+            defaultCurrency,
+            spreadsheetId: spreadsheetId
         });
         res.json({
             ok: true

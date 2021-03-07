@@ -31,12 +31,14 @@ function userForm(user: LoginUser | null) {
     const [id, setId] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [defaultCurrency, setDefaultCurrency] = useState<string>("JPY");
+    const [spreadsheetId, setspreadsheetId] = useState<string>("");
     const [budget, setBudget] = useState<number>(10000);
     const [valid, setValid] = useState<boolean>(false);
     useEffect(() => {
-        const ok = id.length > 0 && name.length > 0 && budget > 0 && defaultCurrency.length === 3;
+        const ok =
+            id.length > 0 && name.length > 0 && spreadsheetId.length > 0 && budget > 0 && defaultCurrency.length === 3;
         setValid(ok);
-    }, [id, name, budget]);
+    }, [id, name, budget, spreadsheetId]);
     useEffect(() => {
         if (!user) {
             return;
@@ -44,6 +46,11 @@ function userForm(user: LoginUser | null) {
         setId(user.id);
         setName(user.name);
         setDefaultCurrency(user.defaultCurrency);
+        const spreadsheetId = user.spreadsheetUrl.replace(
+            /https:\/\/docs\.google\.com\/spreadsheets\/([^\/]+)\//,
+            "$1"
+        );
+        setspreadsheetId(spreadsheetId);
     }, [user]);
     const handlers = useMemo(
         () => ({
@@ -52,6 +59,9 @@ function userForm(user: LoginUser | null) {
             },
             updateName: (event: SyntheticEvent<HTMLInputElement>) => {
                 setName(event.currentTarget.value);
+            },
+            updatespreadsheetId: (event: SyntheticEvent<HTMLInputElement>) => {
+                setspreadsheetId(event.currentTarget.value);
             },
             updateBudget: (_valueAsString: string, valueAsNumber: number) => {
                 setBudget(valueAsNumber);
@@ -67,6 +77,7 @@ function userForm(user: LoginUser | null) {
         id,
         name,
         budget,
+        spreadsheetId,
         defaultCurrency,
         valid,
         handlers
@@ -75,7 +86,7 @@ function userForm(user: LoginUser | null) {
 
 export default function Create() {
     const user = useLoginUser();
-    const { id, name, valid, budget, defaultCurrency, handlers } = userForm(user);
+    const { id, name, valid, spreadsheetId, budget, defaultCurrency, handlers } = userForm(user);
     const [error, setError] = useState<Error | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const submit = () => {
@@ -90,7 +101,8 @@ export default function Create() {
                 id,
                 name,
                 budget,
-                defaultCurrency
+                defaultCurrency,
+                spreadsheetId
             })
         })
             .then((res) => {
@@ -173,7 +185,7 @@ export default function Create() {
                                 </NumberInput>
                                 <FormHelperText>今年の寄付の予算額を入力してください。</FormHelperText>
                             </FormControl>
-                            <FormControl is={"defaultCurrency"} isRequired>
+                            <FormControl id={"defaultCurrency"} isRequired>
                                 <FormLabel>デフォルトの通貨</FormLabel>
                                 <Select value={defaultCurrency} onChange={handlers.updateDefaultCurrency}>
                                     {CURRENCY_CODES.map((currencyCode, index) => {
@@ -192,6 +204,14 @@ export default function Create() {
                                         ISO 4217
                                     </Link>
                                     に基づきます。日本円はJPYです。
+                                </FormHelperText>
+                            </FormControl>
+                            <FormControl id={"SpreadSheet ID"} isRequired>
+                                <FormLabel>SpreadSheet ID</FormLabel>
+                                <Input value={spreadsheetId} onChange={handlers.updatespreadsheetId} />
+                                <FormHelperText>
+                                    紐付けるGoogle SpreadSheetのIDを入力してください。
+                                    <code>https://docs.google.com/spreadsheets/d/ID</code>のIDのみを入力してください。
                                 </FormHelperText>
                             </FormControl>
                             <Button

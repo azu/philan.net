@@ -31,6 +31,23 @@ const SCHEMA = {
             ],
             "additionalProperties": false
         },
+        "CreateUserResponseBody": {
+            "type": "object",
+            "properties": {
+                "ok": {
+                    "type": "boolean",
+                    "const": true
+                },
+                "id": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "ok",
+                "id"
+            ],
+            "additionalProperties": false
+        },
         "UpdateUserRequestBody": {
             "type": "object",
             "properties": {
@@ -42,12 +59,16 @@ const SCHEMA = {
                 },
                 "defaultCurrency": {
                     "type": "string"
+                },
+                "spreadsheetId": {
+                    "type": "string"
                 }
             },
             "required": [
                 "name",
                 "budget",
-                "defaultCurrency"
+                "defaultCurrency",
+                "spreadsheetId"
             ],
             "additionalProperties": false
         },
@@ -118,6 +139,21 @@ export function validateCreateUserRequestBody(payload: unknown): apiTypes.Create
 export function isCreateUserRequestBody(payload: unknown): payload is apiTypes.CreateUserRequestBody {
   /** Schema is defined in {@link SCHEMA.definitions.CreateUserRequestBody } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/CreateUserRequestBody" });
+  return ajvValidate(payload);
+}
+
+export function validateCreateUserResponseBody(payload: unknown): apiTypes.CreateUserResponseBody {
+  if (!isCreateUserResponseBody(payload)) {
+  　const error = new Error('invalid payload: CreateUserResponseBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isCreateUserResponseBody(payload: unknown): payload is apiTypes.CreateUserResponseBody {
+  /** Schema is defined in {@link SCHEMA.definitions.CreateUserResponseBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/CreateUserResponseBody" });
   return ajvValidate(payload);
 }
 

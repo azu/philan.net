@@ -88,7 +88,7 @@ function UserPage({
             </Head>
             <Header />
             <Box mb={20}>
-                <Box as="section" pt={{ base: "10rem", md: "12rem" }} pb={{ base: "0", md: "1rem" }}>
+                <Box as="section" pt={{ base: "8rem", md: "10rem" }} pb={{ base: "0", md: "1rem" }}>
                     <Container>
                         <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
                             <Flex paddingY={4}>
@@ -224,6 +224,7 @@ export async function getStaticProps({ params }: { params: { userId: string } })
         credentials: user.credentials
     });
     const markdown = createMarkdown();
+    console.log("res[0].README", res[0]);
     return {
         props: {
             userName: user.name,

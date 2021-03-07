@@ -4,7 +4,7 @@ import * as SpreadSheetAPI from "./api/spreadsheet/api-types";
 import dynamic from "next/dynamic";
 
 function useSpreadSheet(token?: string) {
-    const [spreadsheetId, setSpreadsheetId] = useLocalStorage<string>("spreadsheetId", "");
+    const [spreadsheetId, setspreadsheetId] = useLocalStorage<string>("spreadsheetId", "");
     const handlers = useMemo(
         () => ({
             create: () => {
@@ -19,7 +19,7 @@ function useSpreadSheet(token?: string) {
                         return res.json();
                     })
                     .then((res) => {
-                        setSpreadsheetId(res.spreadsheetId);
+                        setspreadsheetId(res.spreadsheetId);
                     });
             },
             add: () => {

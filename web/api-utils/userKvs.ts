@@ -4,18 +4,18 @@ import { createKVS } from "./kvs";
 export const createUserKvs = () => {
     const kvs = createKVS<User>();
     return {
-        findByGoogleId(id?: string) {
-            if (!id) {
+        findByGoogleId(googleID?: string) {
+            if (!googleID) {
                 return;
             }
-            return kvs.get(`google:1:${id}`);
+            return kvs.get(`google:1:${googleID}`);
         },
         findByUserId(userId: string) {
             return kvs.get(`users:1:${userId}`);
         },
-        async updateUser(id: string, user: User) {
+        async updateUser(googleID: string, user: User) {
             // double write for id and userId
-            await kvs.set(`google:1:${id}`, user);
+            await kvs.set(`google:1:${googleID}`, user);
             await kvs.set(`users:1:${user.id}`, user);
         },
         async exists(id: string) {

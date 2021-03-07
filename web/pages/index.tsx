@@ -42,7 +42,7 @@ const MissionFeature = ({
 } & BoxProps) => {
     return (
         // https://bgjar.com/circuit-primary.html
-        <Box bg={useColorModeValue("white", "gray.700")} shadow="base" padding="40px" {...props}>
+        <Box bg={useColorModeValue("white", "gray.700")} shadow="base" padding="8" {...props}>
             <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={4} padding={4}>
                 <Box order={imagePosition === "left" ? 1 : 0} paddingX={4}>
                     <Image

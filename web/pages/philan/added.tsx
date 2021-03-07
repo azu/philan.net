@@ -81,9 +81,10 @@ export default function Added() {
         } else {
             setTweet(`寄付しました！`);
         }
-        // setTimeout(() => {
-        //     location.href = `/user/${id}`;
-        // }, 60 * 1000);
+        // want to update user page
+        fetch(`https://philan.net/user/${userId}`)
+            .then(() => console.log("updated"))
+            .catch(() => console.error("Fail to fetch"));
     }, []);
     const goToTweet = useCallback(() => {
         const userPage = `https://philan.net/user/${userId}`;

@@ -81,7 +81,7 @@ export default function Create() {
     const { id, name, valid, budget, agreement, README, defaultCurrency, handlers } = userForm();
     const [error, setError] = useState<Error | null>(null);
     const submit = () => {
-        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
         fetch(HOST + "/api/user/create", {
             method: "post",
             headers: {

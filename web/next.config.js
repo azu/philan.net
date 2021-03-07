@@ -5,6 +5,14 @@ module.exports = {
         },
         externalResolver: true
     },
+    async rewrites() {
+        return [
+            {
+                source: "/user/:id.json",
+                destination: "/user/json/:id"
+            }
+        ];
+    },
     async headers() {
         return [
             {

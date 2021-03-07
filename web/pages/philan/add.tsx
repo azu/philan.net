@@ -145,7 +145,7 @@ export default function Create() {
         if (!user) {
             return setError(new Error("require login"));
         }
-        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
         const body: AddRequestBody = {
             url,
             amount: type === "checked" ? amount : 0,

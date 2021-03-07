@@ -90,7 +90,7 @@ export default function Create() {
     const [error, setError] = useState<Error | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const submit = () => {
-        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
         fetch(HOST + "/api/user/update", {
             method: "post",
             headers: {

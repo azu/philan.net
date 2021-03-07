@@ -21,16 +21,16 @@ import {
     StatNumber,
     useColorModeValue
 } from "@chakra-ui/react";
-import { Header } from "../../components/Header";
+import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
 import React from "react";
-import type { GetResponseBody } from "../api/spreadsheet/api-types";
-import { getSpreadSheet } from "../api/spreadsheet/get";
-import { createUserKvs } from "../../api-utils/userKvs";
+import type { GetResponseBody } from "../../api/spreadsheet/api-types";
+import { getSpreadSheet } from "../../api/spreadsheet/get";
+import { createUserKvs } from "../../../api-utils/userKvs";
 import Head from "next/head";
 import { createMarkdown } from "safe-marked";
-// const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+// const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
 const markdown = createMarkdown();
 const Summarize = (props: { children: string }) => {
     const lines = props.children.split(/\n/);

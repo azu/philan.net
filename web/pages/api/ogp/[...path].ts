@@ -48,7 +48,7 @@ export {};
 //         ["used", spreadSheetData[0].stats.used.value],
 //         ["balance", spreadSheetData[0].stats.balance.value]
 //     ]);
-//     const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
+//     const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
 //     await page.goto(`${HOST}/playOGP?${param.toString()}`, { waitUntil: "load" });
 //     await page.evaluateHandle("document.fonts.ready");
 //     const mainElement = await page.$("#main");

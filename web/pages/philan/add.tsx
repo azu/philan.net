@@ -260,7 +260,7 @@ export default function Create() {
                             <FormControl id="url" paddingBottom={6}>
                                 <FormLabel>URL:</FormLabel>
                                 <Input value={url} onChange={handlers.updateUrl} />
-                                <FormHelperText>寄付先に関連するhttpから始まるURLを入力してください</FormHelperText>
+                                <FormHelperText>寄付先に関連するURLを入力してください</FormHelperText>
                             </FormControl>
                             <Box marginBottom={6}>
                                 {RadioGroup}
@@ -268,6 +268,7 @@ export default function Create() {
                                     id="amount"
                                     isRequired={type === "checked"}
                                     isDisabled={type === "checking"}
+                                    paddingY={2}
                                     borderLeft="1px"
                                     borderColor="gray.200"
                                     borderRadius={8}
@@ -305,8 +306,8 @@ export default function Create() {
                                 </FormControl>
                             </Box>
                             <FormControl id="memo" paddingBottom={6}>
-                                <FormLabel>Memo:</FormLabel>
-                                <FormHelperText>メモ欄(Markdown)</FormHelperText>
+                                <FormLabel>Why?</FormLabel>
+                                <FormHelperText>なぜ寄付するのかをメモできます(Markdown形式)</FormHelperText>
                                 <Textarea height={"10em"} value={memo} onChange={handlers.updateMemo} />
                             </FormControl>
                             <Button

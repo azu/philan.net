@@ -14,7 +14,6 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse<GetUserRe
                 isLogin: false
             });
         }
-        console.log(user);
         res.json({
             isLogin: true,
             id: user.id,

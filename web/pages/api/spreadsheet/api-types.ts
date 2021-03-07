@@ -48,7 +48,7 @@ export type GetResponseBody = {
             value: string;
         };
         url: string;
-        memo: string;
+        memo: string; // why?
         meta: RecordItem["meta"];
     }[];
 }[];

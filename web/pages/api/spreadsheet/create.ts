@@ -28,7 +28,7 @@ export const createNewSheet = async (
         // Count(A1:A) avoid curricular dependencies
         [budget, "=SUM(OFFSET(C3,1,0,ROWS(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,ROWS(A1:A)))"],
         // TODO: monthly?,
-        ["Date", "To", "Amount", "URL", "Memo", "Meta"]
+        ["Date", "To", "Amount", "URL", "Why?", "Meta"]
     ] as (string | number)[][];
     const createCell = (cell: string | number): Schema$CellData => {
         if (typeof cell === "number") {

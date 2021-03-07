@@ -33,7 +33,7 @@ Storage
 
 ## Permission
 
-次の目的のために、それぞれのパーミッションをしていている。
+次の目的のために、それぞれのパーミッションをしています。
 
 - SpreadSheetの読み書き: "https://www.googleapis.com/auth/spreadsheets"
 - SpreadSheetファイルの作成: "https://www.googleapis.com/auth/drive"

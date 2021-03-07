@@ -24,7 +24,7 @@ const links = [
     {
         icon: DiGithubBadge,
         label: "GitHub",
-        href: "https://github.com/azu"
+        href: "https://github.com/azu/philan.net"
     },
     {
         icon: IoLogoTwitter,

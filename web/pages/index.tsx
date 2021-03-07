@@ -17,15 +17,52 @@ import {
     Icon,
     Alert,
     AlertIcon,
-    VStack
+    VStack,
+    BoxProps,
+    Image
 } from "@chakra-ui/react";
-import React from "react";
+
+import React, { ReactElement } from "react";
 import { ArrowForwardIcon, ArrowRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdAccessibility, MdPublic } from "react-icons/md";
 import { BiSpreadsheet, BiBookAdd } from "react-icons/bi";
 import NextLink from "next/link";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+
+const MissionFeature = ({
+    title,
+    children,
+    imagePosition,
+    ...props
+}: {
+    title: string;
+    imagePosition: "left" | "right";
+    children: (string | ReactElement)[] | (string | ReactElement);
+} & BoxProps) => {
+    return (
+        // https://bgjar.com/circuit-primary.html
+        <Box bg={useColorModeValue("white", "gray.700")} shadow="base" padding="40px" {...props}>
+            <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={4} padding={4}>
+                <Box order={imagePosition === "left" ? 1 : 0} paddingX={4}>
+                    <Image
+                        objectFit={"fill"}
+                        size={"full"}
+                        src={imagePosition === "left" ? "/image-right.svg" : "image-left.svg"}
+                    />
+                </Box>
+                <Box order={imagePosition === "left" ? 0 : 1} paddingX={4}>
+                    <Heading as="h3" size="md" fontSize="xl" fontWeight="semibold" mb="0.5em">
+                        {title}
+                    </Heading>
+                    <Text fontSize="lg" opacity={0.7}>
+                        {children}
+                    </Text>
+                </Box>
+            </Grid>
+        </Box>
+    );
+};
 
 const Feature = ({ title, icon, children, ...props }: any) => {
     return (
@@ -160,6 +197,52 @@ const IndexPage = (props: { users: string[] }) => {
                         </Grid>
                     </Container>
                 </Box>
+                <Box>
+                    <Container maxW="1280px">
+                        <Box textAlign="center">
+                            <chakra.h1
+                                maxW="16ch"
+                                mx="auto"
+                                fontSize={{ base: "2.25rem", sm: "3rem", lg: "4rem" }}
+                                fontFamily="heading"
+                                letterSpacing="tighter"
+                                fontWeight="extrabold"
+                                mb="16px"
+                                lineHeight="1.2"
+                            >
+                                <Box as="span" color={useColorModeValue("pink.500", "pink.300")}>
+                                    Missions
+                                </Box>
+                            </chakra.h1>
+                        </Box>
+                        <Box>
+                            <MissionFeature title="寄付が特別な状態ではないことを目指す" imagePosition={"right"}>
+                                寄付やお金が神聖なものとして扱われている状態があります。
+                                <br />
+                                慈善活動において寄付は重要な資源ですが、特別なものとして扱うと寄付をする側、寄付をされる側どちらも動きにくくなります。
+                                <br />
+                                寄付が特別ではない状態を目指し、寄付が最大限活用できる状態にします。
+                            </MissionFeature>
+                            <MissionFeature title="寄付の状況を公開することで透明性を出す" imagePosition={"left"}>
+                                寄付をする側、寄付を受ける側どちらも透明性が重要です。
+                                <br />
+                                寄付をしない理由として
+                                <Link
+                                    href={"https://core.ac.uk/download/pdf/228068334.pdf"}
+                                    borderBottom={"1px"}
+                                    borderColor={"blue.200"}
+                                    isExternal={true}
+                                >
+                                    寄付の管理団体への不信感・不透明感
+                                    <ExternalLinkIcon mx={"2px"} />
+                                </Link>
+                                が大きいです。
+                                <br />
+                                寄付を受けた側の透明性レポートは必要ですが、寄付をする側の透明性も重要です。なぜ寄付をしたのかなどの記録を公開することで、透明性がある状態を目指してます。
+                            </MissionFeature>
+                        </Box>
+                    </Container>
+                </Box>
                 <Box padding={"8"} backgroundColor={useColorModeValue("teal.500", "teal.300")}>
                     <Box textAlign="center">
                         <chakra.h1
@@ -219,7 +302,10 @@ const IndexPage = (props: { users: string[] }) => {
                                 lineHeight="1.2"
                             >
                                 <Box as="span" color={useColorModeValue("pink.500", "pink.300")}>
-                                    Philanthropist
+                                    <Text as="span" color={useColorModeValue("teal.500", "teal.300")}>
+                                        Philan
+                                    </Text>
+                                    thropist
                                 </Box>
                             </chakra.h1>
                             <Box>

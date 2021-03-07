@@ -12,11 +12,11 @@ type FooterLinkProps = {
 const serviceLinks = [
     {
         label: "利用規約",
-        href: "https://github.com/azu"
+        href: "https://github.com/azu/philan.net/blob/main/docs/ja/term-of-use.md"
     },
     {
         label: "プライバシーポリシー",
-        href: "https://twitter.com/azu_re"
+        href: "https://github.com/azu/philan.net/blob/main/docs/ja/privacy-poicy.md"
     }
 ];
 
@@ -34,7 +34,7 @@ const links = [
     {
         icon: MdEmail,
         label: "Email",
-        href: "mailto:example@example.com"
+        href: "mailto:info@philan.net"
     }
 ];
 const FooterLink: React.FC<FooterLinkProps> = ({ icon, href, label }) => (

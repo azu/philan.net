@@ -5,6 +5,7 @@ import {
     Box,
     Button,
     chakra,
+    Checkbox,
     Container,
     FormControl,
     FormHelperText,
@@ -35,10 +36,11 @@ function userForm() {
     const [defaultCurrency, setDefaultCurrency] = useState<string>("JPY");
     const [budget, setBudget] = useState<number>(10000);
     const [valid, setValid] = useState<boolean>(false);
+    const [agreement, setAgreement] = useState<boolean>(false);
     useEffect(() => {
-        const ok = id.length > 0 && name.length > 0 && budget > 0 && defaultCurrency.length === 3;
+        const ok = agreement && id.length > 0 && name.length > 0 && budget > 0 && defaultCurrency.length === 3;
         setValid(ok);
-    }, [id, name, budget]);
+    }, [id, name, budget, agreement]);
     const handlers = useMemo(
         () => ({
             updateId: (event: SyntheticEvent<HTMLInputElement>) => {
@@ -55,6 +57,9 @@ function userForm() {
             },
             updateDefaultCurrency: (event: SyntheticEvent<HTMLSelectElement>) => {
                 setDefaultCurrency(event.currentTarget.value);
+            },
+            updateAgreement: (event: SyntheticEvent<HTMLInputElement>) => {
+                setAgreement(event.currentTarget.checked);
             }
         }),
         [id, name, budget]
@@ -65,6 +70,7 @@ function userForm() {
         name,
         README,
         budget,
+        agreement,
         defaultCurrency,
         valid,
         handlers
@@ -72,7 +78,7 @@ function userForm() {
 }
 
 export default function Create() {
-    const { id, name, valid, budget, README, defaultCurrency, handlers } = userForm();
+    const { id, name, valid, budget, agreement, README, defaultCurrency, handlers } = userForm();
     const [error, setError] = useState<Error | null>(null);
     const submit = () => {
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
@@ -200,6 +206,28 @@ export default function Create() {
                                     あなたの自己紹介を入力してください(Markdown形式、後から変更できます)
                                 </FormHelperText>
                                 <Textarea height={"10em"} value={README} onChange={handlers.updateREADME} />
+                            </FormControl>
+                            <FormControl id="agreement" marginBottom={6}>
+                                <Checkbox isChecked={agreement} onChange={handlers.updateAgreement}>
+                                    <Link
+                                        display="inline-block"
+                                        href={"https://github.com/azu/philan.net/blob/main/docs/ja/term-of-use.md"}
+                                        color="teal.500"
+                                        isExternal
+                                    >
+                                        利用規約
+                                    </Link>
+                                    と
+                                    <Link
+                                        display="inline-block"
+                                        href={"https://github.com/azu/philan.net/blob/main/docs/ja/privacy-poicy.md"}
+                                        color="teal.500"
+                                        isExternal
+                                    >
+                                        プライバシーポリシー
+                                    </Link>
+                                    に同意する
+                                </Checkbox>
                             </FormControl>
                             <Button
                                 mt={4}

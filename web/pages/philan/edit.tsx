@@ -132,7 +132,7 @@ export default function Create() {
     return (
         <>
             <Head>
-                <title>ユーザーを登録する - philan.net</title>
+                <title>ユーザー情報の更新 - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
             <Header />

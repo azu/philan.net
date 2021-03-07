@@ -3,6 +3,7 @@ import {
     Box,
     chakra,
     Container,
+    Icon,
     IconButton,
     Link,
     Menu,
@@ -15,7 +16,7 @@ import Head from "next/head";
 import { Header } from "../../components/Header";
 import { RiAddFill } from "react-icons/ri";
 import { useLoginUser } from "../../components/useLoginUser";
-
+import { AiOutlineInfoCircle } from "react-icons/ai";
 export default function Created() {
     const user = useLoginUser();
     const AddNewRecord = useCallback(() => {
@@ -75,7 +76,12 @@ export default function Created() {
                 <Container>
                     <Box>
                         寄付先を探している人は
-                        <Link href={"https://github.com/azu/philan.net/blob/main/docs/ja/knowledge.md"}>
+                        <Link
+                            href={"https://github.com/azu/philan.net/blob/main/docs/ja/knowledge.md"}
+                            color="teal.500"
+                            isExternal={true}
+                        >
+                            <Icon as={AiOutlineInfoCircle} fontSize="xl" color="gray.400" />
                             ナレッジベース
                         </Link>
                         を参照してみてください

@@ -22,4 +22,8 @@
 
 ## 改定履歴
 
-- [コミットログ][]を参照
+プライバシーポリシーのGitHubのコミットログを参照してください。
+
+- [プライバシーポリシーの改定記録][]
+
+[プライバシーポリシーの改定記録]: https://github.com/azu/philan.net/commits/main/docs/ja/privacy-poicy.md

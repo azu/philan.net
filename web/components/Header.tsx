@@ -126,6 +126,7 @@ function HeaderContent() {
             <MenuList>
                 <MenuItem onClick={() => (location.href = `/user/${user.id}`)}>Open My Page</MenuItem>
                 <MenuItem onClick={() => window.open(user.spreadsheetUrl, "_blank")}>Open SpreadSheet</MenuItem>
+                <MenuItem onClick={() => (location.href = `/philan/edit`)}>Edit Profile</MenuItem>
             </MenuList>
         </Menu>
     ) : null;

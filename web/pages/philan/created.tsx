@@ -1,10 +1,10 @@
 import {
-    Avatar,
     Box,
     chakra,
     Container,
     Icon,
     IconButton,
+    Img,
     Link,
     Menu,
     MenuButton,
@@ -36,7 +36,7 @@ export default function Created() {
             <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<Avatar loading="lazy" size="sm" name={user.name} src={user.avatarUrl} />}
+                icon={<Img boxSize="32px" borderRadius="full" objectFit="cover" alt={user.name} src={user.avatarUrl} />}
                 backgroundColor={"transparent"}
             />
             <MenuList>

@@ -4,7 +4,7 @@ import {
     AccordionIcon,
     AccordionItem,
     AccordionPanel,
-    Avatar,
+    Img,
     Box,
     Container,
     Flex,
@@ -96,7 +96,13 @@ function UserPage({
                         <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
                             <Flex paddingY={4}>
                                 <Box>
-                                    <Avatar loading="eager" size="xl" name={userName} src={userAvatarUrl} />
+                                    <Img
+                                        boxSize="96px"
+                                        borderRadius="full"
+                                        objectFit="cover"
+                                        alt={userName}
+                                        src={userAvatarUrl}
+                                    />
                                 </Box>
                                 <Box paddingX={4}>
                                     <Heading as="h1" size="xl" mt="1em" mb="0.5em">

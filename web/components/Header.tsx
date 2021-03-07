@@ -1,5 +1,5 @@
 import {
-    Avatar,
+    Img,
     Box,
     BoxProps,
     chakra,
@@ -120,7 +120,7 @@ function HeaderContent() {
             <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<Avatar loading="lazy" size="sm" name={user.name} src={user.avatarUrl} />}
+                icon={<Img boxSize="32px" borderRadius="full" objectFit="cover" alt={user.name} src={user.avatarUrl} />}
                 backgroundColor={"transparent"}
             />
             <MenuList>

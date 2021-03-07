@@ -74,11 +74,12 @@ export default function Created() {
                 </Container>
                 <Container>
                     <Box>
-                        寄付先を考えている人は
-                        <Link href={"https://github.com/azu/philan.net/tree/main/web"}>ナレッジベース</Link>
+                        寄付先を探している人は
+                        <Link href={"https://github.com/azu/philan.net/blob/main/docs/ja/knowledge.md"}>
+                            ナレッジベース
+                        </Link>
                         を参照してみてください
                     </Box>
-                    <Box>ヘッダーの {myPageLink} ボタンから寄付の一覧や記録用のSpreadSheetを開けます。</Box>
                 </Container>
             </Box>
         </>

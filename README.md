@@ -1,24 +1,34 @@
 # philan.net
 
-## Misson
+## Mission
 
 - 寄付が特別な状態ではないことを目指す
 - 自身の寄付の状況を公開することで透明性を出す
 
-## Architectures
-
-This application is based on Cloudflare Workers + Next.js(Vercel).
-
-- `/worker/*` → Cloudflare Workers
-- `/api/*` → Next.js API
-
-## Production
-
-- Cloudflare Workers → Next.js → Cloudflare Workers →　Next.js API
-
 ## Development
 
-- Next.js → Cloudflare Workers →　Next.js API 
+  yarn install
+  yarn dev
+
+- [ ] https://github.com/azu/philan.net/issues/11
+
+## Architectures
+
+This application is based on Next.js(Vercel) +  Cloudflare Workers KV.
+
+- `/*` → Next.js Web/API
+- [ ] `/worker/*` → Cloudflare Workers
+  - Not used yet
+
+Overview
+
+- /* - Next.js
+  - /api - Next.js's API(FaaS)
+  
+Storage
+
+- Cloudflare Workers KV
+- Google SpreadSheet
 
 ## Permission
 
@@ -29,7 +39,9 @@ This application is based on Cloudflare Workers + Next.js(Vercel).
 - ユーザーID: "openid"
 - ユーザーアバター画像: "profile"
 
-## KV 
+## Note
+
+### KV 
 
 - KVには強整合性がないため、invalid stateが発生する
     - 保存したけど、次の読み込みに最新かが保証されない

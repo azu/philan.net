@@ -5,6 +5,10 @@ export type CreateUserRequestBody = {
     defaultCurrency: string;
 };
 
+export type CreateUserResponseBody = {
+    ok: true;
+    id: string;
+};
 export type UpdateUserRequestBody = {
     name: string;
     budget: number;

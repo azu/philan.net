@@ -18,8 +18,8 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         const verifiedIdTokenResponse = await client.verifyIdToken({
             idToken: credentials.id_token
         });
-        const userId = verifiedIdTokenResponse.getUserId();
-        if (!userId) {
+        const googleId = verifiedIdTokenResponse.getUserId();
+        if (!googleId) {
             throw new Error("Not found userId");
         }
         const picture = verifiedIdTokenResponse.getPayload()?.["picture"];
@@ -41,7 +41,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             throw new Error("Can not create spreadsheet: null");
         }
         // Save
-        await kvs.updateUser(userId, {
+        await kvs.updateUser(googleId, {
             id,
             name,
             credentials,
@@ -50,9 +50,11 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             spreadsheetId: spreadSheet.data.spreadsheetId
         });
         // remove temporary
-        await req.session.unset("tempCredentials");
+        req.session.unset("tempCredentials");
+        await req.session.save();
         res.json({
-            ok: true
+            ok: true,
+            id
         });
     });
 export default handler;

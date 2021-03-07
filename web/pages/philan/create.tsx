@@ -23,6 +23,7 @@ import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
 import { Header } from "../../components/Header";
 import COUNTRY_CURRENCY from "country-to-currency";
+import { CreateUserRequestBody } from "../api/user/api-types";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 
@@ -69,7 +70,6 @@ export default function Create() {
     const [error, setError] = useState<Error | null>(null);
     const submit = () => {
         const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan-net.vercel.app";
-
         fetch(HOST + "/api/user/create", {
             method: "post",
             headers: {
@@ -85,9 +85,14 @@ export default function Create() {
         })
             .then((res) => {
                 if (res.ok) {
-                    return setError(null);
+                    setError(null);
+                    return res.json();
                 }
                 return res.text().then((text) => Promise.reject(new Error(text)));
+            })
+            .then((json: CreateUserRequestBody) => {
+                const query = new URLSearchParams([["id", json.id]]);
+                window.location.href = "/philan/created?" + query.toString();
             })
             .catch((error) => {
                 setError(error);

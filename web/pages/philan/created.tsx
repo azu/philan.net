@@ -92,7 +92,7 @@ export default function Created() {
     return (
         <>
             <Head>
-                <title>新しい寄付の記録に成功🎉 - philan.net</title>
+                <title>アカウントを作成しました 🎉 - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
             <Header />

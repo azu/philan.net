@@ -8,14 +8,14 @@ export const createUserKvs = () => {
             if (!id) {
                 return;
             }
-            return kvs.get(id);
+            return kvs.get(`google:1:${id}`);
         },
         findByUserId(userId: string) {
             return kvs.get(`users:1:${userId}`);
         },
         async updateUser(id: string, user: User) {
             // double write for id and userId
-            await kvs.set(id, user);
+            await kvs.set(`google:1:${id}`, user);
             await kvs.set(`users:1:${user.id}`, user);
         },
         async exists(id: string) {

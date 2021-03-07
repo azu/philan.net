@@ -1,11 +1,10 @@
 {
   "private": true,
-  "name": "@philan-net/api",
+  "name": "@philan-net/web",
   "version": "1.0.0",
   "scripts": {
     "dev": "npm-run-all -p dev:next",
     "dev:next": "next --port 3000",
-    "dev:localtunnel": "lt --port 3000 --subdomain philan-net-api",
     "build": "next build",
     "start": "next start",
     "type-check": "tsc",
@@ -51,7 +50,6 @@
     "@types/react-dom": "^17.0.1",
     "@types/simple-oauth2": "^4.1.0",
     "create-validator-ts": "^1.0.2",
-    "localtunnel": "^2.0.1",
     "npm-run-all": "^4.1.5",
     "typescript": "^4.1.5"
   },

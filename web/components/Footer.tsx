@@ -47,7 +47,7 @@ export const Footer = () => (
         <Divider />
         <Stack mt={4} direction="row" spacing="12px" justify="center">
             {serviceLinks.map((link) => (
-                <Link display="inline-block" href={link.href} aria-label={link.label} isExternal>
+                <Link key={link.href} display="inline-block" href={link.href} aria-label={link.label} isExternal>
                     {link.label}
                 </Link>
             ))}

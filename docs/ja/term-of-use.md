@@ -170,7 +170,7 @@
 
 - [利用規約の改定記録][]
 
-[ルール]: https://github.com/azu/philan.net
+[ルール]: https://github.com/azu/philan.net/blob/main/rule.md
 [Code of Conduct]: https://github.com/azu/philan.net/blob/main/CODE_OF_CONDUCT.md
 [プライバシーポリシー]: https://github.com/azu/philan.net/blob/main/docs/ja/privacy-poicy.md
 [利用規約の改定記録]: https://github.com/azu/philan.net/commits/main/docs/ja/term-of-use.md

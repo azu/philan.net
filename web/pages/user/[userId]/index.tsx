@@ -30,6 +30,7 @@ import { getSpreadSheet } from "../../api/spreadsheet/get";
 import { createUserKvs } from "../../../api-utils/userKvs";
 import Head from "next/head";
 import { createMarkdown } from "safe-marked";
+import { Footer } from "../../../components/Footer";
 // const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
 const markdown = createMarkdown();
 const Summarize = (props: { children: string }) => {
@@ -204,6 +205,7 @@ function UserPage({
                         })}
                     </Box>
                 </Container>
+                <Footer />
             </Box>
         </>
     );

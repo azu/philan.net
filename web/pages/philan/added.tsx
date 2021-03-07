@@ -14,6 +14,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import { SiTwitter } from "react-icons/si";
 import { Header } from "../../components/Header";
+import { Footer } from "../../components/Footer";
 
 const Messages = [
     <Box>
@@ -144,6 +145,7 @@ export default function Added() {
                         </Container>
                     </Box>
                 </Box>
+                <Footer />
             </Box>
         </>
     );

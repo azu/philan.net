@@ -29,6 +29,7 @@ import { UseRadioProps } from "@chakra-ui/radio/dist/types/use-radio";
 import COUNTRY_CURRENCY from "country-to-currency";
 import { LoginUser, useLoginUser } from "../../components/useLoginUser";
 import dayjs from "dayjs";
+import { Footer } from "../../components/Footer";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 const options = [
@@ -349,6 +350,7 @@ export default function Create() {
                         </Box>
                     </Container>
                 </Box>
+                <Footer />
             </Box>
         </>
     );

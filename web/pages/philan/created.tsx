@@ -17,6 +17,7 @@ import { Header } from "../../components/Header";
 import { RiAddFill } from "react-icons/ri";
 import { useLoginUser } from "../../components/useLoginUser";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+import { Footer } from "../../components/Footer";
 
 export default function Created() {
     const user = useLoginUser();
@@ -88,6 +89,7 @@ export default function Created() {
                         を参照してみてください
                     </Box>
                 </Container>
+                <Footer />
             </Box>
         </>
     );

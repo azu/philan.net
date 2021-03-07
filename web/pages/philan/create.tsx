@@ -26,6 +26,7 @@ import Head from "next/head";
 import { Header } from "../../components/Header";
 import COUNTRY_CURRENCY from "country-to-currency";
 import { CreateUserRequestBody } from "../api/user/api-types";
+import { Footer } from "../../components/Footer";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 
@@ -243,6 +244,7 @@ export default function Create() {
                         </Box>
                     </Container>
                 </Box>
+                <Footer />
             </Box>
         </>
     );

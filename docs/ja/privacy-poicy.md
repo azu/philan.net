@@ -12,10 +12,9 @@
 
 - アクセス許可: このサービスは Google Spreadsheetを含むGoogle API を使用しています。利用者（あなた）が、Google アカウントへのアクセス許可を、このサービスへ与えることで、このサービスが機能します。
 - 許可の内容: 次の内容を取得するためのスコープを設定しています。
-    - SpreadSheetの読み書き: "https://www.googleapis.com/auth/spreadsheets"
-    - SpreadSheetファイルの作成: "https://www.googleapis.com/auth/drive"
-    - ユーザーID: "openid"
-    - ユーザーアバター画像: "profile"
+  - SpreadSheetのファイル作成、編集: "https://www.googleapis.com/auth/drive.file"
+  - ユーザーID: "openid"
+  - ユーザーアバター画像: "profile"
 - データの保存: 読み取れるデータの一部を、このサービスはデータベースに保存しています。
 - 許可の取り消し: Google の設定から、「philan.net」への許可を取り消せます。
   - <https://myaccount.google.com/permissions>

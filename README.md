@@ -35,10 +35,9 @@ Storage
 
 ## Permission
 
-次の目的のために、それぞれのパーミッションをしています。
+次の目的のために、それぞれのパーミッションを指定しています。
 
-- SpreadSheetの読み書き: "https://www.googleapis.com/auth/spreadsheets"
-- SpreadSheetファイルの作成: "https://www.googleapis.com/auth/drive"
+- SpreadSheetのファイル作成、編集: "https://www.googleapis.com/auth/drive.file"
 - ユーザーID: "openid"
 - ユーザーアバター画像: "profile"
 

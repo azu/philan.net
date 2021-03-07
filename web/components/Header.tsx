@@ -38,7 +38,7 @@ const SponsorButton = (props: BoxProps) => (
         display={{ base: "none", md: "flex" }}
         alignItems="center"
         as="a"
-        aria-label="Sponsor philan.net on GitHub"
+        aria-label="Support philan.net on GitHub"
         href={"https://github.com/sponsors/azu"}
         target="_blank"
         rel="noopener noreferrer"

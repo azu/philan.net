@@ -179,7 +179,7 @@ const IndexPage = (props: { users: string[] }) => {
                             <chakra.h2
                                 maxW="30ch"
                                 mx="auto"
-                                fontSize={{ base: "1.25rem", sm: "1rem", lg: "2rem" }}
+                                fontSize={{ base: "1.25rem", sm: "1.2rem", lg: "2rem" }}
                                 color={"whiteAlpha.800"}
                                 fontFamily="heading"
                                 letterSpacing="tighter"

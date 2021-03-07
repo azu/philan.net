@@ -4,7 +4,7 @@ export const createOAuthClient = (credentials?: Auth.Credentials) => {
     const CLIENT_ID = process.env.CLIENT_ID;
     const CLIENT_SECRET = process.env.CLIENT_SECRET;
     const REDIRECT_URL = process.env.VERCEL
-        ? "https://philan-net.vercel.app/api/auth/authorized"
+        ? "https://philan.net/api/auth/authorized"
         : "http://localhost:3000/api/auth/authorized";
     const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL);
     if (credentials) {

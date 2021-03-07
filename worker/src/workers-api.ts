@@ -8,7 +8,7 @@ import { HeadersShorthands } from "sunder/context";
 declare const USERS: KVNamespace;
 declare const DEBUG: string | undefined;
 
-const API_HOST = typeof DEBUG !== "undefined" ? "https://philan-net-api.loca.lt" : "https://philan-net.vercel.app";
+const API_HOST = typeof DEBUG !== "undefined" ? "https://philan-net-api.loca.lt" : "https://philan.net";
 
 const setCookie = (response: ResponseData, values: [key: string, value: string][]) => {
     if (DEBUG) {

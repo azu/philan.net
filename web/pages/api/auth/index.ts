@@ -21,8 +21,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             access_type: "offline",
             prompt: "consent",
             scope: [
-                "https://www.googleapis.com/auth/spreadsheets",
-                "https://www.googleapis.com/auth/drive", // require to create sheet
+                "https://www.googleapis.com/auth/drive.file", // require to create sheet
                 "openid", // id_token
                 "profile" // aviator, default name, default id
             ],

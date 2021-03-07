@@ -99,7 +99,6 @@ router.get("/docs/(.*)", async (context) => {
 router.get("/worker/user/meta/:user", async ({ request, response, params }) => {
     corsHeader(response);
     const user = params.user;
-    console.log("user", user);
     const text = await USERS.get(user);
     if (!text) {
         response.body = "No user";
@@ -119,7 +118,7 @@ router.get("/worker/user/:user", async ({ request, response, params }) => {
         return;
     }
     const userData = JSON.parse(text) as User;
-    const SSRURL = `${API_HOST}/user/1FNux_fbqZsbTJpJ3AIcC3-RF7oywV7uJ8TDwZv19T2k/${userData.google_token}`;
+    const SSRURL = `${API_HOST}/user/ID/${userData.google_token}`;
     const res = await fetch(SSRURL);
     if (res.body) {
         response.body = res.body;

@@ -31,7 +31,6 @@ export const getSpreadSheet = async ({
     }
     // const locale = spreadsheet.data.properties?.locale;
     return spreadsheet?.data?.sheets?.map((sheet) => {
-        console.log(JSON.stringify(sheet, null, 4));
         const items = sheet?.data?.[0];
         // ["Budget", "Used", "Balance"]
         const statsRow = items?.rowData?.[1];

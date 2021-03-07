@@ -9,11 +9,13 @@
 
 ## Development
 
-  yarn install
-  # first time
-  yarn bootstrap
-  # start server
-  yarn dev
+```
+yarn install
+# first time
+yarn bootstrap
+# start server
+yarn dev
+```
 
 - [ ] https://github.com/azu/philan.net/issues/11
 

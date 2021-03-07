@@ -16,15 +16,11 @@
 
 This application is based on Next.js(Vercel) +  Cloudflare Workers KV.
 
-- `/*` → Next.js Web/API
+- /* - [Next.js](./web)
+  - /api - [Next.js's API(FaaS)](./web/pages/api)
 - [ ] `/worker/*` → Cloudflare Workers
   - Not used yet
 
-Overview
-
-- /* - Next.js
-  - /api - Next.js's API(FaaS)
-  
 Storage
 
 - Cloudflare Workers KV

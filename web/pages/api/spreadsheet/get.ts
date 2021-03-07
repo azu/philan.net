@@ -6,8 +6,13 @@ import nextConnect from "next-connect";
 import { withSession } from "../../../api-utils/with-session";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 import dayjs from "dayjs";
-
+import shortHash from "shorthash2";
 const sheets = google.sheets("v4");
+
+const createHashedId = (...seeds: (string | undefined)[]) => {
+    const stringSeeds = seeds.filter((seed) => seed !== undefined || seed !== null) as string[];
+    return shortHash(stringSeeds.join("--"));
+};
 export const getSpreadSheet = async ({
     spreadsheetId,
     credentials
@@ -63,15 +68,22 @@ export const getSpreadSheet = async ({
                 })
                 ?.map((row) => {
                     const values = row.values;
+                    const dateString = values?.[0].userEnteredValue?.stringValue!;
+                    const amountValue = values?.[2]?.formattedValue!;
+                    const dateKey = dayjs(dateString!).format("YYYY-MM-DD");
+                    const url = values?.[3].userEnteredValue?.stringValue!;
+                    const hashId = createHashedId(dateString, amountValue, url);
+                    const id = `${dateKey}-${hashId}`;
                     const meta = JSON.parse(values?.[5]?.userEnteredValue?.stringValue ?? "{}");
                     return {
-                        date: values?.[0].userEnteredValue?.stringValue!,
+                        id,
+                        date: dateString,
                         to: values?.[1].userEnteredValue?.stringValue!,
                         amount: {
                             raw: values?.[2].effectiveValue?.numberValue!,
-                            value: values?.[2]?.formattedValue!
+                            value: amountValue
                         },
-                        url: values?.[3].userEnteredValue?.stringValue!,
+                        url: url,
                         memo: values?.[4].userEnteredValue?.stringValue ?? "",
                         meta: meta
                     };

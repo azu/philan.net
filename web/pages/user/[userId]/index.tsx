@@ -171,7 +171,7 @@ function UserPage({
                                                     </span>
                                                 ) : null;
                                             return (
-                                                <ListItem key={item.date}>
+                                                <ListItem key={item.id} id={item.id}>
                                                     <Flex alignItems={"baseline"}>
                                                         <Box padding="2">
                                                             {Icon}

@@ -17,6 +17,7 @@ import { Header } from "../../components/Header";
 import { RiAddFill } from "react-icons/ri";
 import { useLoginUser } from "../../components/useLoginUser";
 import { AiOutlineInfoCircle } from "react-icons/ai";
+
 export default function Created() {
     const user = useLoginUser();
     const AddNewRecord = useCallback(() => {

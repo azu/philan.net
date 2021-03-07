@@ -42,6 +42,7 @@ export type GetResponseBody = {
         };
     };
     items: {
+        id: string;
         date: string;
         to: string;
         amount: {

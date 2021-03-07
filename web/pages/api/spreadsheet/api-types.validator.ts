@@ -201,6 +201,9 @@ const SCHEMA = {
                         "items": {
                             "type": "object",
                             "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
                                 "date": {
                                     "type": "string"
                                 },
@@ -248,6 +251,7 @@ const SCHEMA = {
                                 }
                             },
                             "required": [
+                                "id",
                                 "date",
                                 "to",
                                 "amount",

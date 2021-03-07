@@ -21,7 +21,8 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { ArrowForwardIcon, ArrowRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
-import { MdAccessibility, MdGrain, MdPalette } from "react-icons/md";
+import { MdAccessibility, MdPublic } from "react-icons/md";
+import { BiSpreadsheet, BiBookAdd } from "react-icons/bi";
 import NextLink from "next/link";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
@@ -137,21 +138,21 @@ const IndexPage = (props: { users: string[] }) => {
                         </Box>
                         <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={4} padding={4}>
                             <Feature icon={MdAccessibility} title="寄付の予算">
-                                寄付をする年間の予算を決定できます。
+                                あなたの寄付に関する年間の予算を決定できます。
                                 <br />
                                 「寄付が難しい」という感覚は、得たお金を手放さないと行けないという苦痛から来ています。この苦痛を和らげる方法として、事前に寄付する金額を決めておくプレミコミットメントの手法が有効です。
                             </Feature>
-                            <Feature icon={MdPalette} title="データはSpreadSheetに記録">
+                            <Feature icon={BiSpreadsheet} title="データはSpreadSheetに記録">
                                 寄付の記録はすべてGoogle SpreadSheetに記録されます。
                                 <br />
                                 philan.netを使わなくなってもデータは常にあなたの手元に残ります。
                             </Feature>
-                            <Feature icon={MdGrain} title="寄付の記録を公開">
+                            <Feature icon={MdPublic} title="寄付の記録を公開">
                                 あなたの寄付の記録を公開できます。
                                 <br />
                                 あなたがいつ、どこへ、いくら、なぜ寄付したのかを記録し、あなたの寄付の記録として公開できます。
                             </Feature>
-                            <Feature icon={MdGrain} title="寄付の記録を簡単追加">
+                            <Feature icon={BiBookAdd} title="寄付の記録を簡単追加">
                                 ログインすることで寄付の記録を簡単に追加できます。
                                 <br />
                                 記録したデータはGoogle SpreadSheetに追記されます。

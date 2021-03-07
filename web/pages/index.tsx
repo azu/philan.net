@@ -73,7 +73,7 @@ const IndexPage = (props: { users: string[] }) => {
                                     </Box>
                                 </chakra.h1>
 
-                                <Text maxW="560px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">
+                                <Text maxW="600px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">
                                     Philan.netは、自身の寄付内容を公開、管理できるサービスです。
                                     寄付する額を事前に決めておくことで、寄付する気持ちを楽にします。
                                 </Text>

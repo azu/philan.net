@@ -18,7 +18,9 @@ export const withSession = () => {
         cookieName: "irsid",
         password: env.SESSION_COOKIE_SECRET,
         cookieOptions: {
-            secure: process.env.NODE_ENV === "production"
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            httpOnly: true
         }
     });
 };

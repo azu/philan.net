@@ -82,7 +82,7 @@ export default function Added() {
             setTweet(`寄付しました！`);
         }
         // want to update user page
-        fetch(`https://philan.net/user/${userId}`)
+        fetch(`https://philan.net/user/${id}`)
             .then(() => console.log("updated"))
             .catch(() => console.error("Fail to fetch"));
     }, []);

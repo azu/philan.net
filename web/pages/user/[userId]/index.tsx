@@ -37,8 +37,9 @@ const Summarize = (props: { children: string }) => {
     const lines = props.children.split(/\n/);
     if (lines.length <= 1) {
         return (
-            <div
-                className="UserContent"
+            <Box
+                className="UserContent markdown-body"
+                opacity={0.8}
                 dangerouslySetInnerHTML={{
                     __html: markdown(props.children)
                 }}
@@ -48,7 +49,7 @@ const Summarize = (props: { children: string }) => {
     const firstLine = lines[0] ?? "";
     const restLines = lines.slice(1).join("\n");
     return (
-        <Accordion className="UserContent" allowToggle defaultIndex={[0]}>
+        <Accordion className="UserContent markdown-body" allowToggle defaultIndex={[0]} opacity={0.8}>
             <AccordionItem>
                 <AccordionButton>
                     <Box flex="1" textAlign="left">
@@ -124,7 +125,7 @@ function UserPage({
                 </Box>
             </Box>
             <Box mt={{ base: "60px", md: "120px" }} mb="60px">
-                <Container>
+                <Container maxWidth={"80ch"}>
                     <Box padding={"2"}>
                         {response.map((item) => {
                             const balancePercent =

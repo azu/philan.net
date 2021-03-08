@@ -161,7 +161,7 @@ function UserPage({
                                             <StatHelpText>{balancePercent}%</StatHelpText>
                                         </Stat>
                                     </StatGroup>
-                                    <List>
+                                    <List paddingY={"1rem"}>
                                         {item.items.map((item) => {
                                             const safeUrl = /https?:/.test(item.url) ? item.url : "";
                                             const Icon =

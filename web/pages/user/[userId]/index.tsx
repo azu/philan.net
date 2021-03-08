@@ -129,8 +129,9 @@ function UserPage({
                         {response.map((item) => {
                             const balancePercent =
                                 item.stats.used.raw < item.stats.budget.raw
-                                    ? 100 - item.stats.used.raw / item.stats.budget.raw
+                                    ? ((item.stats.budget.raw - item.stats.used.raw) / item.stats.budget.raw) * 100
                                     : 0;
+                            const usedPercent = (item.stats.used.raw / item.stats.budget.raw) * 100;
                             return (
                                 <div key={item.year}>
                                     <Box maxW="32rem" padding={2}>
@@ -146,7 +147,7 @@ function UserPage({
                                         <Stat>
                                             <StatLabel>使用金額</StatLabel>
                                             <StatNumber>{item.stats.used.value}</StatNumber>
-                                            <StatHelpText>{item.stats.used.raw / item.stats.budget.raw}%</StatHelpText>
+                                            <StatHelpText>{usedPercent}%</StatHelpText>
                                         </Stat>
 
                                         <Stat>

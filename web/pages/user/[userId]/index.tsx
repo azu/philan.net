@@ -129,9 +129,11 @@ function UserPage({
                         {response.map((item) => {
                             const balancePercent =
                                 item.stats.used.raw < item.stats.budget.raw
-                                    ? ((item.stats.budget.raw - item.stats.used.raw) / item.stats.budget.raw) * 100
+                                    ? Math.trunc(
+                                          ((item.stats.budget.raw - item.stats.used.raw) / item.stats.budget.raw) * 100
+                                      )
                                     : 0;
-                            const usedPercent = (item.stats.used.raw / item.stats.budget.raw) * 100;
+                            const usedPercent = Math.trunc((item.stats.used.raw / item.stats.budget.raw) * 100);
                             return (
                                 <div key={item.year}>
                                     <Box maxW="32rem" padding={2}>

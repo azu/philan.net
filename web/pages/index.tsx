@@ -134,6 +134,7 @@ const IndexPage = (props: { users: string[] }) => {
                                         backgroundColor={"transparent"}
                                         borderBottom={"1px"}
                                         borderColor={useColorModeValue("teal.500", "teal.300")}
+                                        textAlign={"left"}
                                     >
                                         <AlertIcon />
                                         <Text opacity={0.7} fontSize={{ base: "s" }}>
@@ -148,6 +149,37 @@ const IndexPage = (props: { users: string[] }) => {
                                                 <ExternalLinkIcon verticalAlign={"baseline"} mx="2px" />
                                             </Link>
                                             を参照してください。
+                                        </Text>
+                                    </Alert>
+                                    <Alert
+                                        status="warning"
+                                        backgroundColor={"transparent"}
+                                        borderBottom={"1px"}
+                                        borderColor={useColorModeValue("teal.500", "teal.300")}
+                                        textAlign={"left"}
+                                    >
+                                        <AlertIcon />
+                                        <Text opacity={0.7} fontSize={{ base: "s" }}>
+                                            philan.netはαレベルのプロダクトです。
+                                            <br />
+                                            <Link
+                                                color="teal.500"
+                                                isExternal={true}
+                                                href={"https://github.com/azu/philan.net/issues"}
+                                            >
+                                                Issues
+                                                <ExternalLinkIcon verticalAlign={"baseline"} mx="2px" />
+                                            </Link>
+                                            や
+                                            <Link
+                                                color="teal.500"
+                                                isExternal={true}
+                                                href={"https://github.com/azu/philan.net/discussions"}
+                                            >
+                                                Discussions
+                                                <ExternalLinkIcon verticalAlign={"baseline"} mx="2px" />
+                                            </Link>
+                                            へフィードバックをお願いします。
                                         </Text>
                                     </Alert>
                                 </VStack>

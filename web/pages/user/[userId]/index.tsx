@@ -126,7 +126,7 @@ function UserPage({
                     </Container>
                 </Box>
             </Box>
-            <Box mt={{ base: "60px", md: "120px" }} mb="60px">
+            <Box marginTop={{ base: "60px" }} mb="60px">
                 <Container maxWidth={"80ch"}>
                     <Box padding={"2"}>
                         {response.map((item) => {

@@ -48,7 +48,7 @@ const Summarize = (props: { children: string }) => {
     const firstLine = lines[0] ?? "";
     const restLines = lines.slice(1).join("\n");
     return (
-        <Accordion className="UserContent" allowToggle>
+        <Accordion className="UserContent" allowToggle defaultIndex={[0]}>
             <AccordionItem>
                 <AccordionButton>
                     <Box flex="1" textAlign="left">

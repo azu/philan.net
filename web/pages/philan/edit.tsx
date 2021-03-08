@@ -11,11 +11,6 @@ import {
     FormLabel,
     Input,
     Link,
-    NumberDecrementStepper,
-    NumberIncrementStepper,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
     Select,
     Text
 } from "@chakra-ui/react";
@@ -33,13 +28,11 @@ function userForm(user: LoginUser | null) {
     const [name, setName] = useState<string>("");
     const [defaultCurrency, setDefaultCurrency] = useState<string>("JPY");
     const [spreadsheetId, setspreadsheetId] = useState<string>("");
-    const [budget, setBudget] = useState<number>(10000);
     const [valid, setValid] = useState<boolean>(false);
     useEffect(() => {
-        const ok =
-            id.length > 0 && name.length > 0 && spreadsheetId.length > 0 && budget > 0 && defaultCurrency.length === 3;
+        const ok = id.length > 0 && name.length > 0 && spreadsheetId.length > 0 && defaultCurrency.length === 3;
         setValid(ok);
-    }, [id, name, budget, spreadsheetId]);
+    }, [id, name, spreadsheetId]);
     useEffect(() => {
         if (!user) {
             return;
@@ -64,20 +57,16 @@ function userForm(user: LoginUser | null) {
             updatespreadsheetId: (event: SyntheticEvent<HTMLInputElement>) => {
                 setspreadsheetId(event.currentTarget.value);
             },
-            updateBudget: (_valueAsString: string, valueAsNumber: number) => {
-                setBudget(valueAsNumber);
-            },
             updateDefaultCurrency: (event: SyntheticEvent<HTMLSelectElement>) => {
                 setDefaultCurrency(event.currentTarget.value);
             }
         }),
-        [id, name, budget]
+        [id, name]
     );
 
     return {
         id,
         name,
-        budget,
         spreadsheetId,
         defaultCurrency,
         valid,
@@ -87,7 +76,7 @@ function userForm(user: LoginUser | null) {
 
 export default function Create() {
     const user = useLoginUser();
-    const { id, name, valid, spreadsheetId, budget, defaultCurrency, handlers } = userForm(user);
+    const { id, name, valid, spreadsheetId, defaultCurrency, handlers } = userForm(user);
     const [error, setError] = useState<Error | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const submit = () => {
@@ -101,7 +90,6 @@ export default function Create() {
             body: JSON.stringify({
                 id,
                 name,
-                budget,
                 defaultCurrency,
                 spreadsheetId
             })
@@ -169,22 +157,6 @@ export default function Create() {
                                 <FormLabel>ユーザー名</FormLabel>
                                 <Input value={name} onChange={handlers.updateName} />
                                 <FormHelperText>ユーザー名は表示のために使われる名前です</FormHelperText>
-                            </FormControl>
-                            <FormControl id="amount" isRequired>
-                                <FormLabel>寄付の予算</FormLabel>
-                                <NumberInput
-                                    value={budget}
-                                    max={100000000000}
-                                    min={100}
-                                    onChange={handlers.updateBudget}
-                                >
-                                    <NumberInputField />
-                                    <NumberInputStepper>
-                                        <NumberIncrementStepper />
-                                        <NumberDecrementStepper />
-                                    </NumberInputStepper>
-                                </NumberInput>
-                                <FormHelperText>今年の寄付の予算額を入力してください。</FormHelperText>
                             </FormControl>
                             <FormControl id={"defaultCurrency"} isRequired>
                                 <FormLabel>デフォルトの通貨</FormLabel>

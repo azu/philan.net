@@ -17,8 +17,6 @@ yarn bootstrap
 yarn dev
 ```
 
-- [ ] https://github.com/azu/philan.net/issues/11
-
 ## Architectures
 
 This application is based on Next.js(Vercel) +  Cloudflare Workers KV.

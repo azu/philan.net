@@ -5,6 +5,7 @@ export type RecordItem = {
     url: string;
     memo: string;
     meta: {
+        id: string;
         type: "checking" | "checked" | "not-money";
     };
 };

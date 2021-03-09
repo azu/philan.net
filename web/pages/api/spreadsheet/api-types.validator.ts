@@ -72,6 +72,9 @@ const SCHEMA = {
                 "meta": {
                     "type": "object",
                     "properties": {
+                        "id": {
+                            "type": "string"
+                        },
                         "type": {
                             "type": "string",
                             "enum": [
@@ -82,6 +85,7 @@ const SCHEMA = {
                         }
                     },
                     "required": [
+                        "id",
                         "type"
                     ],
                     "additionalProperties": false

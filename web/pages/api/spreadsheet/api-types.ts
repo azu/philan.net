@@ -51,6 +51,6 @@ export type GetResponseBody = {
         };
         url: string;
         memo: string; // why?
-        meta: RecordItem["meta"];
+        meta: Omit<RecordItem["meta"], "id">;
     }[];
 }[];

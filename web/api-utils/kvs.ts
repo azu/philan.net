@@ -146,7 +146,6 @@ const createLocalStorage = async <V>(): Promise<Storage<V>> => {
 };
 export const createKVS = async <V>(): Promise<Storage<V>> => {
     if (!hasCloudFlareEnv()) {
-        console.info("Use file system instead of Cloudflare KV Storage");
         return createLocalStorage<V>();
     }
     const kvStorage = new KvStorage({

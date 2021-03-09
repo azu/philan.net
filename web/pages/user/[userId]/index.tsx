@@ -1,9 +1,4 @@
 import {
-    Accordion,
-    AccordionButton,
-    AccordionIcon,
-    AccordionItem,
-    AccordionPanel,
     Img,
     Box,
     Container,
@@ -34,39 +29,17 @@ import { Footer } from "../../../components/Footer";
 // const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
 const markdown = createMarkdown();
 const Summarize = (props: { children: string }) => {
-    const lines = props.children.split(/\n/);
-    if (lines.length <= 1) {
-        return (
-            <Box
-                className="UserContent markdown-body"
-                opacity={0.8}
-                paddingX={"1rem"}
-                paddingBottom={"0.5rem"}
-                dangerouslySetInnerHTML={{
-                    __html: markdown(props.children)
-                }}
-            />
-        );
-    }
-    const firstLine = lines[0] ?? "";
-    const restLines = lines.slice(1).join("\n");
+    const body = markdown(props.children);
     return (
-        <Accordion className="UserContent markdown-body" allowToggle defaultIndex={[0]} opacity={0.8}>
-            <AccordionItem>
-                <AccordionButton>
-                    <Box flex="1" textAlign="left">
-                        {firstLine}
-                    </Box>
-                    <AccordionIcon />
-                </AccordionButton>
-                <AccordionPanel
-                    pb={4}
-                    dangerouslySetInnerHTML={{
-                        __html: markdown(restLines)
-                    }}
-                ></AccordionPanel>
-            </AccordionItem>
-        </Accordion>
+        <Box
+            className="UserContent markdown-body"
+            opacity={0.8}
+            paddingX={"1rem"}
+            paddingBottom={"0.5rem"}
+            dangerouslySetInnerHTML={{
+                __html: body
+            }}
+        />
     );
 };
 
@@ -194,9 +167,11 @@ function UserPage({
                                                         </Box>
                                                         <Spacer />
                                                         <Box fontSize={"small"} textAlign={"left"}>
-                                                            <time dateTime={item.date}>
-                                                                {dayjs(item.date).format("YYYY-MM-DD")}
-                                                            </time>
+                                                            <Link href={"#" + item.id}>
+                                                                <time dateTime={item.date}>
+                                                                    {dayjs(item.date).format("YYYY-MM-DD")}
+                                                                </time>
+                                                            </Link>
                                                         </Box>
                                                     </Flex>
                                                     <Box color={useColorModeValue("gray.500", "gray.300")}>

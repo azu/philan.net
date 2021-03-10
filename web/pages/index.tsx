@@ -376,9 +376,10 @@ const IndexPage = (props: { users: string[] }) => {
 
 export async function getStaticProps() {
     const users = await getUserList();
+    const displayUsers = users.filter((user) => user.length > 2);
     return {
         props: {
-            users
+            users: displayUsers
         }
     };
 }

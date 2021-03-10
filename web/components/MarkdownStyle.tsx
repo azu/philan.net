@@ -1,3 +1,4 @@
+// Based on https://github.com/sindresorhus/github-markdown-css/issues/76
 export function MarkdownStyle(props: { colorMode: "dark" | "light" }) {
     return (
         <style>

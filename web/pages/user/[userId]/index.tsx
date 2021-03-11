@@ -21,7 +21,7 @@ import {
 import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
-import React from "react";
+import React, { useCallback } from "react";
 import type { GetResponseBody } from "../../api/spreadsheet/api-types";
 import { getSpreadSheet } from "../../api/spreadsheet/get";
 import { createUserKvs } from "../../../api-utils/userKvs";
@@ -37,6 +37,7 @@ const Summarize = (props: { children: string }) => {
         <Box>
             <Box
                 className="UserContent markdown-body"
+                opacity={0.8}
                 paddingX={"1rem"}
                 paddingBottom={"0.5rem"}
                 dangerouslySetInnerHTML={{
@@ -90,6 +91,7 @@ function UserPage({
     const { colorMode } = useColorMode();
     const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
     const feedURL = `${HOST}/user/${userId}/feed`;
+    const styleGenerator = useCallback(() => MarkdownStyle(colorMode), [colorMode]);
     return (
         <>
             <Head>
@@ -97,7 +99,7 @@ function UserPage({
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                 <link rel="alternate" type="application/rss+xml" href={feedURL} />
                 {/*<meta property="og:image" content={`${HOST}/api/ogp/${userId}`} />*/}
-                <MarkdownStyle colorMode={colorMode} />
+                <style>{styleGenerator()}</style>
             </Head>
             <Header />
             <Box mb={20}>

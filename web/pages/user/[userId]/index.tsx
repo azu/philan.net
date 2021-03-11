@@ -14,6 +14,7 @@ import {
     StatHelpText,
     StatLabel,
     StatNumber,
+    Text,
     useColorModeValue,
     useColorMode
 } from "@chakra-ui/react";
@@ -48,18 +49,45 @@ const Summarize = (props: { children: string }) => {
 };
 
 function UserPage({
+    ok,
+    errorMessage,
     response,
     userId,
     userName,
     userAvatarUrl,
     README
 }: {
+    ok: boolean;
+    errorMessage?: string;
     README: string;
     userName: string;
     userAvatarUrl?: string;
     userId: string;
     response: GetResponseBody;
 }) {
+    if (!ok) {
+        return (
+            <>
+                <Head>
+                    <title>SpreadSheet Error - philan.net</title>
+                </Head>
+                <Header />
+                <Box mb={20}>
+                    <Box as="section" pt={{ base: "8rem", md: "10rem" }} pb={{ base: "0", md: "1rem" }}>
+                        <Container>
+                            <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
+                                <Text>Can not fetch spreadsheet</Text>
+                                <pre>Error: {errorMessage}</pre>
+                            </Box>
+                        </Container>
+                    </Box>
+                </Box>
+                <Box marginTop={{ base: "60px" }} mb="60px">
+                    <Footer />
+                </Box>
+            </>
+        );
+    }
     const { colorMode } = useColorMode();
     const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
     const feedURL = `${HOST}/user/${userId}/feed`;
@@ -218,25 +246,35 @@ export async function getStaticProps({
     if (!user) {
         throw new Error("No user");
     }
-    const res = await getSpreadSheet({
-        spreadsheetId: user.spreadsheetId,
-        credentials: user.credentials,
-        defaultCurrency: user.defaultCurrency
-    });
-    const markdown = createMarkdown();
-    return {
-        props: {
-            userName: user.name,
-            userId: user.id,
-            userAvatarUrl: user.avatarUrl,
-            response: res,
-            README: markdown(res[0].README)
-        },
-        // Next.js will attempt to re-generate the page:
-        // - When a request comes in
-        // - At most once x second
-        revalidate: 60 // In seconds
-    };
+    try {
+        const res = await getSpreadSheet({
+            spreadsheetId: user.spreadsheetId,
+            credentials: user.credentials,
+            defaultCurrency: user.defaultCurrency
+        });
+        const markdown = createMarkdown();
+        return {
+            props: {
+                ok: true,
+                userName: user.name,
+                userId: user.id,
+                userAvatarUrl: user.avatarUrl,
+                response: res,
+                README: markdown(res[0].README)
+            },
+            // Next.js will attempt to re-generate the page:
+            // - When a request comes in
+            // - At most once x second
+            revalidate: 60 // In seconds
+        };
+    } catch (error) {
+        return {
+            props: {
+                errorMessage: error.message,
+                ok: false
+            }
+        };
+    }
 }
 
 export default UserPage;

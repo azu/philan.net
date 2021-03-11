@@ -9,6 +9,7 @@
   "scripts": {
     "bootstrap": "cp web/.env.example web/.env",
     "dev": "npm run dev:web",
+    "test": "cd web && npm run test",
     "_dev": "concurrently --names 'API,WORKER' -c 'bgBlue.bold,bgMagenta.bold' 'npm:dev:api' 'npm:dev:worker'",
     "dev:web": "cd web && yarn dev",
     "dev:worker": "#cd worker && yarn dev",

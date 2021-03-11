@@ -101,7 +101,6 @@ export const getSpreadSheet = async ({
                 ?.map((row) => {
                     const values = row.values;
                     const dateString = values?.[0].userEnteredValue?.stringValue!;
-                    console.log("values?.[2]", values?.[2]);
                     const amountUserEnteredValue = values?.[2].userEnteredValue?.formulaValue!;
                     const amountNumber = values?.[2].effectiveValue?.numberValue!;
                     const amountFormattedValue = values?.[2]?.formattedValue!;

@@ -39,6 +39,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-icons": "^4.2.0",
+    "react-select": "^4.2.1",
     "react-use": "^17.1.1",
     "safe-marked": "^5.0.0",
     "shorthash2": "^1.0.3"
@@ -51,6 +52,7 @@
     "@types/pino": "^6.3.6",
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
+    "@types/react-select": "^4.0.13",
     "@types/simple-oauth2": "^4.1.0",
     "create-validator-ts": "^1.0.2",
     "npm-run-all": "^4.1.5",

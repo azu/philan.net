@@ -15,7 +15,8 @@ export async function getServerSideProps({ params, res }: GetServerSidePropsCont
     }
     const spreadSheet = await getSpreadSheet({
         spreadsheetId: user.spreadsheetId,
-        credentials: user.credentials
+        credentials: user.credentials,
+        defaultCurrency: user.defaultCurrency
     });
     const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
     const link = `${HOST}/user/${user.id}`;

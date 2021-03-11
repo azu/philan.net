@@ -79,8 +79,7 @@ const SCHEMA = {
                             "type": "string",
                             "enum": [
                                 "checking",
-                                "checked",
-                                "not-money"
+                                "checked"
                             ]
                         }
                     },
@@ -127,6 +126,80 @@ const SCHEMA = {
             "required": [
                 "token",
                 "spreadsheetId"
+            ],
+            "additionalProperties": false
+        },
+        "SpreadSheetItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "to": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "object",
+                    "properties": {
+                        "number": {
+                            "type": "number"
+                        },
+                        "value": {
+                            "type": "string"
+                        },
+                        "raw": {
+                            "type": "number"
+                        },
+                        "inputCurrency": {
+                            "type": "string"
+                        },
+                        "outputCurrency": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "number",
+                        "value",
+                        "raw",
+                        "inputCurrency",
+                        "outputCurrency"
+                    ],
+                    "additionalProperties": false
+                },
+                "url": {
+                    "type": "string"
+                },
+                "memo": {
+                    "type": "string"
+                },
+                "meta": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string",
+                            "enum": [
+                                "checking",
+                                "checked"
+                            ]
+                        }
+                    },
+                    "required": [
+                        "type"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "id",
+                "date",
+                "to",
+                "amount",
+                "url",
+                "memo",
+                "meta"
             ],
             "additionalProperties": false
         },
@@ -203,67 +276,7 @@ const SCHEMA = {
                     "items": {
                         "type": "array",
                         "items": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "string"
-                                },
-                                "date": {
-                                    "type": "string"
-                                },
-                                "to": {
-                                    "type": "string"
-                                },
-                                "amount": {
-                                    "type": "object",
-                                    "properties": {
-                                        "raw": {
-                                            "type": "number"
-                                        },
-                                        "value": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "required": [
-                                        "raw",
-                                        "value"
-                                    ],
-                                    "additionalProperties": false
-                                },
-                                "url": {
-                                    "type": "string"
-                                },
-                                "memo": {
-                                    "type": "string"
-                                },
-                                "meta": {
-                                    "type": "object",
-                                    "properties": {
-                                        "type": {
-                                            "type": "string",
-                                            "enum": [
-                                                "checking",
-                                                "checked",
-                                                "not-money"
-                                            ]
-                                        }
-                                    },
-                                    "required": [
-                                        "type"
-                                    ],
-                                    "additionalProperties": false
-                                }
-                            },
-                            "required": [
-                                "id",
-                                "date",
-                                "to",
-                                "amount",
-                                "url",
-                                "memo",
-                                "meta"
-                            ],
-                            "additionalProperties": false
+                            "$ref": "#/definitions/SpreadSheetItem"
                         }
                     }
                 },
@@ -366,6 +379,21 @@ export function validateGetRequestQuery(payload: unknown): apiTypes.GetRequestQu
 export function isGetRequestQuery(payload: unknown): payload is apiTypes.GetRequestQuery {
   /** Schema is defined in {@link SCHEMA.definitions.GetRequestQuery } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetRequestQuery" });
+  return ajvValidate(payload);
+}
+
+export function validateSpreadSheetItem(payload: unknown): apiTypes.SpreadSheetItem {
+  if (!isSpreadSheetItem(payload)) {
+  　const error = new Error('invalid payload: SpreadSheetItem');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isSpreadSheetItem(payload: unknown): payload is apiTypes.SpreadSheetItem {
+  /** Schema is defined in {@link SCHEMA.definitions.SpreadSheetItem } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/SpreadSheetItem" });
   return ajvValidate(payload);
 }
 

@@ -9,14 +9,14 @@ import dayjs from "dayjs";
  */
 export const createItemId = ({
     dateString,
-    amountRaw,
+    amountNumber,
     url
 }: {
     dateString: string;
-    amountRaw: number;
+    amountNumber: number;
     url?: string;
 }) => {
-    const stringSeeds = [dateString, String(amountRaw), url].filter((seed) => seed !== undefined) as string[];
+    const stringSeeds = [dateString, String(amountNumber), url].filter((seed) => seed !== undefined) as string[];
     const hashId = shortHash(stringSeeds.join("--"));
     const dateKey = dayjs(dateString!).format("YYYY-MM-DD");
     return `${dateKey}-${hashId}`;

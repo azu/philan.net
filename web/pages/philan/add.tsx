@@ -14,15 +14,16 @@ import {
     Input,
     NumberInput,
     NumberInputField,
-    Select,
     Text,
     Textarea,
     Tooltip,
+    Select,
+    useColorModeValue,
     useRadio,
     useRadioGroup
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { AddRequestBody } from "../api/spreadsheet/api-types";
+import { AddRequestBody, GetResponseBody, SpreadSheetItem } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
 import { UseRadioProps } from "@chakra-ui/radio/dist/types/use-radio";
@@ -31,6 +32,8 @@ import { LoginUser, useLoginUser } from "../../components/useLoginUser";
 import dayjs from "dayjs";
 import { Footer } from "../../components/Footer";
 import { createItemId } from "../../api-utils/create-item-id";
+import AutoCompleteSelect from "react-select";
+import { ActionMeta } from "react-select/src/types";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 const options = [
@@ -87,6 +90,38 @@ function userForm(user: LoginUser | null) {
     const [valid, setValid] = useState<boolean>(false);
     const [type, setType] = useState<StateType>("checked");
     const [currency, setCurrencyCode] = useState<string>("JPY");
+
+    const [selectOptions, setSelectOptions] = useState<SelectItem[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+    useEffect(() => {
+        (async function loadSelect() {
+            const json: GetResponseBody = await fetch("/api/spreadsheet/get").then((res) => res.json());
+            const items: SelectItem[] = [];
+            json.forEach((yearData) => {
+                yearData.items.forEach((item) => {
+                    // filter duplicate item
+                    if (
+                        items.some((existingItem) => {
+                            return (
+                                existingItem.amount.value === item.amount.value &&
+                                existingItem.to === item.to &&
+                                existingItem.url === item.url
+                            );
+                        })
+                    ) {
+                        return;
+                    }
+                    items.push({
+                        label: item.to,
+                        value: item.id,
+                        ...item
+                    });
+                });
+            });
+            setSelectOptions(items);
+            setIsLoading(false);
+        })();
+    }, []);
     useEffect(() => {
         const validURL = url.length > 0 ? url.startsWith("http") : true;
         const ok = to.length > 0 && validURL && amount > 0;
@@ -125,9 +160,16 @@ function userForm(user: LoginUser | null) {
             },
             updateCurrency: (event: SyntheticEvent<HTMLSelectElement>) => {
                 setCurrencyCode(event.currentTarget.value);
+            },
+            updateSelect: (value: SelectItem, _actionMeta: ActionMeta<any>) => {
+                setTo(value.to);
+                setUrl(value.url);
+                setCurrencyCode(value.amount.inputCurrency);
+                setMemo(value.memo);
+                setType(value.meta.type);
             }
         }),
-        [to, url, amount, memo, type, currency]
+        [to, url, amount, memo, type, currency, selectOptions]
     );
 
     return {
@@ -139,13 +181,16 @@ function userForm(user: LoginUser | null) {
         type,
         currency,
         valid,
+        isLoading,
+        selectOptions,
         handlers
     };
 }
 
+type SelectItem = { label: string; value: string } & SpreadSheetItem;
 export default function Create() {
     const user = useLoginUser();
-    const { date, url, amount, memo, to, type, currency, valid, handlers } = userForm(user);
+    const { date, url, amount, memo, to, type, currency, valid, isLoading, selectOptions, handlers } = userForm(user);
     const formattedAmount = useMemo(() => {
         return new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
             style: "currency",
@@ -164,7 +209,7 @@ export default function Create() {
         const isoDate = date.toISOString();
         const id = createItemId({
             dateString: isoDate,
-            amountRaw: amount,
+            amountNumber: amount,
             url
         });
         const body: AddRequestBody = {
@@ -244,7 +289,6 @@ export default function Create() {
                 <AlertTitle mr={2}>Success to update!</AlertTitle>
             </Alert>
         ) : null;
-
     return (
         <>
             <Head>
@@ -276,6 +320,23 @@ export default function Create() {
 
                     <Container maxW="xl">
                         <Box w="100%" p={4}>
+                            <FormControl
+                                id={"clone-records"}
+                                paddingBottom={6}
+                                marginBottom={6}
+                                color={useColorModeValue("gray.900", "gray.700")}
+                                borderBottom="1px"
+                                borderColor="gray.200"
+                            >
+                                <FormLabel>過去の記録から入力する:</FormLabel>
+                                <AutoCompleteSelect
+                                    inputId="clone-records-select"
+                                    options={selectOptions}
+                                    isDisabled={isLoading}
+                                    onChange={handlers.updateSelect}
+                                />
+                                <FormHelperText>過去の記録を選択して、入力欄に内容をコピーできます</FormHelperText>
+                            </FormControl>
                             <FormControl id="date" isRequired marginBottom={6}>
                                 <FormLabel>日付:</FormLabel>
                                 <Input
@@ -304,7 +365,7 @@ export default function Create() {
                                     paddingY={2}
                                     borderLeft="1px"
                                     borderColor="gray.200"
-                                    borderRadius={8}
+                                    borderRadius={12}
                                     paddingLeft={4}
                                 >
                                     <FormLabel>寄付額</FormLabel>

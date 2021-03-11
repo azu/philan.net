@@ -17,7 +17,8 @@ export async function getServerSideProps({ params, res }: GetServerSidePropsCont
     }
     const spreadSheet = await getSpreadSheet({
         spreadsheetId: user.spreadsheetId,
-        credentials: user.credentials
+        credentials: user.credentials,
+        defaultCurrency: user.defaultCurrency
     });
     res.statusCode = 200;
     const cacheTime = 60 * 60; // 1 hour

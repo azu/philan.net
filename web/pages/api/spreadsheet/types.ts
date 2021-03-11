@@ -6,6 +6,6 @@ export type RecordItem = {
     memo: string;
     meta: {
         id: string;
-        type: "checking" | "checked" | "not-money";
+        type: "checking" | "checked";
     };
 };

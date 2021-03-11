@@ -10,12 +10,47 @@ import { createItemId } from "../../../api-utils/create-item-id";
 
 const sheets = google.sheets("v4");
 
+const parseAmount = (amount: string | number, defaultCurrency: string) => {
+    if (typeof amount === "number") {
+        return {
+            amount,
+            from: defaultCurrency,
+            to: defaultCurrency
+        };
+    }
+    // = ${v} * index(GOOGLEFINANCE("CURRENCY:${item.currency.from}${item.currency.to}", "price", "${date}"), 2, 2);
+    if (amount.startsWith("=")) {
+        const match = amount.match(
+            /=\s*(?<AMOUNT>\d+)\s*\*\s*index\(GOOGLEFINANCE\("CURRENCY:(?<FROM>\w{3})(?<TO>\w{3})/
+        );
+        if (!match) {
+            return {
+                amount: 0,
+                from: defaultCurrency,
+                to: defaultCurrency
+            };
+        }
+        return {
+            amount: Number(match.groups?.AMOUNT!),
+            from: match.groups?.FROM!,
+            to: match.groups?.TO!
+        };
+    } else {
+        return {
+            amount: amount,
+            from: defaultCurrency,
+            to: defaultCurrency
+        };
+    }
+};
 export const getSpreadSheet = async ({
     spreadsheetId,
-    credentials
+    credentials,
+    defaultCurrency
 }: {
     spreadsheetId: string;
     credentials: UserCredentials;
+    defaultCurrency: string;
 }) => {
     const client = createOAuthClient(credentials);
     const { token } = await client.getAccessToken();
@@ -66,22 +101,28 @@ export const getSpreadSheet = async ({
                 ?.map((row) => {
                     const values = row.values;
                     const dateString = values?.[0].userEnteredValue?.stringValue!;
-                    const amountRaw = values?.[2].effectiveValue?.numberValue!;
-                    const amountValue = values?.[2]?.formattedValue!;
+                    console.log("values?.[2]", values?.[2]);
+                    const amountUserEnteredValue = values?.[2].userEnteredValue?.formulaValue!;
+                    const amountNumber = values?.[2].effectiveValue?.numberValue!;
+                    const amountFormattedValue = values?.[2]?.formattedValue!;
                     const url = values?.[3].userEnteredValue?.stringValue!;
                     const id = createItemId({
                         dateString,
-                        amountRaw,
+                        amountNumber,
                         url
                     });
                     const meta = JSON.parse(values?.[5]?.userEnteredValue?.stringValue ?? "{}");
+                    const parsedAmount = parseAmount(amountUserEnteredValue ?? amountNumber, defaultCurrency);
                     return {
                         id,
                         date: dateString,
                         to: values?.[1].userEnteredValue?.stringValue!,
                         amount: {
-                            raw: amountRaw,
-                            value: amountValue
+                            number: amountNumber,
+                            value: amountFormattedValue,
+                            raw: parsedAmount.amount,
+                            inputCurrency: parsedAmount.from,
+                            outputCurrency: parsedAmount.to
                         },
                         url: url,
                         memo: values?.[4].userEnteredValue?.stringValue ?? "",
@@ -97,11 +138,12 @@ export const getSpreadSheet = async ({
 const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
     .use(requireLogin())
-    .post(async (req, res) => {
+    .get(async (req, res) => {
         const user = req.user;
         const response = await getSpreadSheet({
             credentials: user.credentials,
-            spreadsheetId: user.spreadsheetId
+            spreadsheetId: user.spreadsheetId,
+            defaultCurrency: user.defaultCurrency
         });
         res.json(response);
     });

@@ -24,6 +24,21 @@ export type GetRequestQuery = {
     token: string;
     spreadsheetId: string;
 };
+export type SpreadSheetItem = {
+    id: string;
+    date: string;
+    to: string;
+    amount: {
+        number: number;
+        value: string;
+        raw: number;
+        inputCurrency: string;
+        outputCurrency: string;
+    };
+    url: string;
+    memo: string; // why?
+    meta: Omit<RecordItem["meta"], "id">;
+};
 export type GetResponseBody = {
     year: string;
     README: string;
@@ -41,16 +56,5 @@ export type GetResponseBody = {
             value: string;
         };
     };
-    items: {
-        id: string;
-        date: string;
-        to: string;
-        amount: {
-            raw: number;
-            value: string;
-        };
-        url: string;
-        memo: string; // why?
-        meta: Omit<RecordItem["meta"], "id">;
-    }[];
+    items: SpreadSheetItem[];
 }[];

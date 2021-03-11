@@ -220,7 +220,8 @@ export async function getStaticProps({
     }
     const res = await getSpreadSheet({
         spreadsheetId: user.spreadsheetId,
-        credentials: user.credentials
+        credentials: user.credentials,
+        defaultCurrency: user.defaultCurrency
     });
     const markdown = createMarkdown();
     return {

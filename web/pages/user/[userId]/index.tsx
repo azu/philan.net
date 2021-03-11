@@ -37,7 +37,6 @@ const Summarize = (props: { children: string }) => {
         <Box>
             <Box
                 className="UserContent markdown-body"
-                opacity={0.8}
                 paddingX={"1rem"}
                 paddingBottom={"0.5rem"}
                 dangerouslySetInnerHTML={{

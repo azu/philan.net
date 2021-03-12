@@ -279,7 +279,8 @@ export async function getStaticProps({
             props: {
                 errorMessage: error.message,
                 ok: false
-            }
+            },
+            revalidate: 1 // In seconds
         };
     }
 }

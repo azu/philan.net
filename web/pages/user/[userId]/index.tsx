@@ -16,7 +16,8 @@ import {
     StatNumber,
     Text,
     useColorModeValue,
-    useColorMode
+    useColorMode,
+    chakra
 } from "@chakra-ui/react";
 import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
@@ -77,7 +78,12 @@ function UserPage({
                         <Container>
                             <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
                                 <Text>Can not fetch spreadsheet</Text>
-                                <pre>Error: {errorMessage}</pre>
+                                <chakra.pre whiteSpace={"normal"}>Error: {errorMessage}</chakra.pre>
+                            </Box>
+                            <Box>
+                                <Link href={"https://github.com/azu/philan.net/issues/new"}>
+                                    Issueへ問題を報告してください
+                                </Link>
                             </Box>
                         </Container>
                     </Box>

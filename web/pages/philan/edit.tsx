@@ -54,7 +54,7 @@ function userForm(user: LoginUser | null) {
             updateName: (event: SyntheticEvent<HTMLInputElement>) => {
                 setName(event.currentTarget.value);
             },
-            updatespreadsheetId: (event: SyntheticEvent<HTMLInputElement>) => {
+            updateSpreadSheetId: (event: SyntheticEvent<HTMLInputElement>) => {
                 setspreadsheetId(event.currentTarget.value);
             },
             updateDefaultCurrency: (event: SyntheticEvent<HTMLSelectElement>) => {
@@ -90,8 +90,7 @@ export default function Create() {
             body: JSON.stringify({
                 id,
                 name,
-                defaultCurrency,
-                spreadsheetId
+                defaultCurrency
             })
         })
             .then((res) => {
@@ -179,12 +178,12 @@ export default function Create() {
                                     に基づきます。日本円はJPYです。
                                 </FormHelperText>
                             </FormControl>
-                            <FormControl id={"SpreadSheet ID"} isRequired>
+                            <FormControl id={"SpreadSheet ID"} isDisabled={true}>
                                 <FormLabel>SpreadSheet ID</FormLabel>
-                                <Input value={spreadsheetId} onChange={handlers.updatespreadsheetId} />
+                                <Input value={spreadsheetId} onChange={handlers.updateSpreadSheetId} />
                                 <FormHelperText>
-                                    紐付けるGoogle SpreadSheetのIDを入力してください。
-                                    <code>https://docs.google.com/spreadsheets/d/ID</code>のIDのみを入力してください。
+                                    紐付けるGoogle SpreadSheetのIDです。
+                                    <code>https://docs.google.com/spreadsheets/d/ID</code>のIDのみの値です。
                                 </FormHelperText>
                             </FormControl>
                             <Button

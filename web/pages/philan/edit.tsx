@@ -145,19 +145,19 @@ export default function Create() {
                     </Box>
                     <Container maxW="xl">
                         <Box w="100%" p={4}>
-                            <FormControl id="id" isDisabled={true}>
+                            <FormControl id="id" isDisabled={true} marginBottom={6}>
                                 <FormLabel>ユーザーID</FormLabel>
                                 <Input value={id} onChange={handlers.updateId} />
                                 <FormHelperText>
                                     ユーザーIDはphilan.net全体でユニークである必要があります。
                                 </FormHelperText>
                             </FormControl>
-                            <FormControl id="name" isRequired>
+                            <FormControl id="name" isRequired marginBottom={6}>
                                 <FormLabel>ユーザー名</FormLabel>
                                 <Input value={name} onChange={handlers.updateName} />
                                 <FormHelperText>ユーザー名は表示のために使われる名前です</FormHelperText>
                             </FormControl>
-                            <FormControl id={"defaultCurrency"} isRequired>
+                            <FormControl id={"defaultCurrency"} isRequired marginBottom={6}>
                                 <FormLabel>デフォルトの通貨</FormLabel>
                                 <Select value={defaultCurrency} onChange={handlers.updateDefaultCurrency}>
                                     {CURRENCY_CODES.map((currencyCode, index) => {
@@ -178,11 +178,11 @@ export default function Create() {
                                     に基づきます。日本円はJPYです。
                                 </FormHelperText>
                             </FormControl>
-                            <FormControl id={"SpreadSheet ID"} isDisabled={true}>
+                            <FormControl id={"SpreadSheet ID"} isDisabled={true} marginBottom={6}>
                                 <FormLabel>SpreadSheet ID</FormLabel>
                                 <Input value={spreadsheetId} onChange={handlers.updateSpreadSheetId} />
                                 <FormHelperText>
-                                    紐付けるGoogle SpreadSheetのIDです。
+                                    紐付いているGoogle SpreadSheetのIDです。
                                     <code>https://docs.google.com/spreadsheets/d/ID</code>のIDのみの値です。
                                 </FormHelperText>
                             </FormControl>

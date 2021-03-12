@@ -18,3 +18,16 @@ export const requireLogin = () => {
         return next();
     };
 };
+
+export const requireAdmin = () => {
+    const ADMIN_USER = ["azu"];
+    return async (req: NextApiRequestWithUserSession, _res: NextApiResponse, next: NextHandler) => {
+        if (process.env.NODE_ENV === "production") {
+            return next(new Error("Can not use in production"));
+        }
+        if (!ADMIN_USER.includes(req.user.id)) {
+            return next(new Error("No admin"));
+        }
+        return next();
+    };
+};

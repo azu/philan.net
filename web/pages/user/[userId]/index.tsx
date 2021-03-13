@@ -115,6 +115,8 @@ function UserPage({
                             <Flex paddingY={4}>
                                 <Box>
                                     <Img
+                                        width="96px"
+                                        height="96px"
                                         boxSize="96px"
                                         borderRadius="full"
                                         objectFit="cover"

@@ -23,6 +23,7 @@ import React, { useCallback } from "react";
 import { FaHeart, FaMoon, FaSun } from "react-icons/fa";
 import { RiAddFill } from "react-icons/ri";
 import { useLoginUser } from "./useLoginUser";
+import Head from "next/head";
 
 const GithubIcon = (props: any) => (
     <svg viewBox="0 0 20 20" {...props}>
@@ -180,6 +181,7 @@ function HeaderContent() {
     );
 }
 
+const MaxHeaderHeight = `72px` as const;
 export function Header(props: HeaderProps) {
     const bg = useColorModeValue("white", "gray.800");
     const ref = React.useRef<HTMLHeadingElement>(null);
@@ -205,7 +207,18 @@ export function Header(props: HeaderProps) {
             borderTop="6px solid"
             borderTopColor="teal.400"
             width="full"
+            maxHeight={MaxHeaderHeight}
         >
+            <Head>
+                <style>
+                    {`
+                    html {
+                        /* Header Height */
+                        scroll-padding-top: ${MaxHeaderHeight};
+                    }
+                `}
+                </style>
+            </Head>
             <chakra.div height="4.5rem" mx="auto" maxW="1200px">
                 <HeaderContent {...props} />
             </chakra.div>

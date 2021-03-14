@@ -40,7 +40,7 @@ export const addItem = async (
         throw new Error("Not found sheet");
     }
     const foundSheetId = foundSheet?.properties?.sheetId;
-    return await sheets.spreadsheets.batchUpdate({
+    return sheets.spreadsheets.batchUpdate({
         oauth_token: token,
         spreadsheetId: meta.spreadsheetId,
         requestBody: {

@@ -1,34 +1,41 @@
 import { getUserList } from "./api/user/list";
 import Head from "next/head";
 import {
+    Alert,
+    AlertIcon,
     Box,
+    BoxProps,
+    Button,
     chakra,
     Container,
     Flex,
-    Link,
-    Text,
-    List,
-    ListIcon,
-    ListItem,
-    useColorModeValue,
-    Button,
     Grid,
     Heading,
     Icon,
-    Alert,
-    AlertIcon,
-    VStack,
-    BoxProps,
-    Image
+    Image,
+    Link,
+    List,
+    ListIcon,
+    ListItem,
+    Stat,
+    StatArrow,
+    StatGroup,
+    StatLabel,
+    StatNumber,
+    Text,
+    Tooltip,
+    useColorModeValue,
+    VStack
 } from "@chakra-ui/react";
 
 import React, { ReactElement } from "react";
 import { ArrowForwardIcon, ArrowRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { MdAccessibility, MdPublic } from "react-icons/md";
-import { BiSpreadsheet, BiBookAdd } from "react-icons/bi";
+import { BiBookAdd, BiSpreadsheet } from "react-icons/bi";
 import NextLink from "next/link";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { fetchUserStats, UserStat } from "../api-utils/athena";
 
 const MissionFeature = ({
     title,
@@ -80,7 +87,28 @@ const Feature = ({ title, icon, children, ...props }: any) => {
     );
 };
 
-const IndexPage = (props: { users: string[] }) => {
+const IndexPage = (props: { users: string[]; userStats: UserStat[] }) => {
+    const budgetMessage = props.userStats
+        .map((stat) => {
+            return new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
+                style: "currency",
+                currency: stat.currency
+            }).format(stat.budget);
+        })
+        .join(" + ");
+    const usedMessage = props.userStats.map((stat, index) => {
+        const isLast = props.userStats.length - 1 === index;
+        const v = new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
+            style: "currency",
+            currency: stat.currency
+        }).format(Number(stat.used));
+        return (
+            <span key={stat.currency}>
+                <StatArrow type="increase" />
+                {v}({`${Math.round((stat.used / stat.budget) * 100)}%`}){isLast ? "" : " + "}
+            </span>
+        );
+    });
     return (
         <>
             <Head>
@@ -187,7 +215,52 @@ const IndexPage = (props: { users: string[] }) => {
                         </Container>
                     </Box>
                 </Box>
-                <Box>
+                <Box marginBottom={6}>
+                    <Container maxW="1280px" padding={8}>
+                        <Box textAlign="center" paddingBottom={6}>
+                            <chakra.h1
+                                maxW="16ch"
+                                mx="auto"
+                                fontSize={{ base: "2.25rem", sm: "3rem", lg: "4rem" }}
+                                fontFamily="heading"
+                                letterSpacing="tighter"
+                                fontWeight="extrabold"
+                                mb="16px"
+                                lineHeight="1.2"
+                            >
+                                <Box as="span" color={useColorModeValue("orange.500", "orange.300")}>
+                                    予算と寄付金額
+                                </Box>
+                            </chakra.h1>
+                            <Text maxW="600px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">
+                                このサイトで
+                                <Link href={"#philanthropist"} borderBottom={"1px"} borderColor={"blue.200"}>
+                                    慈善活動を公開している人
+                                </Link>
+                                の予算と寄付の合計です。
+                            </Text>
+                        </Box>
+                        <StatGroup padding={8} border="1px" borderColor="gray.200" borderRadius={12}>
+                            <Stat>
+                                <StatLabel>
+                                    <Tooltip label="アクティブなユーザーの寄付の年間の予算を合計した値です">
+                                        寄付の予算の合計
+                                    </Tooltip>
+                                </StatLabel>
+                                <StatNumber>{budgetMessage}</StatNumber>
+                            </Stat>
+                            <Stat>
+                                <StatLabel>
+                                    <Tooltip label="アクティブなユーザーの寄付した金額を合計した値です">
+                                        寄付した合計金額
+                                    </Tooltip>
+                                </StatLabel>
+                                <StatNumber>{usedMessage}</StatNumber>
+                            </Stat>
+                        </StatGroup>
+                    </Container>
+                </Box>
+                <Box marginBottom={6}>
                     <Container maxW="1280px">
                         <Box textAlign="center">
                             <chakra.h1
@@ -229,7 +302,7 @@ const IndexPage = (props: { users: string[] }) => {
                         </Grid>
                     </Container>
                 </Box>
-                <Box>
+                <Box marginBottom={6}>
                     <Container maxW="1280px">
                         <Box textAlign="center">
                             <chakra.h1
@@ -332,6 +405,7 @@ const IndexPage = (props: { users: string[] }) => {
                                 fontWeight="extrabold"
                                 mb="16px"
                                 lineHeight="1.2"
+                                id={"philanthropist"}
                             >
                                 <Box as="span" color={useColorModeValue("pink.500", "pink.300")}>
                                     <Text as="span" color={useColorModeValue("teal.500", "teal.300")}>
@@ -377,9 +451,11 @@ const IndexPage = (props: { users: string[] }) => {
 export async function getStaticProps() {
     const users = await getUserList();
     const displayUsers = users.filter((user) => user.length > 2);
+    const userStats = await fetchUserStats();
     return {
         props: {
-            users: displayUsers
+            users: displayUsers,
+            userStats
         }
     };
 }

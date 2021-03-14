@@ -9,7 +9,13 @@ export const env = {
     CF_namespace_session: process.env.CF_namespace_session!,
     CF_namespace_user: process.env.CF_namespace_user!,
     SESSION_COOKIE_SECRET: process.env.SESSION_COOKIE_SECRET!,
-    LOGFLARE_API_KEY: process.env.LOGFLARE_API_KEY!
+    LOGFLARE_API_KEY: process.env.LOGFLARE_API_KEY!,
+    STATS_AWS_ACCESS_KEY_ID: process.env.STATS_AWS_ACCESS_KEY_ID!,
+    STATS_AWS_SECRET_ACCESS_KEY: process.env.STATS_AWS_SECRET_ACCESS_KEY!,
+    STATS_AWS_S3_REGION: "us-east-1",
+    STATS_AWS_S3_BUCKETS_NAME: "philan.net",
+    AWS_ATHENA_OUTPUT_S3_BUCKETS_NAME: "philan.net-athena",
+    STATS_ENABLED: Boolean(process.env.STATS_ENABLED === "true")
 };
 export const hasCloudFlareEnv = () => {
     if (env.FORCE_NO_USE_CF) {

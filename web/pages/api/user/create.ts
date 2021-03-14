@@ -10,7 +10,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
     .use(withSession())
     .post(async (req, res) => {
         const { id, name, budget, README, defaultCurrency } = validateCreateUserRequestBody(req.body);
-        if (!/^[a-z0-9_-]{1,255}$/.test(id)) {
+        if (!/^[a-z0-9-_.]{2,255}$/.test(id)) {
             throw new Error("Can not use id");
         }
         if (!req.session.get("tempCredentials")) {

@@ -229,7 +229,7 @@ const IndexPage = (props: { users: string[]; userStats: UserStat[] }) => {
                                 lineHeight="1.2"
                             >
                                 <Box as="span" color={useColorModeValue("orange.500", "orange.300")}>
-                                    予算と寄付金額
+                                    予算と寄付額
                                 </Box>
                             </chakra.h1>
                             <Text maxW="600px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">

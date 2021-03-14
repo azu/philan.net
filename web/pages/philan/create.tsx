@@ -45,7 +45,7 @@ function userForm() {
     const handlers = useMemo(
         () => ({
             updateId: (event: SyntheticEvent<HTMLInputElement>) => {
-                setId(event.currentTarget.value);
+                setId(event.currentTarget.value.toLowerCase());
             },
             updateName: (event: SyntheticEvent<HTMLInputElement>) => {
                 setName(event.currentTarget.value);
@@ -150,9 +150,10 @@ export default function Create() {
                         <Box w="100%" p={4}>
                             <FormControl id="id" isRequired marginBottom={6}>
                                 <FormLabel>ユーザーID</FormLabel>
-                                <Input value={id} onChange={handlers.updateId} />
+                                <Input value={id} onChange={handlers.updateId} pattern={"[a-z0-9-_]{1,255}"} />
                                 <FormHelperText>
                                     ユーザーIDはphilan.net全体でユニークである必要があります。
+                                    アルファベット、数字、-、_のみで利用できます。
                                 </FormHelperText>
                             </FormControl>
                             <FormControl id="name" isRequired marginBottom={6}>

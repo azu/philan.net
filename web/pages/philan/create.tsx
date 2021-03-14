@@ -150,11 +150,11 @@ export default function Create() {
                         <Box w="100%" p={4}>
                             <FormControl id="id" isRequired marginBottom={6}>
                                 <FormLabel>ユーザーID</FormLabel>
-                                <Input value={id} onChange={handlers.updateId} pattern={"^[a-z0-9-_.]{2,255}$"} />
+                                <Input value={id} onChange={handlers.updateId} pattern={"^[a-z0-9-_.]{2,32}$"} />
                                 <FormHelperText>
-                                    ユーザーIDはphilan.net全体でユニークである必要があります。 アルファベット、数字、
-                                    <code>-</code>、<code>_</code>、<code>.</code>
-                                    で構成される2文字以上の名前が利用できます。
+                                    ユーザーIDはphilan.net全体でユニークである必要があります。
+                                    <code>アルファベット数字-_.</code>
+                                    で構成される2文字以上32文字以下の名前が利用できます。
                                 </FormHelperText>
                             </FormControl>
                             <FormControl id="name" isRequired marginBottom={6}>

@@ -1,9 +1,10 @@
 import {
-    Img,
     Box,
+    chakra,
     Container,
     Flex,
     Heading,
+    Img,
     Link,
     List,
     ListIcon,
@@ -15,9 +16,8 @@ import {
     StatLabel,
     StatNumber,
     Text,
-    useColorModeValue,
     useColorMode,
-    chakra
+    useColorModeValue
 } from "@chakra-ui/react";
 import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";

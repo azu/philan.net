@@ -83,8 +83,13 @@ export default function Added() {
             setTweet(`寄付しました！`);
         }
         // want to update user page
-        fetch(`https://philan.net/user/${id}`)
-            .then(() => console.log("updated"))
+        fetch(`/user/${id}`)
+            .then(() => console.log("updated user page"))
+            .catch(() => console.error("Fail to fetch"));
+        fetch(`/api/stats/update`, {
+            method: "POST"
+        })
+            .then(() => console.log("updated stats"))
             .catch(() => console.error("Fail to fetch"));
     }, []);
     const goToTweet = useCallback(() => {

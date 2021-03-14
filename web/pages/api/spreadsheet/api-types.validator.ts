@@ -151,7 +151,10 @@ const SCHEMA = {
                             "type": "string"
                         },
                         "raw": {
-                            "type": "number"
+                            "type": [
+                                "number",
+                                "string"
+                            ]
                         },
                         "inputCurrency": {
                             "type": "string"
@@ -203,6 +206,65 @@ const SCHEMA = {
             ],
             "additionalProperties": false
         },
+        "SpreadSheetStats": {
+            "type": "object",
+            "properties": {
+                "budget": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "number"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "raw",
+                        "value"
+                    ],
+                    "additionalProperties": false
+                },
+                "used": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "number"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "raw",
+                        "value"
+                    ],
+                    "additionalProperties": false
+                },
+                "balance": {
+                    "type": "object",
+                    "properties": {
+                        "raw": {
+                            "type": "number"
+                        },
+                        "value": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "raw",
+                        "value"
+                    ],
+                    "additionalProperties": false
+                }
+            },
+            "required": [
+                "budget",
+                "used",
+                "balance"
+            ],
+            "additionalProperties": false
+        },
         "GetResponseBody": {
             "type": "array",
             "items": {
@@ -215,63 +277,7 @@ const SCHEMA = {
                         "type": "string"
                     },
                     "stats": {
-                        "type": "object",
-                        "properties": {
-                            "budget": {
-                                "type": "object",
-                                "properties": {
-                                    "raw": {
-                                        "type": "number"
-                                    },
-                                    "value": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "raw",
-                                    "value"
-                                ],
-                                "additionalProperties": false
-                            },
-                            "used": {
-                                "type": "object",
-                                "properties": {
-                                    "raw": {
-                                        "type": "number"
-                                    },
-                                    "value": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "raw",
-                                    "value"
-                                ],
-                                "additionalProperties": false
-                            },
-                            "balance": {
-                                "type": "object",
-                                "properties": {
-                                    "raw": {
-                                        "type": "number"
-                                    },
-                                    "value": {
-                                        "type": "string"
-                                    }
-                                },
-                                "required": [
-                                    "raw",
-                                    "value"
-                                ],
-                                "additionalProperties": false
-                            }
-                        },
-                        "required": [
-                            "budget",
-                            "used",
-                            "balance"
-                        ],
-                        "additionalProperties": false
+                        "$ref": "#/definitions/SpreadSheetStats"
                     },
                     "items": {
                         "type": "array",
@@ -394,6 +400,21 @@ export function validateSpreadSheetItem(payload: unknown): apiTypes.SpreadSheetI
 export function isSpreadSheetItem(payload: unknown): payload is apiTypes.SpreadSheetItem {
   /** Schema is defined in {@link SCHEMA.definitions.SpreadSheetItem } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/SpreadSheetItem" });
+  return ajvValidate(payload);
+}
+
+export function validateSpreadSheetStats(payload: unknown): apiTypes.SpreadSheetStats {
+  if (!isSpreadSheetStats(payload)) {
+  　const error = new Error('invalid payload: SpreadSheetStats');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isSpreadSheetStats(payload: unknown): payload is apiTypes.SpreadSheetStats {
+  /** Schema is defined in {@link SCHEMA.definitions.SpreadSheetStats } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/SpreadSheetStats" });
   return ajvValidate(payload);
 }
 

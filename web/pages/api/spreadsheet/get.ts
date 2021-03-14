@@ -7,6 +7,7 @@ import { withSession } from "../../../api-utils/with-session";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 import dayjs from "dayjs";
 import { createItemId } from "../../../api-utils/create-item-id";
+import { GetResponseBody } from "./api-types";
 
 const sheets = google.sheets("v4");
 
@@ -51,7 +52,7 @@ export const getSpreadSheet = async ({
     spreadsheetId: string;
     credentials: UserCredentials;
     defaultCurrency: string;
-}) => {
+}): Promise<GetResponseBody> => {
     const client = createOAuthClient(credentials);
     const { token } = await client.getAccessToken();
     if (!token) {

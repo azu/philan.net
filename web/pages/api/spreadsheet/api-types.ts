@@ -31,7 +31,7 @@ export type SpreadSheetItem = {
     amount: {
         number: number;
         value: string;
-        raw: number;
+        raw: number | string;
         inputCurrency: string;
         outputCurrency: string;
     };
@@ -39,22 +39,23 @@ export type SpreadSheetItem = {
     memo: string; // why?
     meta: Omit<RecordItem["meta"], "id">;
 };
+export type SpreadSheetStats = {
+    budget: {
+        raw: number;
+        value: string;
+    };
+    used: {
+        raw: number;
+        value: string;
+    };
+    balance: {
+        raw: number;
+        value: string;
+    };
+};
 export type GetResponseBody = {
     year: string;
     README: string;
-    stats: {
-        budget: {
-            raw: number;
-            value: string;
-        };
-        used: {
-            raw: number;
-            value: string;
-        };
-        balance: {
-            raw: number;
-            value: string;
-        };
-    };
+    stats: SpreadSheetStats;
     items: SpreadSheetItem[];
 }[];

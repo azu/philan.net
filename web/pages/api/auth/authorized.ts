@@ -13,7 +13,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         const { code, state } = validateAuthorizedRequestQuery(req.query);
         // state check
         if (req.session.get("authState") !== state) {
-            logger.warn("mismatch authState", {
+            logger.warn("authorized mismatch authState", {
                 session: req.session.get("authState"),
                 state
             });
@@ -41,12 +41,20 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         req.session.set("googleUserId", googleId);
         const user = await kvs.findByGoogleId(googleId);
         if (!user) {
+            logger.info("success to authorize and create a account", {
+                state,
+                googleId
+            });
             // redirect /philan/create
             req.session.set("tempCredentials", token.tokens as UserCredentials);
             req.session.unset("authState");
             await req.session.save();
             res.redirect("/philan/create");
         } else {
+            logger.info("success to authorize and already have a account", {
+                state,
+                googleId
+            });
             // redirect /user/{id}
             const picture = payload.getPayload()?.["picture"];
             await kvs.updateUser(googleId, {

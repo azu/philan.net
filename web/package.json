@@ -11,7 +11,8 @@
     "type-check": "tsc",
     "validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\"",
     "watch:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --watch",
-    "test:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --check"
+    "test:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --check",
+    "maintenance:backup": "ts-node --require dotenv/config _maintenance/backup.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.5",

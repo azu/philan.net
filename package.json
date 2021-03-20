@@ -3,8 +3,8 @@
   "name": "philan.net",
   "version": "1.0.0",
   "workspaces": [
-    "worker",
-    "web"
+    "web",
+    "tools/*"
   ],
   "scripts": {
     "bootstrap": "cp web/.env.example web/.env",

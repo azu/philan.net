@@ -18,3 +18,5 @@ jobs:
         run: yarn install
       - name: Test
         run: yarn test
+        env:
+          TEST_GOOGLE_CREDENTIAL_BASE64: ${{secret.TEST_GOOGLE_CREDENTIAL_BASE64}}

@@ -5,6 +5,12 @@
     yarn install
     yarn dev
 
+## Testing
+
+    yarn test
+
+:memo: some testing require `TEST_GOOGLE_CREDENTIAL_BASE64`.
+
 ## Specification
 
 ### Language

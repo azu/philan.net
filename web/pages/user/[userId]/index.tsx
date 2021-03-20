@@ -81,7 +81,16 @@ function UserPage({
                                 <chakra.pre whiteSpace={"normal"}>Error: {errorMessage}</chakra.pre>
                             </Box>
                             <Box>
-                                <Link href={"https://github.com/azu/philan.net/issues/new"}>
+                                <ul>
+                                    <li>Error: unauthorized_client が出ている場合はログインしなおしてください。</li>
+                                </ul>
+                            </Box>
+                            <Box>
+                                <Link
+                                    href={"https://github.com/azu/philan.net/issues/new"}
+                                    isExternal={true}
+                                    color="teal.500"
+                                >
                                     Issueへ問題を報告してください
                                 </Link>
                             </Box>

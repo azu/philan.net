@@ -40,6 +40,9 @@ export const addItem = async (
         throw new Error("Not found sheet");
     }
     const foundSheetId = foundSheet?.properties?.sheetId;
+    // TODO: use append is atomic
+    // batchUpdate is not atomic
+    // https://groups.google.com/g/google-spreadsheets-api/c/G0sUsBHlaZg
     return sheets.spreadsheets.batchUpdate({
         oauth_token: token,
         spreadsheetId: meta.spreadsheetId,

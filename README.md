@@ -19,7 +19,7 @@ yarn bootstrap
 yarn dev
 ```
 
-:memo: ローカルでは、統計処理など一部はモックの実装となっています。
+:memo: ローカルでは、統計処理など一部はモックの実装となっています
 
 ## Architectures
 

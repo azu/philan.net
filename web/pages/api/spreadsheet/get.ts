@@ -8,6 +8,7 @@ import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/
 import dayjs from "dayjs";
 import { createItemId } from "../../../api-utils/create-item-id";
 import { GetResponseBody } from "./api-types";
+import groupBy from "lodash/groupBy";
 
 const sheets = google.sheets("v4");
 
@@ -68,72 +69,103 @@ export const getSpreadSheet = async ({
         throw new Error("500: No spreadsheet data");
     }
     // const locale = spreadsheet.data.properties?.locale;
-    return spreadsheet?.data?.sheets?.map((sheet) => {
-        const items = sheet?.data?.[0];
-        // ["Budget", "Used", "Balance"]
-        const statsRow = items?.rowData?.[1];
-        const rowDate = items?.rowData?.slice(START_OF_USER_DATA) ?? [];
-        return {
-            year: sheet?.properties?.title!,
-            README: statsRow?.values?.[3]?.formattedValue! ?? "",
-            stats: {
-                budget: {
-                    raw: statsRow?.values?.[0]?.effectiveValue?.numberValue!,
-                    value: statsRow?.values?.[0]?.formattedValue!
-                },
-                used: {
-                    raw: statsRow?.values?.[1]?.effectiveValue?.numberValue!,
-                    value: statsRow?.values?.[1]?.formattedValue!
-                },
-                balance: {
-                    raw: statsRow?.values?.[2]?.effectiveValue?.numberValue!,
-                    value: statsRow?.values?.[2]?.formattedValue!
-                }
-            },
-            items: rowDate
-                .filter((row) => {
-                    const values = row.values;
-                    return (
-                        values?.[0].userEnteredValue?.stringValue &&
-                        values?.[1].userEnteredValue?.stringValue &&
-                        values?.[2]?.formattedValue!
-                    );
-                })
-                ?.map((row) => {
-                    const values = row.values;
-                    const dateString = values?.[0].userEnteredValue?.stringValue!;
-                    const amountUserEnteredValue = values?.[2].userEnteredValue?.formulaValue;
-                    const amountNumber = values?.[2].effectiveValue?.numberValue!;
-                    const amountFormattedValue = values?.[2]?.formattedValue!;
-                    const url = values?.[3].userEnteredValue?.stringValue!;
-                    const id = createItemId({
-                        dateString,
-                        amountNumber,
-                        url
-                    });
-                    const meta = JSON.parse(values?.[5]?.userEnteredValue?.stringValue ?? "{}");
-                    const parsedAmount = parseAmount(amountUserEnteredValue ?? amountNumber, defaultCurrency);
-                    return {
-                        id,
-                        date: dateString,
-                        to: values?.[1].userEnteredValue?.stringValue!,
-                        amount: {
-                            number: amountNumber,
-                            value: amountFormattedValue,
-                            raw: parsedAmount.amount,
-                            inputCurrency: parsedAmount.from,
-                            outputCurrency: parsedAmount.to
-                        },
-                        url: url,
-                        memo: values?.[4].userEnteredValue?.stringValue ?? "",
-                        meta: meta
-                    };
-                })
-                .sort((a, b) => {
-                    return dayjs(a.date).isBefore(b.date) ? 1 : -1;
-                })
-        };
+    const recordSheet = spreadsheet?.data?.sheets?.find((sheet) => {
+        // TODO: 2021 is for backward-compatible
+        return sheet?.properties?.title === "Records" || sheet?.properties?.title === "2021";
     });
+    if (!recordSheet) {
+        throw new Error(
+            "Records Spreadsheet is not found.\n" + "\n" + "Can you rename record spreadsheet to 'Records'?"
+        );
+    }
+    const recordAllCells = recordSheet?.data?.[0].rowData;
+    const recordDataCells = recordAllCells?.slice(START_OF_USER_DATA) ?? [];
+    const recordItems = recordDataCells
+        .filter((row) => {
+            const values = row.values;
+            return (
+                values?.[0].userEnteredValue?.stringValue &&
+                values?.[1].userEnteredValue?.stringValue &&
+                values?.[2]?.formattedValue!
+            );
+        })
+        ?.map((row) => {
+            const values = row.values;
+            const dateString = values?.[0]?.userEnteredValue?.stringValue!;
+            const amountUserEnteredValue = values?.[2]?.userEnteredValue?.formulaValue;
+            const amountNumber = values?.[2]?.effectiveValue?.numberValue!;
+            const amountFormattedValue = values?.[2]?.formattedValue!;
+            const url = values?.[3]?.userEnteredValue?.stringValue!;
+            const id = createItemId({
+                dateString,
+                amountNumber,
+                url
+            });
+            const meta = JSON.parse(values?.[5]?.userEnteredValue?.stringValue ?? "{}");
+            const parsedAmount = parseAmount(amountUserEnteredValue ?? amountNumber, defaultCurrency);
+            return {
+                id,
+                date: dateString,
+                to: values?.[1].userEnteredValue?.stringValue!,
+                amount: {
+                    number: amountNumber,
+                    value: amountFormattedValue,
+                    raw: parsedAmount.amount,
+                    inputCurrency: parsedAmount.from,
+                    outputCurrency: parsedAmount.to
+                },
+                url: url,
+                memo: values?.[4].userEnteredValue?.stringValue ?? "",
+                meta: meta
+            };
+        })
+        .sort((a, b) => {
+            return dayjs(a.date).isBefore(b.date) ? 1 : -1;
+        });
+    const statsRow = recordAllCells?.[1];
+    if (!statsRow) {
+        throw new Error("statsRow is not defined");
+    }
+    const README = statsRow?.values?.[3]?.formattedValue! ?? "";
+    // TODO: stats should be different by year
+    // TODO: README should be a single
+    const stats = {
+        budget: {
+            raw: statsRow?.values?.[0]?.effectiveValue?.numberValue!,
+            value: statsRow?.values?.[0]?.formattedValue!
+        },
+        used: {
+            raw: statsRow?.values?.[1]?.effectiveValue?.numberValue!,
+            value: statsRow?.values?.[1]?.formattedValue!
+        },
+        balance: {
+            raw: statsRow?.values?.[2]?.effectiveValue?.numberValue!,
+            value: statsRow?.values?.[2]?.formattedValue!
+        }
+    };
+    if (recordItems.length === 0) {
+        const currentYear = dayjs().format("YYYY");
+        return [
+            {
+                year: currentYear,
+                stats,
+                README,
+                items: []
+            }
+        ];
+    }
+    const itemsByYear = groupBy(recordItems, (item) => dayjs(item.date).format("YYYY"));
+    // 2021, 2020 ....
+    return Object.keys(itemsByYear)
+        .sort((a, b) => Number(b) - Number(a))
+        .map((year) => {
+            return {
+                year,
+                stats,
+                README,
+                items: itemsByYear[year]
+            };
+        });
 };
 
 const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()

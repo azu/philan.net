@@ -57,6 +57,26 @@ Array [
         "to": "寄付先",
         "url": "https://example.com/A",
       },
+    ],
+    "stats": Object {
+      "balance": Object {
+        "raw": 95651.447,
+        "value": "¥95,651.45",
+      },
+      "budget": Object {
+        "raw": 100000,
+        "value": "¥100,000.00",
+      },
+      "used": Object {
+        "raw": 4348.553,
+        "value": "¥4,348.55",
+      },
+    },
+    "year": "2021",
+  },
+  Object {
+    "README": "SPREADSHEET FOR TESTING",
+    "items": Array [
       Object {
         "amount": Object {
           "inputCurrency": "JPY",
@@ -106,7 +126,7 @@ Array [
         "value": "¥4,348.55",
       },
     },
-    "year": "2021",
+    "year": "2020",
   },
 ]
 `;

@@ -9,6 +9,8 @@
 
 ## Development
 
+次の手順で、ローカルで開発できます。
+
 ```
 yarn install
 # first time
@@ -16,6 +18,8 @@ yarn bootstrap
 # start server
 yarn dev
 ```
+
+:memo: ローカルでは、統計処理など一部はモックの実装となっています。
 
 ## Architectures
 

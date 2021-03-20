@@ -135,6 +135,7 @@ export const getSpreadSheet = async ({
         };
     });
 };
+
 const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())
     .use(requireLogin())

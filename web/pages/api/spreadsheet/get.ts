@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { createItemId } from "../../../api-utils/create-item-id";
 import { GetResponseBody } from "./api-types";
 import groupBy from "lodash/groupBy";
+import { SheetTitles } from "./SpreadSheetSchema";
 
 const sheets = google.sheets("v4");
 
@@ -70,8 +71,8 @@ export const getSpreadSheet = async ({
     }
     // const locale = spreadsheet.data.properties?.locale;
     const recordSheet = spreadsheet?.data?.sheets?.find((sheet) => {
-        // TODO: 2021 is for backward-compatible
-        return sheet?.properties?.title === "Records" || sheet?.properties?.title === "2021";
+        // TODO: OLD_Records is for backward-compatible
+        return sheet?.properties?.title === SheetTitles.Records || sheet?.properties?.title === SheetTitles.OLD_Records;
     });
     if (!recordSheet) {
         throw new Error(

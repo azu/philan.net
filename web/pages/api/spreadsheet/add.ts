@@ -8,6 +8,7 @@ import { UserCredentials } from "../../../domain/User";
 import dayjs from "dayjs";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 import { RecordItem } from "./types";
+import { SheetTitles } from "./SpreadSheetSchema";
 
 const sheets = google.sheets("v4");
 
@@ -32,9 +33,8 @@ export const addItem = async (
         oauth_token: token,
         spreadsheetId: meta.spreadsheetId
     });
-    const CURRENT_YEAR = dayjs().format("YYYY");
     const foundSheet = spreadsheet.data.sheets?.find((sheet) => {
-        return sheet.properties?.title === CURRENT_YEAR;
+        return sheet.properties?.title === SheetTitles.Records || sheet.properties?.title === SheetTitles.OLD_Records;
     });
     if (!foundSheet) {
         throw new Error("Not found sheet");

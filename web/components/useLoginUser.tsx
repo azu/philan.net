@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { GetUserResponseBody, UserResponseObject } from "../pages/api/user/api-types";
+import type { GetUserResponseBody, UserResponseObject } from "../pages/api/user/api-types";
 
 // https://blog.stin.ink/articles/do-not-export-react-context
 export type LoginUser = UserResponseObject;

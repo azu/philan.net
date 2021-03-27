@@ -1,7 +1,7 @@
 import * as fs from "fs/promises";
 import path from "path";
+import type { User } from "../domain/User";
 import { migrateToRecordsSheet } from "./2021-03-27/2021-03-27-create-budget-sheets";
-import { User } from "../domain/User";
 
 const TARGET_USERS_DIR = path.join(__dirname, ".target");
 
@@ -38,7 +38,7 @@ async function migrationMain() {
             await fs.unlink(jsonFilePath);
         } catch (error) {
             console.log("Migration Failed: " + user.id);
-            console.error(error);
+            throw error;
         }
     }
     console.log("Migration Finished!");

@@ -12,7 +12,6 @@ const TARGET_USERS_DIR = path.join(__dirname, ".target");
 async function migrate(user: User) {
     await migrateToRecordsSheet({
         spreadsheetId: user.spreadsheetId,
-        dryRun: false,
         credentials: user.credentials
     });
 }

@@ -1,6 +1,6 @@
 import { google, sheets_v4 } from "googleapis";
 import Schema$Sheet = sheets_v4.Schema$Sheet;
-import { logger } from "../../../../api-utils/logger";
+import { logger } from "../api-utils/logger";
 
 const sheets = google.sheets("v4");
 // Spreadsheet revision API does not provide /revert API

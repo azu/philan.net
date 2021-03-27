@@ -1,5 +1,5 @@
 import { NextApiResponse } from "next";
-import { google, sheets_v4 } from "googleapis";
+import { google } from "googleapis";
 import nextConnect from "next-connect";
 import { withSession } from "../../../api-utils/with-session";
 import { validateCreateUserRequestBody } from "../user/api-types.validator";
@@ -7,10 +7,11 @@ import { createOAuthClient } from "../../../api-utils/create-OAuth";
 import { UserCredentials } from "../../../domain/User";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 import dayjs from "dayjs";
+import { createRow } from "../../../api-utils/spreadsheet-util";
+import { SheetTitles } from "./SpreadSheetSchema";
+import { env } from "../../../api-utils/env";
 
-type Schema$RowData = sheets_v4.Schema$RowData;
-type Schema$CellData = sheets_v4.Schema$CellData;
-
+const isLocalDebug = env.FORCE_NO_USE_CF;
 export const createNewSheet = async (
     { budget, README }: { budget: number; README: string },
     meta: {
@@ -22,73 +23,44 @@ export const createNewSheet = async (
     if (!token) {
         throw new Error("No Access Token");
     }
-    const DefaultData = [
-        ["Budget", "Used", "Balance", "README"],
-        // append-safe way
-        // Count(A1:A) avoid curricular dependencies
-        [budget, "=SUM(OFFSET(C3,1,0,ROWS(A1:A)))", "=A2-SUM(OFFSET(C3,1,0,ROWS(A1:A)))", README],
-        // TODO: monthly?,
+    const title = isLocalDebug ? `philan.net - DEBUG @ ${new Date().toISOString()}` : `philan.net`;
+    const CURRENT_YEAR = dayjs().format("YYYY");
+    const BudgetRowData = [
+        ["Year", "Budget", "Used", "Balance"],
+        [
+            CURRENT_YEAR,
+            budget,
+            `=SUMIFS('${SheetTitles.Records}'!C:C,'${SheetTitles.Records}'!A:A,INDIRECT(ADDRESS(ROW(),COLUMN() - 2))&"-*")`,
+            "=INDIRECT(ADDRESS(ROW(),COLUMN() - 2))-INDIRECT(ADDRESS(ROW(),COLUMN() - 1))"
+        ]
+    ] as (string | number)[][];
+    const RecordRowData = [
+        [`="Budget("&YEAR(TODAY())&")"`, `="Used("&YEAR(TODAY())&")"`, `="Balance("&YEAR(TODAY())&")"`, "README"],
+        [
+            `=IFERROR(Index(QUERY(${SheetTitles.Budgets}!A:B, "select * where A = '"&YEAR(TODAY())&"'", 0),1,2), 0)`,
+            `=SUMIFS(C:C,A:A, YEAR(TODAY())&"-*")`,
+            "=A2-B2",
+            README
+        ],
         ["Date", "To", "Amount", "URL", "Why?", "Meta"]
     ] as (string | number)[][];
-    const createCell = (cell: string | number): Schema$CellData => {
-        if (typeof cell === "number") {
-            return {
-                userEnteredFormat: {
-                    verticalAlignment: "TOP",
-                    numberFormat: {
-                        type: "CURRENCY"
-                    }
-                },
-                userEnteredValue: {
-                    numberValue: cell
-                }
-            };
-        }
-        if (cell.startsWith("=")) {
-            return {
-                userEnteredFormat: {
-                    verticalAlignment: "TOP",
-                    numberFormat: {
-                        type: "CURRENCY"
-                    }
-                },
-                userEnteredValue: {
-                    formulaValue: cell
-                }
-            };
-        }
-        return {
-            userEnteredFormat: {
-                verticalAlignment: "TOP"
-            },
-            userEnteredValue: {
-                stringValue: String(cell)
-            }
-        };
-    };
-    const rowData: Schema$RowData[] = DefaultData.map((line) => {
-        return {
-            values: line.map((cellValue) => {
-                return createCell(cellValue);
-            })
-        };
-    });
-    const CURRENT_YEAR = dayjs().format("YYYY");
     return sheets.spreadsheets.create({
         oauth_token: token,
         requestBody: {
             properties: {
-                title: "philan.net",
+                title: title,
                 defaultFormat: {
                     numberFormat: {
                         type: "CURRENCY"
                     }
                 }
             },
+            // Order
             sheets: [
+                // "Records" Sheet
                 {
                     properties: {
-                        title: CURRENT_YEAR,
+                        title: SheetTitles.Records,
                         gridProperties: {
                             // fixed
                             frozenRowCount: 3
@@ -96,7 +68,22 @@ export const createNewSheet = async (
                     },
                     data: [
                         {
-                            rowData
+                            rowData: createRow(RecordRowData)
+                        }
+                    ]
+                },
+                // "Budgets" Sheet
+                {
+                    properties: {
+                        title: SheetTitles.Budgets,
+                        gridProperties: {
+                            // fixed
+                            frozenRowCount: 1
+                        }
+                    },
+                    data: [
+                        {
+                            rowData: createRow(BudgetRowData)
                         }
                     ]
                 }

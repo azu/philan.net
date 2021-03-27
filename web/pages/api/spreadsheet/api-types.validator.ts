@@ -300,7 +300,7 @@ const SCHEMA = {
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA");
 export function validateCreateRequestQuery(payload: unknown): apiTypes.CreateRequestQuery {
   if (!isCreateRequestQuery(payload)) {
-  　const error = new Error('invalid payload: CreateRequestQuery');
+    const error = new Error('invalid payload: CreateRequestQuery');
     error.name = "ValidationError";
     throw error;
   }
@@ -315,7 +315,7 @@ export function isCreateRequestQuery(payload: unknown): payload is apiTypes.Crea
 
 export function validateCreateRequestBody(payload: unknown): apiTypes.CreateRequestBody {
   if (!isCreateRequestBody(payload)) {
-  　const error = new Error('invalid payload: CreateRequestBody');
+    const error = new Error('invalid payload: CreateRequestBody');
     error.name = "ValidationError";
     throw error;
   }
@@ -330,7 +330,7 @@ export function isCreateRequestBody(payload: unknown): payload is apiTypes.Creat
 
 export function validateAddRequestQuery(payload: unknown): apiTypes.AddRequestQuery {
   if (!isAddRequestQuery(payload)) {
-  　const error = new Error('invalid payload: AddRequestQuery');
+    const error = new Error('invalid payload: AddRequestQuery');
     error.name = "ValidationError";
     throw error;
   }
@@ -345,7 +345,7 @@ export function isAddRequestQuery(payload: unknown): payload is apiTypes.AddRequ
 
 export function validateAddRequestBody(payload: unknown): apiTypes.AddRequestBody {
   if (!isAddRequestBody(payload)) {
-  　const error = new Error('invalid payload: AddRequestBody');
+    const error = new Error('invalid payload: AddRequestBody');
     error.name = "ValidationError";
     throw error;
   }
@@ -360,7 +360,7 @@ export function isAddRequestBody(payload: unknown): payload is apiTypes.AddReque
 
 export function validateAddResponseBody(payload: unknown): apiTypes.AddResponseBody {
   if (!isAddResponseBody(payload)) {
-  　const error = new Error('invalid payload: AddResponseBody');
+    const error = new Error('invalid payload: AddResponseBody');
     error.name = "ValidationError";
     throw error;
   }
@@ -375,7 +375,7 @@ export function isAddResponseBody(payload: unknown): payload is apiTypes.AddResp
 
 export function validateGetRequestQuery(payload: unknown): apiTypes.GetRequestQuery {
   if (!isGetRequestQuery(payload)) {
-  　const error = new Error('invalid payload: GetRequestQuery');
+    const error = new Error('invalid payload: GetRequestQuery');
     error.name = "ValidationError";
     throw error;
   }
@@ -390,7 +390,7 @@ export function isGetRequestQuery(payload: unknown): payload is apiTypes.GetRequ
 
 export function validateSpreadSheetItem(payload: unknown): apiTypes.SpreadSheetItem {
   if (!isSpreadSheetItem(payload)) {
-  　const error = new Error('invalid payload: SpreadSheetItem');
+    const error = new Error('invalid payload: SpreadSheetItem');
     error.name = "ValidationError";
     throw error;
   }
@@ -405,7 +405,7 @@ export function isSpreadSheetItem(payload: unknown): payload is apiTypes.SpreadS
 
 export function validateSpreadSheetStats(payload: unknown): apiTypes.SpreadSheetStats {
   if (!isSpreadSheetStats(payload)) {
-  　const error = new Error('invalid payload: SpreadSheetStats');
+    const error = new Error('invalid payload: SpreadSheetStats');
     error.name = "ValidationError";
     throw error;
   }
@@ -420,7 +420,7 @@ export function isSpreadSheetStats(payload: unknown): payload is apiTypes.Spread
 
 export function validateGetResponseBody(payload: unknown): apiTypes.GetResponseBody {
   if (!isGetResponseBody(payload)) {
-  　const error = new Error('invalid payload: GetResponseBody');
+    const error = new Error('invalid payload: GetResponseBody');
     error.name = "ValidationError";
     throw error;
   }

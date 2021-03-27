@@ -133,7 +133,7 @@ const SCHEMA = {
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA");
 export function validateCreateUserRequestBody(payload: unknown): apiTypes.CreateUserRequestBody {
   if (!isCreateUserRequestBody(payload)) {
-  　const error = new Error('invalid payload: CreateUserRequestBody');
+    const error = new Error('invalid payload: CreateUserRequestBody');
     error.name = "ValidationError";
     throw error;
   }
@@ -148,7 +148,7 @@ export function isCreateUserRequestBody(payload: unknown): payload is apiTypes.C
 
 export function validateCreateUserResponseBody(payload: unknown): apiTypes.CreateUserResponseBody {
   if (!isCreateUserResponseBody(payload)) {
-  　const error = new Error('invalid payload: CreateUserResponseBody');
+    const error = new Error('invalid payload: CreateUserResponseBody');
     error.name = "ValidationError";
     throw error;
   }
@@ -163,7 +163,7 @@ export function isCreateUserResponseBody(payload: unknown): payload is apiTypes.
 
 export function validateUpdateUserRequestBody(payload: unknown): apiTypes.UpdateUserRequestBody {
   if (!isUpdateUserRequestBody(payload)) {
-  　const error = new Error('invalid payload: UpdateUserRequestBody');
+    const error = new Error('invalid payload: UpdateUserRequestBody');
     error.name = "ValidationError";
     throw error;
   }
@@ -178,7 +178,7 @@ export function isUpdateUserRequestBody(payload: unknown): payload is apiTypes.U
 
 export function validateUserResponseObject(payload: unknown): apiTypes.UserResponseObject {
   if (!isUserResponseObject(payload)) {
-  　const error = new Error('invalid payload: UserResponseObject');
+    const error = new Error('invalid payload: UserResponseObject');
     error.name = "ValidationError";
     throw error;
   }
@@ -193,7 +193,7 @@ export function isUserResponseObject(payload: unknown): payload is apiTypes.User
 
 export function validateGetUserResponseBody(payload: unknown): apiTypes.GetUserResponseBody {
   if (!isGetUserResponseBody(payload)) {
-  　const error = new Error('invalid payload: GetUserResponseBody');
+    const error = new Error('invalid payload: GetUserResponseBody');
     error.name = "ValidationError";
     throw error;
   }

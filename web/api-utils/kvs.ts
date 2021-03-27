@@ -76,10 +76,12 @@ type Storage<V> = {
     has: (key: string) => Promise<boolean>;
     list: ({
         prefix,
-        limit
+        limit,
+        cursor
     }: {
         prefix: string;
         limit: number;
+        cursor?: string;
     }) => Promise<{
         keys: { name: string; expiration?: number; metadata?: unknown }[];
         list_complete: boolean;

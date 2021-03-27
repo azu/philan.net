@@ -1467,7 +1467,7 @@
   dependencies:
     "@types/lodash" "*"
 
-"@types/lodash@*", "@types/lodash@^4.14.153":
+"@types/lodash@*", "@types/lodash@^4.14.153", "@types/lodash@^4.14.168":
   version "4.14.168"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
   integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
@@ -2803,10 +2803,10 @@ create-require@^1.1.0:
   resolved "https://registry.yarnpkg.com/create-require/-/create-require-1.1.1.tgz#c1d7e8f1e5f6cfc9ff65f9cd352d37348756c333"
   integrity sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==
 
-create-validator-ts@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/create-validator-ts/-/create-validator-ts-1.0.2.tgz#e6840f3ad4ea3dc6c6c4546f0de505f72b7b28bb"
-  integrity sha512-XpZfZpW8QwkPoVV/gmNuBGXZH/h+fM8etQeVdFDlrQxiBJGuYvWEKTnrGJyyyuXGl3PSQUpVlbvnewke6MaAGg==
+create-validator-ts@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/create-validator-ts/-/create-validator-ts-1.0.4.tgz#d9b2277bc2fb4146d11d2c47a5f47a3a8c38f4d0"
+  integrity sha512-WznIkRTdaeqjvEPQoDG08HXe61Cigi1Uhcwe2GLP5QmI6z7C2NR0ggRGRsap5VBibMhKxHT0CEqu8mrBrOO8Xw==
   dependencies:
     glob-watcher "^5.0.5"
     globby "^11.0.2"
@@ -5284,7 +5284,7 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
-lodash@4.x, lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.19:
+lodash@4.x, lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

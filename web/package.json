@@ -15,7 +15,7 @@
     "validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\"",
     "watch:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --watch",
     "test:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --check",
-    "migrateion:prepare:test": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/prepare.test.ts",
+    "migrateion:prepare:test": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/prepare-for-test.ts",
     "migrateion:test": "npm run migrateion:prepare:test && ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts",
     "migrateion:prepare:dev": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/prepare.ts",
     "migrateion:start:dev": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts",

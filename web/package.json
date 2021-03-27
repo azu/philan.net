@@ -20,7 +20,8 @@
     "migrateion:prepare:dev": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/prepare.ts",
     "migrateion:start:dev": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts",
     "migrateion:prepare:prod": "ENABLE_PRODUCTION_DATA=1 ts-node --project _migration/tsconfig.json --require dotenv/config _migration/prepare.ts",
-    "migrateion:start:prod": "ENABLE_PRODUCTION_DATA=1 ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts"
+    "migrateion:start:prod": "ENABLE_PRODUCTION_DATA=1 ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts",
+    "_download_xlsx": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/download_xlsx.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.5",

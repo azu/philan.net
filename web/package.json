@@ -16,7 +16,9 @@
     "watch:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --watch",
     "test:validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\" --check",
     "migrateion:prepare": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/prepare.ts",
-    "migrateion:start": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts"
+    "migrateion:start": "ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts",
+    "migrateion:prepare:prod": "ENABLE_PRODUCTION_DATA=1 ts-node --project _migration/tsconfig.json --require dotenv/config _migration/prepare.ts",
+    "migrateion:start:prod": "ENABLE_PRODUCTION_DATA=1 ts-node --project _migration/tsconfig.json --require dotenv/config _migration/index.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^1.0.5",
@@ -69,7 +71,8 @@
     "jest": "^26.6.3",
     "npm-run-all": "^4.1.5",
     "ts-jest": "^26.5.4",
-    "typescript": "^4.1.5"
+    "typescript": "^4.1.5",
+    "del": "^6.0.0"
   },
   "license": "MIT"
 }

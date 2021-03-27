@@ -34,7 +34,7 @@ async function migrationMain() {
         try {
             await migrate(user);
             // delete file when success migration
-            console.log("Migration success: " + user.id);
+            console.log("Migration Success: " + user.id);
             await fs.unlink(jsonFilePath);
         } catch (error) {
             console.log("Migration Failed: " + user.id);

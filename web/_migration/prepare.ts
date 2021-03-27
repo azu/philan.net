@@ -1,10 +1,12 @@
 import { createUserKvs } from "../api-utils/userKvs";
 import * as fs from "fs/promises";
 import path from "path";
+import del from "del";
 
 const TARGET_USERS_DIR = path.join(__dirname, ".target");
 
 async function prepareMain() {
+    await del([TARGET_USERS_DIR]);
     await fs.mkdir(TARGET_USERS_DIR, {
         recursive: true
     });

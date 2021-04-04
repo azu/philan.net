@@ -30,8 +30,8 @@ export const createNewSheet = async (
         [
             CURRENT_YEAR,
             budget,
-            `=SUMIFS('${SheetTitles.Records}'!C:C,'${SheetTitles.Records}'!A:A,INDIRECT(ADDRESS(ROW(),COLUMN() - 2))&"-*")`,
-            "=INDIRECT(ADDRESS(ROW(),COLUMN() - 2))-INDIRECT(ADDRESS(ROW(),COLUMN() - 1))"
+            `=SUMIFS('${SheetTitles.Records}'!C:C,'${SheetTitles.Records}'!A:A,INDIRECT(ADDRESS(ROW(),COLUMN()-2))&"-*")`,
+            "=INDIRECT(ADDRESS(ROW(),COLUMN()-2))-INDIRECT(ADDRESS(ROW(),COLUMN()-1))"
         ]
     ] as (string | number)[][];
     const RecordRowData = [

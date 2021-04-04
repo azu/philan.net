@@ -109,8 +109,8 @@ export const migrateToRecordsSheet = async (meta: { spreadsheetId: string; crede
                     [
                         "2021",
                         budget,
-                        `=SUMIFS('${SheetTitles.Records}'!C:C,'${SheetTitles.Records}'!A:A,INDIRECT(ADDRESS(ROW(),COLUMN() - 2))&"-*")`,
-                        "=INDIRECT(ADDRESS(ROW(),COLUMN() - 2))-INDIRECT(ADDRESS(ROW(),COLUMN() - 1))"
+                        `=SUMIFS('${SheetTitles.Records}'!C:C,'${SheetTitles.Records}'!A:A,INDIRECT(ADDRESS(ROW(),COLUMN()-2))&"-*")`,
+                        "=INDIRECT(ADDRESS(ROW(),COLUMN()-2))-INDIRECT(ADDRESS(ROW(),COLUMN()-1))"
                     ]
                 ] as (string | number)[][];
                 await sheets.spreadsheets.batchUpdate({

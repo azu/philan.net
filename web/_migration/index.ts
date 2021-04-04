@@ -32,6 +32,7 @@ async function migrationMain() {
     for (const jsonFilePath of jsonFilePaths) {
         const user = JSON.parse(await fs.readFile(jsonFilePath, "utf-8"));
         try {
+            console.log("Start Migration: " + user.id);
             await migrate(user);
             // delete file when success migration
             console.log("Migration Success: " + user.id);

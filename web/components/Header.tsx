@@ -166,7 +166,9 @@ function HeaderContent() {
             <Flex w="100%" h="100%" px="6" align="center" justify="space-between">
                 <Flex align="center">
                     <NextLink href="/" passHref>
-                        <Logo />
+                        <chakra.a display="block" aria-label="philan.net">
+                            <Logo />
+                        </chakra.a>
                     </NextLink>
                 </Flex>
 

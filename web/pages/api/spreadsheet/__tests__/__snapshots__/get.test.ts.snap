@@ -60,16 +60,16 @@ Array [
     ],
     "stats": Object {
       "balance": Object {
-        "raw": 95651.447,
-        "value": "¥95,651.45",
+        "raw": 99691.447,
+        "value": "¥99,691.45",
       },
       "budget": Object {
         "raw": 100000,
         "value": "¥100,000.00",
       },
       "used": Object {
-        "raw": 4348.553,
-        "value": "¥4,348.55",
+        "raw": 308.553,
+        "value": "¥308.55",
       },
     },
     "year": "2021",
@@ -114,16 +114,16 @@ Array [
     ],
     "stats": Object {
       "balance": Object {
-        "raw": 95651.447,
-        "value": "¥95,651.45",
+        "raw": 99691.447,
+        "value": "¥99,691.45",
       },
       "budget": Object {
         "raw": 100000,
         "value": "¥100,000.00",
       },
       "used": Object {
-        "raw": 4348.553,
-        "value": "¥4,348.55",
+        "raw": 308.553,
+        "value": "¥308.55",
       },
     },
     "year": "2020",

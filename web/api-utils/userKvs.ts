@@ -21,6 +21,31 @@ export const createUserKvs = async () => {
         async exists(id: string) {
             return (await kvs.get(id)) !== undefined;
         },
+        async *allUsers() {
+            let cursor: undefined | string = undefined;
+            while (true) {
+                const result: any = await kvs.list({
+                    cursor,
+                    limit: 1000,
+                    prefix: "users:1:"
+                });
+                for (const key of result.keys) {
+                    const user = await kvs.get(key.name);
+                    if (!user) {
+                        continue;
+                    }
+                    yield {
+                        userId: key.name,
+                        user: user
+                    };
+                }
+                if (result.list_complete) {
+                    return;
+                } else {
+                    cursor = result.cursor;
+                }
+            }
+        },
         async someUserNames(): Promise<string[]> {
             const res = await kvs.list({ prefix: "users:1:", limit: 100 });
             return res.keys.map(({ name }) => {

@@ -29,7 +29,7 @@ const SCHEMA = {
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA");
 export function validateAuthorizedRequestQuery(payload: unknown): apiTypes.AuthorizedRequestQuery {
   if (!isAuthorizedRequestQuery(payload)) {
-  　const error = new Error('invalid payload: AuthorizedRequestQuery');
+    const error = new Error('invalid payload: AuthorizedRequestQuery');
     error.name = "ValidationError";
     throw error;
   }

@@ -28,9 +28,15 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
         const picture = verifiedIdTokenResponse.getPayload()?.["picture"];
         // check DB
         const kvs = await createUserKvs();
-        const oldUser = await kvs.findByGoogleId(id);
+        // - check google id
+        const googleUser = await kvs.findByGoogleId(googleId);
+        if (googleUser !== undefined) {
+            throw new Error("Already created google id:" + googleId);
+        }
+        // - check user id
+        const oldUser = await kvs.findByUserId(id);
         if (oldUser !== undefined) {
-            throw new Error("Already used");
+            throw new Error("Already used id:" + id);
         }
         const spreadSheet = await createNewSheet(
             {

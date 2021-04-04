@@ -1,9 +1,9 @@
 const ENABLE_PRODUCTION_DATA = Boolean(process.env.ENABLE_PRODUCTION_DATA);
 export const env = {
     DEBUG: process.env.DEBUG!,
+    FORCE_NO_USE_CF: Boolean(process.env.FORCE_NO_USE_CF === "1"),
     CLIENT_ID: ENABLE_PRODUCTION_DATA ? process.env.PROD_CLIENT_ID! : process.env.CLIENT_ID!,
     CLIENT_SECRET: ENABLE_PRODUCTION_DATA ? process.env.PROD_CLIENT_SECRET! : process.env.CLIENT_SECRET!,
-    FORCE_NO_USE_CF: process.env.FORCE_NO_USE_CF!,
     CF_accountId: process.env.CF_accountId!,
     CF_authEmail: process.env.CF_authEmail!,
     CF_authKey: process.env.CF_authKey!,

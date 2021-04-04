@@ -161,7 +161,10 @@ function UserPage({
                                           ((item.stats.budget.raw - item.stats.used.raw) / item.stats.budget.raw) * 100
                                       )
                                     : 0;
-                            const usedPercent = Math.trunc((item.stats.used.raw / item.stats.budget.raw) * 100);
+                            const usedPercent =
+                                item.stats.budget.raw !== 0
+                                    ? Math.trunc((item.stats.used.raw / item.stats.budget.raw) * 100)
+                                    : 0;
                             return (
                                 <div key={item.year}>
                                     <Box maxW="32rem" padding={2}>

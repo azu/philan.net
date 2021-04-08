@@ -164,6 +164,7 @@ function userForm(user: LoginUser | null) {
             updateSelect: (value: SelectItem, _actionMeta: ActionMeta<any>) => {
                 setTo(value.to);
                 setUrl(value.url);
+                setAmount(value.amount.raw);
                 setCurrencyCode(value.amount.inputCurrency);
                 setMemo(value.memo);
                 setType(value.meta.type);

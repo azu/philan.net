@@ -40,7 +40,7 @@ const parseAmount = (amount: string | number, defaultCurrency: string) => {
         };
     } else {
         return {
-            amount: amount,
+            amount: Number(amount),
             from: defaultCurrency,
             to: defaultCurrency
         };

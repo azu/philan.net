@@ -9,7 +9,7 @@
     "dev:prod": "ENABLE_PRODUCTION_DATA=1 next --port 3000",
     "build": "next build",
     "start": "next start",
-    "test": "npm run type-check && jest",
+    "test": "yarn run type-check && yarn run test:validator-ts && jest",
     "updateSnapshot": "jest -u",
     "type-check": "tsc",
     "validator-ts": "create-validator-ts \"pages/api/**/api-types.ts\"",

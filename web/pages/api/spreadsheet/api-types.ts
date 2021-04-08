@@ -31,7 +31,7 @@ export type SpreadSheetItem = {
     amount: {
         number: number;
         value: string;
-        raw: number | string;
+        raw: number;
         inputCurrency: string;
         outputCurrency: string;
     };

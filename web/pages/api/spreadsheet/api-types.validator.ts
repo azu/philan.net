@@ -151,10 +151,7 @@ const SCHEMA = {
                             "type": "string"
                         },
                         "raw": {
-                            "type": [
-                                "number",
-                                "string"
-                            ]
+                            "type": "number"
                         },
                         "inputCurrency": {
                             "type": "string"

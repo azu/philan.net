@@ -205,19 +205,25 @@ function UserPage({
                                                         <ListIcon as={ChevronUpIcon} color="green.500" />
                                                     </span>
                                                 ) : null;
+                                            const SiteName =
+                                                safeUrl !== "" ? (
+                                                    <Link
+                                                        href={safeUrl}
+                                                        borderBottom={"1px"}
+                                                        borderColor={"blue.200"}
+                                                        isExternal={true}
+                                                    >
+                                                        {item.to}
+                                                    </Link>
+                                                ) : (
+                                                    `${item.to}`
+                                                );
                                             return (
                                                 <ListItem key={item.id} id={item.id}>
                                                     <Flex alignItems={"baseline"}>
                                                         <Box padding="2">
                                                             {Icon}
-                                                            <Link
-                                                                href={safeUrl}
-                                                                borderBottom={"1px"}
-                                                                borderColor={"blue.200"}
-                                                                isExternal={true}
-                                                            >
-                                                                {item.to}
-                                                            </Link>
+                                                            {SiteName}
                                                             {Amount}
                                                         </Box>
                                                         <Spacer />

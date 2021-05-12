@@ -23,6 +23,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             prompt: "consent",
             scope: [
                 "https://www.googleapis.com/auth/drive.file", // require to create and edit sheet
+                "https://www.googleapis.com/auth/script.projects", // require to create apps script
                 "openid", // id_token
                 "profile" // aviator, default name, default id
             ],

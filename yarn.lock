@@ -1507,6 +1507,11 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
+"@types/google-apps-script@^1.0.31":
+  version "1.0.31"
+  resolved "https://registry.yarnpkg.com/@types/google-apps-script/-/google-apps-script-1.0.31.tgz#780107c1e821823224cfd075c061cf168af553e5"
+  integrity sha512-tgsJKk20fwFoh0Ml4Li3pqKQ5uu3Nr3XeRsee2+pkPGrJxDlA3qsHAA2q3/HRv5yi9U6QVvdGwJ16USnmA7wAA==
+
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
   resolved "https://registry.yarnpkg.com/@types/graceful-fs/-/graceful-fs-4.1.5.tgz#21ffba0d98da4350db64891f92a9e5db3cdb4e15"

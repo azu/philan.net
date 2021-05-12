@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "npm-run-all -p dev:next",
     "dev:next": "next --port 3000",
+    "dev:local-clean": "rm -rf .cache/ && yarn run dev:local",
     "dev:local": "FORCE_NO_USE_CF=1 next --port 3000",
     "dev:prod": "ENABLE_PRODUCTION_DATA=1 next --port 3000",
     "build": "next build",
@@ -61,6 +62,7 @@
   "devDependencies": {
     "@types/express": "^4.17.11",
     "@types/express-session": "^1.17.3",
+    "@types/google-apps-script": "^1.0.31",
     "@types/jest": "^26.0.21",
     "@types/lodash": "^4.14.168",
     "@types/node": "^14.14.27",

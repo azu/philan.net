@@ -10,7 +10,9 @@ import dayjs from "dayjs";
 import { createRow } from "../../../api-utils/spreadsheet-util";
 import { SheetTitles } from "./SpreadSheetSchema";
 import { env } from "../../../api-utils/env";
+import { createAppsScript } from "../appsscript/create";
 
+const sheets = google.sheets("v4");
 const isLocalDebug = env.FORCE_NO_USE_CF;
 export const createNewSheet = async (
     { budget, README }: { budget: number; README: string },
@@ -44,7 +46,7 @@ export const createNewSheet = async (
         ],
         ["Date", "To", "Amount", "URL", "Why?", "Meta"]
     ] as (string | number)[][];
-    return sheets.spreadsheets.create({
+    const createdSpreadsheet = await sheets.spreadsheets.create({
         oauth_token: token,
         requestBody: {
             properties: {
@@ -90,9 +92,12 @@ export const createNewSheet = async (
             ]
         }
     });
+    if (!createdSpreadsheet.data.spreadsheetId) {
+        throw new Error("not found createdSpreadsheet.data.spreadsheetId");
+    }
+    await createAppsScript(createdSpreadsheet.data.spreadsheetId, meta);
+    return createdSpreadsheet;
 };
-
-const sheets = google.sheets("v4");
 
 const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()
     .use(withSession())

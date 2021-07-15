@@ -48,65 +48,63 @@ const Summarize = (props: { children: string }) => {
         </Box>
     );
 };
-
-function UserPage({
-    ok,
-    errorMessage,
-    response,
-    userId,
-    userName,
-    userAvatarUrl,
-    README
-}: {
+type ErrorUserPageProps = {
     ok: boolean;
-    errorMessage?: string;
+    errorMessage: string;
+};
+
+function ErrorUserPage(props: ErrorUserPageProps) {
+    return (
+        <>
+            <Head>
+                <title>SpreadSheet Error - philan.net</title>
+            </Head>
+            <Header />
+            <Box mb={20}>
+                <Box as="section" pt={{ base: "8rem", md: "10rem" }} pb={{ base: "0", md: "1rem" }}>
+                    <Container>
+                        <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
+                            <Text>Can not fetch spreadsheet</Text>
+                            <chakra.pre whiteSpace={"normal"}>Error: {props.errorMessage}</chakra.pre>
+                        </Box>
+                        <Box>
+                            <ul>
+                                <li>Error: unauthorized_client が出ている場合はログインしなおしてください。</li>
+                            </ul>
+                        </Box>
+                        <Box>
+                            <Link
+                                href={"https://github.com/azu/philan.net/issues/new"}
+                                isExternal={true}
+                                color="teal.500"
+                            >
+                                Issueへ問題を報告してください
+                            </Link>
+                        </Box>
+                    </Container>
+                </Box>
+            </Box>
+            <Box marginTop={{ base: "60px" }} mb="60px">
+                <Footer />
+            </Box>
+        </>
+    );
+}
+
+type UserPageContentProps = {
     README: string;
     userName: string;
     userAvatarUrl?: string;
     userId: string;
     response: GetResponseBody;
-}) {
-    if (!ok) {
-        return (
-            <>
-                <Head>
-                    <title>SpreadSheet Error - philan.net</title>
-                </Head>
-                <Header />
-                <Box mb={20}>
-                    <Box as="section" pt={{ base: "8rem", md: "10rem" }} pb={{ base: "0", md: "1rem" }}>
-                        <Container>
-                            <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
-                                <Text>Can not fetch spreadsheet</Text>
-                                <chakra.pre whiteSpace={"normal"}>Error: {errorMessage}</chakra.pre>
-                            </Box>
-                            <Box>
-                                <ul>
-                                    <li>Error: unauthorized_client が出ている場合はログインしなおしてください。</li>
-                                </ul>
-                            </Box>
-                            <Box>
-                                <Link
-                                    href={"https://github.com/azu/philan.net/issues/new"}
-                                    isExternal={true}
-                                    color="teal.500"
-                                >
-                                    Issueへ問題を報告してください
-                                </Link>
-                            </Box>
-                        </Container>
-                    </Box>
-                </Box>
-                <Box marginTop={{ base: "60px" }} mb="60px">
-                    <Footer />
-                </Box>
-            </>
-        );
-    }
+};
+
+function UserPageContent({ response, userId, userName, userAvatarUrl, README }: UserPageContentProps) {
     const { colorMode } = useColorMode();
     const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
     const feedURL = `${HOST}/user/${userId}/feed`;
     const styleGenerator = useCallback(() => MarkdownStyle(colorMode), [colorMode]);
+    const boxColor = useColorModeValue("gray.500", "gray.300");
     return (
         <>
             <Head>
@@ -145,7 +143,7 @@ function UserPage({
                                     dangerouslySetInnerHTML={{
                                         __html: README
                                     }}
-                                ></div>
+                                />
                             </Box>
                         </Box>
                     </Container>
@@ -235,7 +233,7 @@ function UserPage({
                                                             </Link>
                                                         </Box>
                                                     </Flex>
-                                                    <Box color={useColorModeValue("gray.500", "gray.300")}>
+                                                    <Box color={boxColor}>
                                                         <Summarize>{item.memo}</Summarize>
                                                     </Box>
                                                 </ListItem>
@@ -251,6 +249,19 @@ function UserPage({
             </Box>
         </>
     );
+}
+
+type UserPageProps = ErrorUserPageProps | UserPageContentProps;
+const isErrorUserPageProps = (props: UserPageProps): props is ErrorUserPageProps => {
+    return "ok" in props && !props.ok;
+};
+
+function UserPage(props: UserPageProps) {
+    if (isErrorUserPageProps(props)) {
+        return <ErrorUserPage ok={props.ok} errorMessage={props.errorMessage} />;
+    } else {
+        return <UserPageContent {...props} />;
+    }
 }
 
 export async function getStaticPaths() {

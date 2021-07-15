@@ -23,7 +23,7 @@ import { Footer } from "../../components/Footer";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 
-function userForm(user: LoginUser | null) {
+function useForm(user: LoginUser | null) {
     const [id, setId] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [defaultCurrency, setDefaultCurrency] = useState<string>("JPY");
@@ -61,7 +61,7 @@ function userForm(user: LoginUser | null) {
                 setDefaultCurrency(event.currentTarget.value);
             }
         }),
-        [id, name]
+        []
     );
 
     return {
@@ -76,7 +76,7 @@ function userForm(user: LoginUser | null) {
 
 export default function Create() {
     const user = useLoginUser();
-    const { id, name, valid, spreadsheetId, defaultCurrency, handlers } = userForm(user);
+    const { id, name, valid, spreadsheetId, defaultCurrency, handlers } = useForm(user);
     const [error, setError] = useState<Error | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const submit = () => {

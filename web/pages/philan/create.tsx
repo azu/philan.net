@@ -30,7 +30,7 @@ import { Footer } from "../../components/Footer";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
 
-function userForm() {
+function useForm() {
     const [id, setId] = useState<string>("");
     const [name, setName] = useState<string>("");
     const [README, setREADME] = useState<string>("");
@@ -38,10 +38,11 @@ function userForm() {
     const [budget, setBudget] = useState<number>(10000);
     const [valid, setValid] = useState<boolean>(false);
     const [agreement, setAgreement] = useState<boolean>(false);
+    const [error, setError] = useState<Error | null>(null);
     useEffect(() => {
         const ok = agreement && id.length > 0 && name.length > 0 && budget > 0 && defaultCurrency.length === 3;
         setValid(ok);
-    }, [id, name, budget, agreement]);
+    }, [id, name, budget, agreement, defaultCurrency.length]);
     const handlers = useMemo(
         () => ({
             updateId: (event: SyntheticEvent<HTMLInputElement>) => {
@@ -61,13 +62,45 @@ function userForm() {
             },
             updateAgreement: (event: SyntheticEvent<HTMLInputElement>) => {
                 setAgreement(event.currentTarget.checked);
+            },
+            submit: () => {
+                const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
+                fetch(HOST + "/api/user/create", {
+                    method: "post",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        id,
+                        name,
+                        budget,
+                        README,
+                        defaultCurrency
+                    })
+                })
+                    .then((res) => {
+                        if (res.ok) {
+                            setError(null);
+                            return res.json();
+                        }
+                        return res.text().then((text) => Promise.reject(new Error(text)));
+                    })
+                    .then((json: CreateUserRequestBody) => {
+                        const query = new URLSearchParams([["id", json.id]]);
+                        window.location.href = "/philan/created?" + query.toString();
+                    })
+                    .catch((error) => {
+                        setError(error);
+                    });
             }
         }),
-        [id, name, budget]
+        [README, budget, defaultCurrency, id, name]
     );
 
     return {
         id,
+        error,
         name,
         README,
         budget,
@@ -79,39 +112,7 @@ function userForm() {
 }
 
 export default function Create() {
-    const { id, name, valid, budget, agreement, README, defaultCurrency, handlers } = userForm();
-    const [error, setError] = useState<Error | null>(null);
-    const submit = () => {
-        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
-        fetch(HOST + "/api/user/create", {
-            method: "post",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                id,
-                name,
-                budget,
-                README,
-                defaultCurrency
-            })
-        })
-            .then((res) => {
-                if (res.ok) {
-                    setError(null);
-                    return res.json();
-                }
-                return res.text().then((text) => Promise.reject(new Error(text)));
-            })
-            .then((json: CreateUserRequestBody) => {
-                const query = new URLSearchParams([["id", json.id]]);
-                window.location.href = "/philan/created?" + query.toString();
-            })
-            .catch((error) => {
-                setError(error);
-            });
-    };
+    const { id, name, valid, budget, agreement, README, defaultCurrency, error, handlers } = useForm();
     const errorMessage = error ? (
         <Alert status="error">
             <AlertIcon />
@@ -238,7 +239,7 @@ export default function Create() {
                                 isLoading={false}
                                 type="submit"
                                 disabled={!valid}
-                                onClick={submit}
+                                onClick={handlers.submit}
                             >
                                 登録
                             </Button>

@@ -56,6 +56,7 @@ const MissionFeature = ({
                         objectFit={"fill"}
                         size={"full"}
                         src={imagePosition === "left" ? "/image-right.svg" : "image-left.svg"}
+                        alt={""}
                     />
                 </Box>
                 <Box order={imagePosition === "left" ? 0 : 1} paddingX={4}>

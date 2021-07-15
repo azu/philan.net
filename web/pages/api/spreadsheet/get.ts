@@ -115,7 +115,7 @@ export const getSpreadSheet = async ({
                     inputCurrency: parsedAmount.from,
                     outputCurrency: parsedAmount.to
                 },
-                url: url,
+                url: url ?? "",
                 memo: values?.[4].userEnteredValue?.stringValue ?? "",
                 meta: meta
             };

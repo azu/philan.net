@@ -1,15 +1,4 @@
-import {
-    Box,
-    IconButton,
-    chakra,
-    Container,
-    Link,
-    ListItem,
-    Spinner,
-    Text,
-    UnorderedList,
-    Editable
-} from "@chakra-ui/react";
+import { Box, IconButton, chakra, Container, Link, ListItem, Text, UnorderedList, Editable } from "@chakra-ui/react";
 import React, { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import { SiTwitter } from "react-icons/si";
@@ -17,7 +6,7 @@ import { Header } from "../../components/Header";
 import { Footer } from "../../components/Footer";
 
 const Messages = [
-    <Box>
+    <Box key={"1"}>
         幸せな人はより多く寄付し、寄付することは幸せになるという正のフィードバックループがある
         <br />
         <Link isExternal={true} color="teal.500" href={"https://science.sciencemag.org/content/316/5831/1622.abstract"}>
@@ -25,7 +14,7 @@ const Messages = [
             reveal motives for charitable donations. Science, 2007, 316.5831: 1622-1625.
         </Link>
     </Box>,
-    <Box align={"left"}>
+    <Box align={"left"} key={"2"}>
         寄付が難しいという感覚は、稼いだお金を手放さないといけないとう苦痛から来ている。
         <br />
         寄付をするという長期的な目標を満たすためには、事前に寄付する額を決めておくプレコミットメントが有効とされている。
@@ -141,9 +130,13 @@ export default function Added() {
 
                         <Box opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} my="4">
                             <Text>
-                                ユーザーページを生成中です（最大1~2分程度かかります）
-                                <Spinner as="span" label={"ユーザーページの再構築中"}></Spinner>
+                                寄付の記録は
+                                <Link href={`/user/${userId}`} color="teal.500">
+                                    ユーザページ
+                                </Link>
+                                で確認できます。
                             </Text>
+                            <Text>入力したデータはあなたのSpreadSheetに保存されています。</Text>
                         </Box>
                         <Container padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
                             {message}

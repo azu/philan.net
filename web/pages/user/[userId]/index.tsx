@@ -22,7 +22,7 @@ import {
 import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { GetResponseBody } from "../../api/spreadsheet/api-types";
 import { getSpreadSheet } from "../../api/spreadsheet/get";
 import { createUserKvs } from "../../../api-utils/userKvs";
@@ -30,6 +30,7 @@ import Head from "next/head";
 import { createMarkdown } from "safe-marked";
 import { Footer } from "../../../components/Footer";
 import { MarkdownStyle } from "../../../components/MarkdownStyle";
+import { useLoginUser } from "../../../components/useLoginUser";
 // const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
 const markdown = createMarkdown();
 const Summarize = (props: { children: string }) => {
@@ -99,12 +100,28 @@ type UserPageContentProps = {
     response: GetResponseBody;
 };
 
+const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
 function UserPageContent({ response, userId, userName, userAvatarUrl, README }: UserPageContentProps) {
-    const { colorMode } = useColorMode();
-    const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
     const feedURL = `${HOST}/user/${userId}/feed`;
-    const styleGenerator = useCallback(() => MarkdownStyle(colorMode), [colorMode]);
+    const { colorMode } = useColorMode();
     const boxColor = useColorModeValue("gray.500", "gray.300");
+    const styleGenerator = useCallback(() => MarkdownStyle(colorMode), [colorMode]);
+    const user = useLoginUser();
+    const [records, setRecords] = useState<GetResponseBody>(response);
+    useEffect(() => {
+        async function main() {
+            if (!user) {
+                return; // no fetch
+            }
+            if (user.id !== userId) {
+                return; // no fetch different user
+            }
+            const spreadSheetRecords = await fetch("/api/spreadsheet/get").then((res) => res.json());
+            setRecords(spreadSheetRecords);
+        }
+
+        main();
+    }, [user, userId]);
     return (
         <>
             <Head>
@@ -152,7 +169,7 @@ function UserPageContent({ response, userId, userName, userAvatarUrl, README }: 
             <Box marginTop={{ base: "60px" }} mb="60px">
                 <Container maxWidth={"80ch"}>
                     <Box padding={"2"}>
-                        {response.map((item) => {
+                        {records.map((item) => {
                             const balancePercent =
                                 item.stats.used.raw < item.stats.budget.raw
                                     ? Math.trunc(

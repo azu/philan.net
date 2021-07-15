@@ -14,15 +14,15 @@ import {
     Input,
     NumberInput,
     NumberInputField,
+    Select,
     Text,
     Textarea,
     Tooltip,
-    Select,
     useColorModeValue,
     useRadio,
     useRadioGroup
 } from "@chakra-ui/react";
-import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
+import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { AddRequestBody, GetResponseBody, SpreadSheetItem } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
@@ -81,7 +81,7 @@ function RadioCard(props: UseRadioProps & { children: string }) {
     );
 }
 
-function userForm(user: LoginUser | null) {
+const useForm = (user: LoginUser | null) => {
     const [date, setDate] = useState<Date>(new Date());
     const [to, setTo] = useState<string>("");
     const [url, setUrl] = useState<string>("https://");
@@ -132,6 +132,9 @@ function userForm(user: LoginUser | null) {
             setCurrencyCode(user.defaultCurrency);
         }
     }, [user]);
+    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+    const [submitError, setSubmitError] = useState<Error | null>(null);
+    const [submitSuccess, setSubmitSuccess] = useState<boolean>(false);
     const handlers = useMemo(
         () => ({
             updateDate: (event: SyntheticEvent<HTMLInputElement>) => {
@@ -168,9 +171,67 @@ function userForm(user: LoginUser | null) {
                 setCurrencyCode(value.amount.inputCurrency);
                 setMemo(value.memo);
                 setType(value.meta.type);
+            },
+            submit: () => {
+                if (!user) {
+                    return setSubmitError(new Error("require login"));
+                }
+                const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
+                const finalAmount = type === "checked" ? amount : 0;
+                const isoDate = date.toISOString();
+                const id = createItemId({
+                    dateString: isoDate,
+                    amountNumber: amount,
+                    url
+                });
+                const body: AddRequestBody = {
+                    isoDate: isoDate,
+                    url,
+                    amount: finalAmount,
+                    memo,
+                    to,
+                    currency,
+                    meta: {
+                        id,
+                        type
+                    }
+                };
+                setIsSubmitting(true);
+                fetch(HOST + "/api/spreadsheet/add", {
+                    method: "post",
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                })
+                    .then((res) => {
+                        if (res.ok) {
+                            return res.json();
+                        }
+                        return res.text().then((text) => Promise.reject(new Error(text)));
+                    })
+                    .then(() => {
+                        setSubmitSuccess(true);
+                        setSubmitError(null);
+                        const query = new URLSearchParams([
+                            ["id", user.id],
+                            ["to", to],
+                            ["type", type],
+                            ["amount", String(finalAmount)],
+                            ["currency", currency]
+                        ]);
+                        window.location.href = "/philan/added?" + query.toString();
+                    })
+                    .catch((error) => {
+                        setSubmitError(error);
+                    })
+                    .finally(() => {
+                        setIsSubmitting(false);
+                    });
             }
         }),
-        [to, url, amount, memo, type, currency, selectOptions]
+        [amount, user, type, date, url, memo, to, currency]
     );
 
     return {
@@ -184,81 +245,39 @@ function userForm(user: LoginUser | null) {
         valid,
         isLoading,
         selectOptions,
+        isSubmitting,
+        submitError,
+        submitSuccess,
         handlers
     };
-}
+};
 
 type SelectItem = { label: string; value: string } & SpreadSheetItem;
 export default function Create() {
     const user = useLoginUser();
-    const { date, url, amount, memo, to, type, currency, valid, isLoading, selectOptions, handlers } = userForm(user);
+    const {
+        date,
+        url,
+        amount,
+        memo,
+        to,
+        type,
+        currency,
+        valid,
+        isLoading,
+        selectOptions,
+        isSubmitting,
+        submitError,
+        submitSuccess,
+        handlers
+    } = useForm(user);
     const formattedAmount = useMemo(() => {
         return new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
             style: "currency",
             currency: currency
         }).format(amount);
     }, [amount, currency]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<Error | null>(null);
-    const [success, setSuccess] = useState<boolean>(false);
-    const submit = useCallback(() => {
-        if (!user) {
-            return setError(new Error("require login"));
-        }
-        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
-        const finalAmount = type === "checked" ? amount : 0;
-        const isoDate = date.toISOString();
-        const id = createItemId({
-            dateString: isoDate,
-            amountNumber: amount,
-            url
-        });
-        const body: AddRequestBody = {
-            isoDate: isoDate,
-            url,
-            amount: finalAmount,
-            memo,
-            to,
-            currency,
-            meta: {
-                id,
-                type
-            }
-        };
-        setLoading(true);
-        fetch(HOST + "/api/spreadsheet/add", {
-            method: "post",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body)
-        })
-            .then((res) => {
-                if (res.ok) {
-                    return res.json();
-                }
-                return res.text().then((text) => Promise.reject(new Error(text)));
-            })
-            .then(() => {
-                setSuccess(true);
-                setError(null);
-                const query = new URLSearchParams([
-                    ["id", user.id],
-                    ["to", to],
-                    ["type", type],
-                    ["amount", String(finalAmount)],
-                    ["currency", currency]
-                ]);
-                window.location.href = "/philan/added?" + query.toString();
-            })
-            .catch((error) => {
-                setError(error);
-            })
-            .finally(() => {
-                setLoading(false);
-            });
-    }, [url, amount, memo, to, currency]);
+
     const { getRootProps, getRadioProps } = useRadioGroup({
         name: "type",
         defaultValue: type,
@@ -277,14 +296,14 @@ export default function Create() {
             })}
         </HStack>
     );
-    const errorMessage = error ? (
+    const errorMessage = submitError ? (
         <Alert status="error">
             <AlertIcon />
-            <AlertTitle mr={2}>{error.message}</AlertTitle>
+            <AlertTitle mr={2}>{submitError.message}</AlertTitle>
         </Alert>
     ) : null;
     const successMessage =
-        !error && success ? (
+        !submitError && submitSuccess ? (
             <Alert status="success">
                 <AlertIcon />
                 <AlertTitle mr={2}>Success to update!</AlertTitle>
@@ -410,8 +429,8 @@ export default function Create() {
                                 colorScheme="teal"
                                 isLoading={false}
                                 type="submit"
-                                disabled={!valid || loading}
-                                onClick={submit}
+                                disabled={!valid || isSubmitting}
+                                onClick={handlers.submit}
                             >
                                 Submit
                             </Button>

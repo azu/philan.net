@@ -1,4 +1,85 @@
 import dayjs from "dayjs";
+import cronParser from "cron-parser";
+
+// Subscription tab data
+type SubscriptionRowItem = [
+    startDate: Date,
+    enDate: Date | undefined,
+    every: string,
+    to: string,
+    URL: string,
+    amount: string,
+    memo: string
+];
+// To add record
+type SubscriptionRecord = {
+    date: Date;
+    to: string;
+    amount: string;
+    URL: string;
+    memo: string;
+};
+export type CreateRecordResult =
+    | {
+          type: "error";
+          message: string;
+      }
+    | {
+          type: "no-create";
+          message: string;
+      }
+    | {
+          type: "created";
+          record: SubscriptionRecord;
+      };
+export const createRecord = (today: Date, item: SubscriptionRowItem): CreateRecordResult => {
+    // [StartDate, EndDate, cron, to, URL, amount, why?]
+    const [startDate, endDate, cron, to, amount, URL, memo] = item;
+    try {
+        const interval = cronParser.parseExpression(cron, {
+            startDate: startDate,
+            // end of yesterday → found date in today
+            currentDate: dayjs(today).startOf("day").subtract(1, "second").toDate(),
+            endDate: endDate
+        });
+        if (!interval.hasNext()) {
+            return {
+                type: "no-create",
+                message: "No next date."
+            };
+        }
+        const nextDate = interval.next();
+        if (!nextDate) {
+            return {
+                type: "no-create",
+                message: "No next date."
+            };
+        }
+        // if today is matched, should create it as record
+        if (dayjs(nextDate.toDate()).isSame(dayjs(today), "day")) {
+            return {
+                type: "created",
+                record: {
+                    date: today,
+                    amount,
+                    to,
+                    URL,
+                    memo
+                }
+            };
+        } else {
+            return {
+                type: "no-create",
+                message: "No match date"
+            };
+        }
+    } catch (error: any) {
+        return {
+            type: "error",
+            message: `Invalid cron format: ${cron}. ${error.message}`
+        };
+    }
+};
 
 function main() {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -20,19 +101,7 @@ function main() {
      * @param {string} URL
      * @param {string} memo
      */
-    const appendRecord = ({
-        date,
-        to,
-        amount,
-        URL,
-        memo
-    }: {
-        date: Date;
-        to: string;
-        amount: string;
-        URL: string;
-        memo: string;
-    }) => {
+    const appendRecord = ({ date, to, amount, URL, memo }: SubscriptionRecord) => {
         console.log("appendRecord", {
             date,
             to,
@@ -49,79 +118,17 @@ function main() {
         // https://stackoverflow.com/questions/58565725/get-appendrow-in-gas-to-copy-border-style
         range.copyFormatToRange(gridId, column, lastColumn, lastRow + 1, lastRow + 1);
     };
-    /**
-     * @param {number} diff
-     * @param {Date} startDate
-     * @param {Date} today
-     */
-    const matchYears = (diff: number, startDate: Date, today: Date) => {
-        return dayjs(today).diff(startDate, "year") % diff === 0 && dayjs(today).format("MM-DD") === "01-01";
-    };
-    /**
-     * @param {number} diff
-     * @param {Date} startDate
-     * @param {Date} today
-     */
-    const matchMonths = (diff: number, startDate: Date, today: Date) => {
-        const todayDay = dayjs(today);
-        return (
-            todayDay.diff(startDate, "month") % diff === 0 && todayDay.format("DD") === dayjs(startDate).format("DD")
-        );
-    };
-    /**
-     * @param {number} diff
-     * @param {Date} startDate
-     * @param {Date} today
-     */
-    const matchDays = (diff: number, startDate: Date, today: Date) => {
-        const todayDay = dayjs(today);
-        return todayDay.diff(startDate, "day") % diff === 0;
-    };
-    const todayDayjs = dayjs();
+    const todayDay = new Date();
     for (const item of itemValues) {
-        // [StartDate, EndDate, every, to, URL, amount, why?]
-        const [startDate, endDate, every, to, amount, URL, memo] = item;
-        const match = every.match(/(\d+) (days|months|years)/);
-        if (!match) {
-            continue;
-        }
-        const [, diff, format] = match;
-        if (endDate) {
-            const endDateDay = dayjs(endDate);
-            if (endDateDay.isAfter(todayDayjs) && endDateDay.isSame(todayDayjs)) {
-                continue; // skip
-            }
-        }
-        if (format === "years") {
-            if (matchYears(diff, new Date(startDate), new Date())) {
-                appendRecord({
-                    date: new Date(),
-                    amount,
-                    to,
-                    URL,
-                    memo
-                });
-            }
-        } else if (format === "months") {
-            if (matchMonths(diff, new Date(startDate), new Date())) {
-                appendRecord({
-                    date: new Date(),
-                    amount,
-                    to,
-                    URL,
-                    memo
-                });
-            }
-        } else if (format === "days") {
-            if (matchDays(diff, new Date(startDate), new Date())) {
-                appendRecord({
-                    date: new Date(),
-                    amount,
-                    to,
-                    URL,
-                    memo
-                });
-            }
+        const result = createRecord(todayDay, item as SubscriptionRowItem);
+        if (result.type === "no-create") {
+            console.log(`No create on ${JSON.stringify(item)}: ${result.message}`);
+        } else if (result.type === "error") {
+            console.error(`Error on  ${JSON.stringify(item)}: ${result.message}`);
+        } else {
+            const record = result.record;
+            console.log(`Append record on ${JSON.stringify(item)}: ${JSON.stringify(record)}`);
+            appendRecord(record);
         }
     }
 }

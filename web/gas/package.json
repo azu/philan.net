@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "build": "microbundle -i ./subscription.ts -o ../pages/api/appsscript/subscription.gas --no-pkg-main -f umd --no-sourcemap",
-    "watch": "microbundle watch -i ./subscription.ts -o ../pages/api/appsscript/subscription.gas --no-pkg-main -f umd --no-sourcemap"
+    "watch": "microbundle watch -i ./subscription.ts -o ../pages/api/appsscript/subscription.gas --no-pkg-main -f umd --no-sourcemap",
+    "test": "mocha"
   },
   "keywords": [],
   "author": "azu",
@@ -14,6 +15,11 @@
   "devDependencies": {
     "@types/google-apps-script": "^1.0.37",
     "microbundle": "^0.13.3",
+    "mocha": "^9.0.2",
+    "ts-node": "^10.1.0",
     "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "cron-parser": "^3.5.0"
   }
 }

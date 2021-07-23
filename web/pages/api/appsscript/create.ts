@@ -33,7 +33,7 @@ export const createAppsScript = async (
         throw new Error("Not found createdScriptId");
     }
     const source = await fs.promises.readFile(
-        path.join(serverRuntimeConfig.PROJECT_ROOT, "pages/api/appsscript/gas.js"),
+        path.join(serverRuntimeConfig.PROJECT_ROOT, "pages/api/appsscript/subscription.gas"),
         "utf-8"
     );
     const response = await script.projects.updateContent({

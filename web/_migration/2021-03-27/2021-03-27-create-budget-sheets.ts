@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { UserCredentials } from "../../domain/User";
-import { createOAuthClient } from "../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../api-utils/oauth/createOAuthClient";
 import { logger } from "../../api-utils/logger";
 import { createCopiedSheet } from "../migration-helper";
 import { createRow } from "../../api-utils/spreadsheet-util";

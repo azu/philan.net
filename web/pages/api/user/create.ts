@@ -1,7 +1,7 @@
 import nextConnect from "next-connect";
 import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-session";
 import { NextApiResponse } from "next";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import { validateCreateUserRequestBody } from "./api-types.validator";
 import { createNewSheet } from "../spreadsheet/create";
 import { createUserKvs } from "../../../api-utils/userKvs";

@@ -2,21 +2,24 @@ import dayjs from "dayjs";
 import cronParser from "cron-parser";
 
 // Subscription tab data
-type SubscriptionRowItem = [
+export type SubscriptionRowItem = [
+    // start and end date does not require time
+    // e.g. 2021-01-01 is ok
+    // time is just ignored
     startDate: Date,
     enDate: Date | undefined,
-    every: string,
+    cron: string,
     to: string,
-    URL: string,
+    url: string,
     amount: string,
     memo: string
 ];
 // To add record
-type SubscriptionRecord = {
+export type SubscriptionRecord = {
     date: Date;
     to: string;
     amount: string;
-    URL: string;
+    url: string;
     memo: string;
 };
 export type CreateRecordResult =
@@ -32,9 +35,9 @@ export type CreateRecordResult =
           type: "created";
           record: SubscriptionRecord;
       };
-export const createRecord = (today: Date, item: SubscriptionRowItem): CreateRecordResult => {
+const createRecord = (today: Date, item: SubscriptionRowItem): CreateRecordResult => {
     // [StartDate, EndDate, cron, to, URL, amount, why?]
-    const [startDate, endDate, cron, to, amount, URL, memo] = item;
+    const [startDate, endDate, cron, to, amount, url, memo] = item;
     try {
         const interval = cronParser.parseExpression(cron, {
             startDate: startDate,
@@ -63,7 +66,7 @@ export const createRecord = (today: Date, item: SubscriptionRowItem): CreateReco
                     date: today,
                     amount,
                     to,
-                    URL,
+                    url,
                     memo
                 }
             };
@@ -80,8 +83,9 @@ export const createRecord = (today: Date, item: SubscriptionRowItem): CreateReco
         };
     }
 };
-
-function main() {
+export { createRecord as _test_createRecord };
+// @ts-ignore
+global.main = function main() {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
     const subscriptionsSheet = spreadsheet.getSheetByName("Subscriptions");
     const recordsSheet = spreadsheet.getSheetByName("Records");
@@ -101,12 +105,12 @@ function main() {
      * @param {string} URL
      * @param {string} memo
      */
-    const appendRecord = ({ date, to, amount, URL, memo }: SubscriptionRecord) => {
+    const appendRecord = ({ date, to, amount, url, memo }: SubscriptionRecord) => {
         console.log("appendRecord", {
             date,
             to,
             amount,
-            URL,
+            url: url,
             memo
         });
         const gridId = recordsSheet.getSheetId();
@@ -114,7 +118,7 @@ function main() {
         const column = 1; // Change if necessary according to your sheet
         const lastColumn = recordsSheet.getLastColumn();
         const range = recordsSheet.getRange(lastRow, column, 1, lastColumn);
-        recordsSheet.appendRow([date.toISOString(), to, amount, URL, memo]);
+        recordsSheet.appendRow([date.toISOString(), to, amount, url, memo]);
         // https://stackoverflow.com/questions/58565725/get-appendrow-in-gas-to-copy-border-style
         range.copyFormatToRange(gridId, column, lastColumn, lastRow + 1, lastRow + 1);
     };
@@ -131,8 +135,18 @@ function main() {
             appendRecord(record);
         }
     }
+};
+
+function deleteAllTriggers() {
+    const triggers = ScriptApp.getProjectTriggers();
+    for (const trigger of triggers) {
+        ScriptApp.deleteTrigger(trigger);
+    }
 }
 
-function setTrigger() {
+// @ts-ignore
+global.setTrigger = function setTrigger() {
+    deleteAllTriggers();
+    // set new trigger
     ScriptApp.newTrigger("main").timeBased().everyDays(1).create();
-}
+};

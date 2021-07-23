@@ -3,14 +3,13 @@ import { google } from "googleapis";
 import nextConnect from "next-connect";
 import { withSession } from "../../../api-utils/with-session";
 import { validateCreateUserRequestBody } from "../user/api-types.validator";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import { UserCredentials } from "../../../domain/User";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 import dayjs from "dayjs";
 import { createRow } from "../../../api-utils/spreadsheet-util";
 import { SheetTitles } from "./SpreadSheetSchema";
 import { env } from "../../../api-utils/env";
-import { createAppsScript } from "../appsscript/create";
 
 const sheets = google.sheets("v4");
 const isLocalDebug = env.FORCE_NO_USE_CF;
@@ -95,7 +94,6 @@ export const createNewSheet = async (
     if (!createdSpreadsheet.data.spreadsheetId) {
         throw new Error("not found createdSpreadsheet.data.spreadsheetId");
     }
-    await createAppsScript(createdSpreadsheet.data.spreadsheetId, meta);
     return createdSpreadsheet;
 };
 

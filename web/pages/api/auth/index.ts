@@ -1,5 +1,5 @@
 import { NextApiResponse } from "next";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import nextConnect from "next-connect";
 import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-session";
 import { randomBytes } from "crypto";

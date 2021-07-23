@@ -1,4 +1,4 @@
-import { createRecord } from "./subscription";
+import { _test_createRecord as createRecord } from "./subscription";
 import dayjs from "dayjs";
 import * as assert from "assert";
 

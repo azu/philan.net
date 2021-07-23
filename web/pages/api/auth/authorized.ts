@@ -2,7 +2,7 @@ import { UserCredentials } from "../../../domain/User";
 import nextConnect from "next-connect";
 import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-session";
 import { NextApiResponse } from "next";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import { validateAuthorizedRequestQuery } from "./api-types.validator";
 import { createUserKvs } from "../../../api-utils/userKvs";
 import { logger } from "../../../api-utils/logger";

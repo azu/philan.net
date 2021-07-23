@@ -1,7 +1,7 @@
 import { NextApiResponse } from "next";
 import { google } from "googleapis";
 import { UserCredentials } from "../../../domain/User";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import nextConnect from "next-connect";
 import { withSession } from "../../../api-utils/with-session";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";

@@ -3,7 +3,7 @@ import { google } from "googleapis";
 import { validateAddRequestBody } from "./api-types.validator";
 import nextConnect from "next-connect";
 import { withSession } from "../../../api-utils/with-session";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import { UserCredentials } from "../../../domain/User";
 import dayjs from "dayjs";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";

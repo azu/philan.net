@@ -7,10 +7,11 @@ import { createRow } from "../../../api-utils/spreadsheet-util";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 import { NextApiResponse } from "next";
 import { withSession } from "../../../api-utils/with-session";
-import nextConnect from "next-connect";
+import nextConnect, { ErrorHandler } from "next-connect";
 import { logger } from "../../../api-utils/logger";
 import { getToken, GetTokenMeta } from "../../../api-utils/oauth/getToken";
-
+import { createUserKvs } from "../../../api-utils/userKvs";
+import oauthScopes from "../../../gas/subscriptions.scope.json";
 const { serverRuntimeConfig } = getConfig();
 export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta) => {
     const token = await getToken(meta);
@@ -29,7 +30,7 @@ export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta
         throw new Error("Not found createdScriptId");
     }
     const source = await fs.promises.readFile(
-        path.join(serverRuntimeConfig.PROJECT_ROOT, "pages/api/subscription/subscription.gs"),
+        path.join(serverRuntimeConfig.PROJECT_ROOT, "pages/api/subscription/subscription.gs.js"),
         "utf-8"
     );
     const response = await script.projects.updateContent({
@@ -45,19 +46,22 @@ export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta
                 },
                 {
                     name: "appsscript",
-                    source: JSON.stringify({ runtimeVersion: "V8" }),
+                    source: JSON.stringify({
+                        runtimeVersion: "V8",
+                        oauthScopes: oauthScopes
+                    }),
                     type: "JSON"
                 }
             ]
         }
     });
     // TODO: will be failed in first time
-    script.scripts.run({
-        scriptId: createdScriptId,
-        requestBody: {
-            function: "setTrigger"
-        }
-    });
+    // script.scripts.run({
+    //     scriptId: createdScriptId,
+    //     requestBody: {
+    //         function: "setTrigger"
+    //     }
+    // });
     return response;
 };
 
@@ -127,8 +131,7 @@ export const createSubscriptionSheet = async (spreadsheetId: string, meta: GetTo
     });
 };
 
-// @ts-ignore
-const onError: ErrorHandler<Req, Res> = (error, req, res) => {
+const onError: ErrorHandler<any, NextApiResponse> = (error, req, res) => {
     logger.error(error);
     if (process.env.NODE_ENV === "production") {
         res.status(500).end("Server Error");
@@ -156,11 +159,19 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>({ on
                 credentials: user.credentials
             })
         ]);
+        const appsScriptId = appsScript.data.scriptId;
         logger.info(`user: ${user.id} created subscription sheet in ${user.spreadsheetId}`);
-        logger.info(`user: ${user.id} created appsScript: ${appsScript.data.scriptId}`);
+        logger.info(`user: ${user.id} created appsScript: ${appsScriptId}`);
+        if (appsScriptId) {
+            const kvs = await createUserKvs();
+            await kvs.updateUser(user.googleId, {
+                ...user,
+                appsScriptId: appsScriptId
+            });
+        }
         res.json({
             spreadsheetId: user.spreadsheetId,
-            appsScriptId: appsScript.data.scriptId
+            appsScriptId: appsScriptId
         });
     });
 export default handler;

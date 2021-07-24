@@ -150,3 +150,12 @@ global.setTrigger = function setTrigger() {
     // set new trigger
     ScriptApp.newTrigger("main").timeBased().everyDays(1).create();
 };
+
+// @ts-ignore
+global.onOpen = function onOpen() {
+    var ui = SpreadsheetApp.getUi();
+    var menu = ui.createMenu("philan.net");
+    menu.addItem("Set Trigger", "setTrigger");
+    menu.addItem("Try to record subscription", "main");
+    menu.addToUi();
+};

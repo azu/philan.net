@@ -9,7 +9,7 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, "../pages/api/subscription"),
-        filename: "subscription.gs"
+        filename: "subscription.gs.js"
     },
     resolve: {
         extensions: [".ts", ".js"]

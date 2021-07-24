@@ -1,14 +1,26 @@
 import { User } from "../domain/User";
 import { createKVS } from "./kvs";
 
+// google: need to update user
+// users: read only use-case
+export type WritableUserWithGoogleId = User & {
+    googleId: string;
+};
 export const createUserKvs = async () => {
     const kvs = await createKVS<User>();
     return {
-        findByGoogleId(googleID?: string) {
-            if (!googleID) {
+        async findByGoogleId(googleId?: string): Promise<WritableUserWithGoogleId | undefined> {
+            if (!googleId) {
                 return;
             }
-            return kvs.get(`google:1:${googleID}`);
+            const user = await kvs.get(`google:1:${googleId}`);
+            if (!user) {
+                return user;
+            }
+            return {
+                ...user,
+                googleId
+            };
         },
         findByUserId(userId: string) {
             return kvs.get(`users:1:${userId}`);

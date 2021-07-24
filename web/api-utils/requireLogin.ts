@@ -1,11 +1,10 @@
 import { NextApiResponse } from "next";
 import { NextHandler } from "next-connect";
-import { User } from "../domain/User";
-import { createUserKvs } from "./userKvs";
+import { createUserKvs, WritableUserWithGoogleId } from "./userKvs";
 import { NextApiRequestWithSession } from "./with-session";
 
 export type NextApiRequestWithUserSession = NextApiRequestWithSession & {
-    user: User;
+    user: WritableUserWithGoogleId;
 };
 export const requireLogin = () => {
     return async (req: NextApiRequestWithSession, _res: NextApiResponse, next: NextHandler) => {

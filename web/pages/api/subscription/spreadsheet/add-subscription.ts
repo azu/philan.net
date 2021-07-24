@@ -1,25 +1,24 @@
 import { google } from "googleapis";
-import { SheetTitles } from "../spreadsheet/SpreadSheetSchema";
-import { createRow } from "../../../api-utils/spreadsheet-util";
-import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
+import { SheetTitles } from "../../spreadsheet/SpreadSheetSchema";
+import { createRow } from "../../../../api-utils/spreadsheet-util";
+import { NextApiRequestWithUserSession, requireLogin } from "../../../../api-utils/requireLogin";
 import { NextApiResponse } from "next";
-import { withSession } from "../../../api-utils/with-session";
+import { withSession } from "../../../../api-utils/with-session";
 import nextConnect, { ErrorHandler } from "next-connect";
-import { logger } from "../../../api-utils/logger";
-import { getToken, GetTokenMeta } from "../../../api-utils/oauth/getToken";
-import dayjs from "dayjs";
+import { logger } from "../../../../api-utils/logger";
+import { getToken, GetTokenMeta } from "../../../../api-utils/oauth/getToken";
+import { validateAddSubscritionRequestBody } from "../api-types.validator";
 
 export const addSubscription = async (
     item: {
         // start and end date does not require time
         // e.g. 2021-01-01 is ok
         // time is just ignored
-        startDate: Date;
-        enDate: Date | undefined;
+        startDate: string;
         cron: string;
         to: string;
         url: string;
-        amount: string;
+        amount: number;
         memo: string;
     },
     meta: GetTokenMeta & {
@@ -43,8 +42,8 @@ export const addSubscription = async (
     // batchUpdate is not atomic
     // https://groups.google.com/g/google-spreadsheets-api/c/G0sUsBHlaZg
     const row = [
-        dayjs(item.startDate).format("YYYY-MM-DD"),
-        item.enDate ? dayjs(item.enDate).format("YYYY-MM-DD") : "",
+        item.startDate,
+        "", // end date is empty
         item.cron,
         item.to,
         item.amount,
@@ -80,24 +79,17 @@ const onError: ErrorHandler<any, NextApiResponse> = (error, _req, res) => {
 const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>({ onError })
     .use(withSession())
     .use(requireLogin())
-    .get(async (req, res) => {
+    .post(async (req, res) => {
         const user = req.user;
         if (!user) {
             throw new Error("No user");
         }
-        if (user.appsScriptId) {
-            throw new Error("Already created subscription apps and sheet!");
+        if (!user.appsScriptId) {
+            throw new Error("Not found appsScriptId");
         }
+        const { startDate, cron, to, url, amount, memo } = validateAddSubscritionRequestBody(req.body);
         const sub = await addSubscription(
-            {
-                startDate: new Date(),
-                cron: "0 0 1 * *",
-                enDate: undefined,
-                to: "test",
-                url: "http://localhost",
-                memo: "サブスク",
-                amount: "1000"
-            },
+            { startDate, cron, to, url, amount, memo },
             {
                 credentials: user.credentials,
                 spreadsheetId: user.spreadsheetId

@@ -24,6 +24,7 @@ export type UserResponseObject = {
     defaultCurrency: string;
     avatarUrl?: string;
     spreadsheetUrl: string;
+    appsScriptUrl?: string;
 };
 
 //

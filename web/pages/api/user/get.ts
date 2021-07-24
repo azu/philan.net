@@ -27,7 +27,10 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse<GetUserRe
             name: user.name,
             defaultCurrency: user.defaultCurrency,
             avatarUrl: user.avatarUrl,
-            spreadsheetUrl: `https://docs.google.com/spreadsheets/d/${user.spreadsheetId}`
+            spreadsheetUrl: `https://docs.google.com/spreadsheets/d/${user.spreadsheetId}`,
+            appsScriptUrl: user.appsScriptId
+                ? `https://script.google.com/home/projects/${user.appsScriptId}`
+                : undefined
         });
     });
 export default handler;

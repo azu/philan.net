@@ -47,7 +47,7 @@ export const createUserKvs = async () => {
             }
         },
         async someUserNames(): Promise<string[]> {
-            const res = await kvs.list({ prefix: "users:1:", limit: 100 });
+            const res = await kvs.list({ prefix: "users:1:", limit: 20 });
             return res.keys.map(({ name }) => {
                 return name.replace("users:1:", "");
             });

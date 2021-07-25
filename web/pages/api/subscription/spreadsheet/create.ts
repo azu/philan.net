@@ -85,7 +85,7 @@ const onError: ErrorHandler<any, NextApiResponse> = (error, req, res) => {
 const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>({ onError })
     .use(withSession())
     .use(requireLogin())
-    .get(async (req, res) => {
+    .post(async (req, res) => {
         const user = req.user;
         if (!user) {
             throw new Error("No user");

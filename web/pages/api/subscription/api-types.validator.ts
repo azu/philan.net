@@ -22,6 +22,9 @@ const SCHEMA = {
                 "amount": {
                     "type": "number"
                 },
+                "currency": {
+                    "type": "string"
+                },
                 "url": {
                     "type": "string"
                 },
@@ -34,6 +37,7 @@ const SCHEMA = {
                 "cron",
                 "to",
                 "amount",
+                "currency",
                 "url",
                 "memo"
             ],
@@ -49,6 +53,15 @@ const SCHEMA = {
             "required": [
                 "ok"
             ],
+            "additionalProperties": false
+        },
+        "AppsScriptCreateRequestBody": {
+            "type": "object",
+            "properties": {
+                "force": {
+                    "type": "boolean"
+                }
+            },
             "additionalProperties": false
         },
         "SubScriptionGetRequestQuery": {
@@ -129,6 +142,22 @@ const SCHEMA = {
                 "memo"
             ],
             "additionalProperties": false
+        },
+        "SetupStatusResponseBody": {
+            "type": "object",
+            "properties": {
+                "hasSubscriptionSheet": {
+                    "type": "boolean"
+                },
+                "hasAppsScript": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "hasSubscriptionSheet",
+                "hasAppsScript"
+            ],
+            "additionalProperties": false
         }
     }
 };
@@ -160,6 +189,21 @@ export function validateAddSubscritionResponseody(payload: unknown): apiTypes.Ad
 export function isAddSubscritionResponseody(payload: unknown): payload is apiTypes.AddSubscritionResponseody {
   /** Schema is defined in {@link SCHEMA.definitions.AddSubscritionResponseody } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddSubscritionResponseody" });
+  return ajvValidate(payload);
+}
+
+export function validateAppsScriptCreateRequestBody(payload: unknown): apiTypes.AppsScriptCreateRequestBody {
+  if (!isAppsScriptCreateRequestBody(payload)) {
+    const error = new Error('invalid payload: AppsScriptCreateRequestBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isAppsScriptCreateRequestBody(payload: unknown): payload is apiTypes.AppsScriptCreateRequestBody {
+  /** Schema is defined in {@link SCHEMA.definitions.AppsScriptCreateRequestBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AppsScriptCreateRequestBody" });
   return ajvValidate(payload);
 }
 
@@ -205,5 +249,20 @@ export function validateSubscriptionItem(payload: unknown): apiTypes.Subscriptio
 export function isSubscriptionItem(payload: unknown): payload is apiTypes.SubscriptionItem {
   /** Schema is defined in {@link SCHEMA.definitions.SubscriptionItem } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/SubscriptionItem" });
+  return ajvValidate(payload);
+}
+
+export function validateSetupStatusResponseBody(payload: unknown): apiTypes.SetupStatusResponseBody {
+  if (!isSetupStatusResponseBody(payload)) {
+    const error = new Error('invalid payload: SetupStatusResponseBody');
+    error.name = "ValidationError";
+    throw error;
+  }
+  return payload;
+}
+
+export function isSetupStatusResponseBody(payload: unknown): payload is apiTypes.SetupStatusResponseBody {
+  /** Schema is defined in {@link SCHEMA.definitions.SetupStatusResponseBody } **/
+  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/SetupStatusResponseBody" });
   return ajvValidate(payload);
 }

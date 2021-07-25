@@ -2,8 +2,6 @@ import { google } from "googleapis";
 import * as fs from "fs";
 import * as path from "path";
 import getConfig from "next/config";
-import { SheetTitles } from "../../spreadsheet/SpreadSheetSchema";
-import { createRow } from "../../../../api-utils/spreadsheet-util";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../../api-utils/requireLogin";
 import { NextApiResponse } from "next";
 import { withSession } from "../../../../api-utils/with-session";
@@ -12,6 +10,7 @@ import { logger } from "../../../../api-utils/logger";
 import { getToken, GetTokenMeta } from "../../../../api-utils/oauth/getToken";
 import { createUserKvs } from "../../../../api-utils/userKvs";
 import oauthScopes from "../../../../gas/subscriptions.scope.json";
+import { validateAppsScriptCreateRequestBody } from "../api-types.validator";
 
 const { serverRuntimeConfig } = getConfig();
 export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta) => {
@@ -19,6 +18,7 @@ export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta
     const script = google.script({
         version: "v1"
     });
+    const startTime = Date.now();
     const project = await script.projects.create({
         oauth_token: token,
         requestBody: {
@@ -26,6 +26,7 @@ export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta
             parentId: spreadsheetId
         }
     });
+    logger.info(`creation time: ${Date.now() - startTime}ms`);
     const createdScriptId = project.data.scriptId;
     if (!createdScriptId) {
         throw new Error("Not found createdScriptId");
@@ -56,6 +57,7 @@ export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta
             ]
         }
     });
+    logger.info(`update time: ${Date.now() - startTime}ms`);
     // TODO: will be failed in first time
     // script.scripts.run({
     //     scriptId: createdScriptId,
@@ -64,88 +66,6 @@ export const createAppsScript = async (spreadsheetId: string, meta: GetTokenMeta
     //     }
     // });
     return response;
-};
-
-export const createSubscriptionSheet = async (spreadsheetId: string, meta: GetTokenMeta) => {
-    const sheets = google.sheets("v4");
-    const token = await getToken(meta);
-    const spreadsheet = await sheets.spreadsheets.get({
-        oauth_token: token,
-        spreadsheetId: spreadsheetId,
-        includeGridData: false
-    });
-    const hasSubscription = spreadsheet.data.sheets?.find((sheet) => {
-        return sheet.properties?.title === SheetTitles.Subscriptions;
-    });
-    if (hasSubscription) {
-        return;
-    }
-    // create "Subscription" sheet
-    const createSubscriptionSheetResponse = await sheets.spreadsheets.batchUpdate({
-        oauth_token: token,
-        spreadsheetId: spreadsheetId,
-        fields: "*",
-        requestBody: {
-            includeSpreadsheetInResponse: true, // response includes sheet.id
-            requests: [
-                {
-                    addSheet: {
-                        properties: {
-                            title: SheetTitles.Subscriptions,
-                            gridProperties: {
-                                frozenRowCount: 1
-                            }
-                        }
-                    }
-                }
-            ]
-        }
-    });
-    const subscriptionSheet = createSubscriptionSheetResponse?.data?.updatedSpreadsheet?.sheets?.find((sheet) => {
-        return sheet.properties?.title === SheetTitles.Subscriptions;
-    });
-    const subscriptionSheetId = subscriptionSheet?.properties?.sheetId;
-    if (!subscriptionSheetId) {
-        throw new Error("Fail to create subscription sheet");
-    }
-    logger.info(`subscriptionSheetId: ${subscriptionSheetId}`);
-    await sheets.spreadsheets.batchUpdate({
-        oauth_token: token,
-        spreadsheetId: spreadsheetId,
-        fields: "*",
-        requestBody: {
-            requests: [
-                // create "Budgets" sheet
-                {
-                    updateCells: {
-                        fields: "*",
-                        range: {
-                            sheetId: subscriptionSheetId,
-                            startRowIndex: 0,
-                            endRowIndex: 1
-                        },
-                        rows: createRow([["StartDate", "EndDate", "Cron", "To", "Amount", "URL", "Why?", "Meta"]])
-                    },
-                    repeatCell: {
-                        range: {
-                            startColumnIndex: 0,
-                            endColumnIndex: 2,
-                            sheetId: subscriptionSheetId
-                        },
-                        cell: {
-                            userEnteredFormat: {
-                                numberFormat: {
-                                    type: "TIME",
-                                    pattern: "yyyy-mm-dd"
-                                }
-                            }
-                        },
-                        fields: "userEnteredFormat.numberFormat"
-                    }
-                }
-            ]
-        }
-    });
 };
 
 const onError: ErrorHandler<any, NextApiResponse> = (error, _, res) => {
@@ -165,14 +85,18 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>({ on
         if (!user) {
             throw new Error("No user");
         }
-        if (user.appsScriptId) {
-            throw new Error("Already created subscription apps and sheet!");
+        const { force } = validateAppsScriptCreateRequestBody(req.body);
+        if (!force && user.appsScriptId) {
+            return res.json({
+                ok: false,
+                message: "Already created subscription apps and sheet!"
+            });
         }
         const appsScript = await createAppsScript(user.spreadsheetId, {
             credentials: user.credentials
         });
         const appsScriptId = appsScript.data.scriptId;
-        logger.info(`user: ${user.id} created appsScript: ${appsScriptId}`);
+        logger.info(`user: ${user.id} created appsScript: ${appsScriptId}, force: ${force}`);
         if (appsScriptId) {
             const kvs = await createUserKvs();
             await kvs.updateUser(user.googleId, {
@@ -181,8 +105,7 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>({ on
             });
         }
         res.json({
-            spreadsheetId: user.spreadsheetId,
-            appsScriptId: appsScriptId
+            ok: true
         });
     });
 export default handler;

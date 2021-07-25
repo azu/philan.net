@@ -10,6 +10,7 @@ import {
     FormHelperText,
     FormLabel,
     Input,
+    Link,
     NumberInput,
     NumberInputField,
     Radio,
@@ -26,52 +27,17 @@ import {
     Tooltip,
     Tr
 } from "@chakra-ui/react";
+import cronParser from "cron-parser";
 import { Footer } from "../../components/Footer";
 import React, { SyntheticEvent, useCallback, useEffect, useMemo, useState } from "react";
 import type { AddSubscritionRequestBody, SubScriptionGetResponseBody } from "../api/subscription/api-types";
 import dayjs from "dayjs";
 import { LoginUser, useLoginUser } from "../../components/useLoginUser";
 import COUNTRY_CURRENCY from "country-to-currency";
+import { useFetch } from "../../components/useFetch";
 
 const CURRENCY_CODES = Object.values(COUNTRY_CURRENCY);
-
-function useFetch<T>(input: RequestInfo, init?: RequestInit) {
-    const [response, setResponse] = React.useState<T | null>(null);
-    const [error, setError] = React.useState<null | Error>(null);
-
-    React.useEffect(() => {
-        const abortController = new AbortController();
-        const fetchData = async () => {
-            try {
-                const res = await fetch(input, {
-                    ...init,
-                    signal: abortController.signal
-                });
-                const json = await res.json();
-                setResponse(json);
-            } catch (error) {
-                setError(error);
-            }
-        };
-        fetchData();
-        return () => {
-            abortController.abort();
-        };
-    }, [init, input]);
-
-    const reload = useCallback(async () => {
-        try {
-            const res = await fetch(input, init);
-            const json = await res.json();
-            setResponse(json);
-        } catch (error) {
-            setError(error);
-        }
-    }, [init, input]);
-    return [{ response, error }, { reload }] as const;
-}
-
-const useForm = (user: LoginUser | null) => {
+export const useSubscriptionForm = (user: LoginUser | null) => {
     const MONTHLY_CRON = "@monthly";
     const YEARLY_CRON = "@yearly";
     const [startDate, setStartDate] = useState<Date>(new Date());
@@ -79,6 +45,14 @@ const useForm = (user: LoginUser | null) => {
     const [url, setUrl] = useState<string>("https://");
     const [cronType, setCronType] = useState<"monthly" | "yearly" | "yearly-with-start" | "custom">("monthly");
     const [cron, setCron] = useState<string>(MONTHLY_CRON);
+    const nextCronDate = useMemo(() => {
+        try {
+            const interval = cronParser.parseExpression(cron);
+            return interval.next().toDate().toLocaleDateString();
+        } catch (error) {
+            return `Error: ${error.message}`;
+        }
+    }, [cron]);
     const readonlyCronInput = useMemo(() => {
         return cronType !== "custom";
     }, [cronType]);
@@ -191,6 +165,7 @@ const useForm = (user: LoginUser | null) => {
         startDate,
         cronType,
         cron,
+        nextCronDate,
         readonlyCronInput,
         to,
         url,
@@ -207,12 +182,13 @@ const useForm = (user: LoginUser | null) => {
     };
 };
 
-const SubscribeContents = (props: { response: SubScriptionGetResponseBody | null }) => {
+export const SubscriptionForm = (props: { response: SubScriptionGetResponseBody | null }) => {
     const loginUser = useLoginUser();
     const {
         startDate,
         cronType,
         cron,
+        nextCronDate,
         readonlyCronInput,
         to,
         url,
@@ -226,40 +202,43 @@ const SubscribeContents = (props: { response: SubScriptionGetResponseBody | null
         isLoading,
         handlers,
         currency
-    } = useForm(loginUser);
+    } = useSubscriptionForm(loginUser);
     if (!props.response) {
         return <p>Loading...</p>;
     }
     return (
         <Box w="100%" p={4}>
-            <Table size="sm" marginBottom={8}>
-                <Thead>
-                    <Tr>
-                        <Th>Start Date</Th>
-                        <Th>End Date</Th>
-                        <Th whiteSpace={"nowrap"}>Cron</Th>
-                        <Th>To</Th>
-                        <Th>Amount</Th>
-                        <Th>Url</Th>
-                        <Th>Memo</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {props.response?.items?.map((item) => {
-                        return (
-                            <Tr key={item.startDate + item.to}>
-                                <Td>{item.startDate}</Td>
-                                <Td>{item.endDate !== "" ? "✔" : ""}</Td>
-                                <Td whiteSpace={"nowrap"}>{item.cron}</Td>
-                                <Td>{item.to}</Td>
-                                <Td>{item.amount.value}</Td>
-                                <Td>{item.url}</Td>
-                                <Td>{item.memo}</Td>
-                            </Tr>
-                        );
-                    })}
-                </Tbody>
-            </Table>
+            <Box border={"1px"} borderRadius={"12px"} borderColor={"gray.400"} paddingY={4}>
+                <Table size="sm" marginBottom={8}>
+                    <Thead>
+                        <Tr>
+                            <Th>Start Date</Th>
+                            <Th>End Date</Th>
+                            <Th whiteSpace={"nowrap"}>Cron</Th>
+                            <Th>To</Th>
+                            <Th>Amount</Th>
+                            <Th>Url</Th>
+                            <Th>Memo</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {props.response?.items?.map((item, index) => {
+                            const isEnded = Boolean(item.endDate);
+                            return (
+                                <Tr key={item.startDate + item.to + index}>
+                                    <Td>{item.startDate}</Td>
+                                    <Td>{isEnded ? "✔" : "継続中"}</Td>
+                                    <Td whiteSpace={"nowrap"}>{item.cron}</Td>
+                                    <Td>{item.to}</Td>
+                                    <Td>{item.amount.value}</Td>
+                                    <Td>{item.url}</Td>
+                                    <Td>{item.memo}</Td>
+                                </Tr>
+                            );
+                        })}
+                    </Tbody>
+                </Table>
+            </Box>
             <Box>
                 <chakra.h2
                     maxW="16ch"
@@ -288,9 +267,13 @@ const SubscribeContents = (props: { response: SubScriptionGetResponseBody | null
                         </Stack>
                     </RadioGroup>
                     <Input value={cron} onChange={handlers.updateCron} disabled={readonlyCronInput} />
+                    <FormHelperText>次の記録予定日: {nextCronDate} </FormHelperText>
                     <FormHelperText>
-                        スケジュールの種類を選択してください。 毎月または毎年から選択できます。
-                        また、カスタムではCron記法を使って好きなスケジュールを登録できます。(スケジュールでは、時刻は無視されます。一つの定期寄付に付き最大でも1日1つの記録となります。)
+                        スケジュールの種類を選択してください。 毎月または毎年から選択できます。 また、カスタムでは
+                        <Link href={"https://crontab.guru/examples.html"} isExternal={true}>
+                            Cron記法
+                        </Link>
+                        を使って好きなスケジュールを登録できます。(スケジュールでは、時刻は無視されます。一つスケジュールにおいては最大でも1日1つの記録となります。)
                     </FormHelperText>
                 </FormControl>
                 <FormControl id="to" isRequired marginBottom={6}>
@@ -370,7 +353,7 @@ const SubscriptionPage = () => {
     return (
         <>
             <Head>
-                <title>サブスクリプションの管理 - philan.net</title>
+                <title>定期寄付の管理 - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
             <Header />
@@ -387,16 +370,14 @@ const SubscriptionPage = () => {
                             marginBottom="16px"
                             lineHeight="1.2"
                         >
-                            サブスクリプションの管理ページ
+                            定期寄付の管理ページ
                         </chakra.h1>
-                        <Text maxW="560px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">
+                        <Text maxW="800px" mx="auto" opacity={0.7} fontSize={{ base: "lg", lg: "xl" }} mt="6">
                             定期的に寄付をしている対象を管理します。
-                            <br />
-                            サブスクリプションへ登録している対象は、指定したタイミングで自動的に記録が追加できます。
                         </Text>
                     </Box>
-                    <Container>
-                        <SubscribeContents response={response} />
+                    <Container maxW={"container.lg"}>
+                        <SubscriptionForm response={response} />
                     </Container>
                 </Box>
                 <Footer />

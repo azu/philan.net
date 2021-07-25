@@ -10,7 +10,7 @@ import { createItemId } from "../../../api-utils/create-item-id";
 import { GetResponseBody } from "./api-types";
 import groupBy from "lodash/groupBy";
 import { SheetTitles } from "./SpreadSheetSchema";
-import { parseAmount } from "../../../api-utils/parseAmount";
+import { parseAmount } from "../../../api-utils/amount-util";
 
 const sheets = google.sheets("v4");
 

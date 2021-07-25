@@ -1,6 +1,6 @@
 import { google } from "googleapis";
 import { SheetTitles } from "../../spreadsheet/SpreadSheetSchema";
-import { createRow } from "../../../../api-utils/spreadsheet-util";
+import { CreateCellArg, createRow } from "../../../../api-utils/spreadsheet-util";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../../api-utils/requireLogin";
 import { NextApiResponse } from "next";
 import { withSession } from "../../../../api-utils/with-session";
@@ -8,6 +8,7 @@ import nextConnect, { ErrorHandler } from "next-connect";
 import { logger } from "../../../../api-utils/logger";
 import { getToken, GetTokenMeta } from "../../../../api-utils/oauth/getToken";
 import { validateAddSubscritionRequestBody } from "../api-types.validator";
+import { createTodayAmountFormula } from "../../../../api-utils/amount-util";
 
 export const addSubscription = async (
     item: {
@@ -19,6 +20,10 @@ export const addSubscription = async (
         to: string;
         url: string;
         amount: number;
+        currency: {
+            from: string;
+            to: string;
+        };
         memo: string;
     },
     meta: GetTokenMeta & {
@@ -38,15 +43,17 @@ export const addSubscription = async (
         throw new Error("Not found sheet");
     }
     const foundSheetId = foundSheet?.properties?.sheetId;
-    // TODO: use append is atomic
-    // batchUpdate is not atomic
-    // https://groups.google.com/g/google-spreadsheets-api/c/G0sUsBHlaZg
-    const row = [
+    const row: CreateCellArg[] = [
+        // YYYY-MM-DD string
         item.startDate,
         "", // end date is empty
         item.cron,
         item.to,
-        item.amount,
+        // always today show today value
+        createTodayAmountFormula({
+            value: item.amount,
+            currency: item.currency
+        }),
         item.url,
         item.memo
     ];
@@ -87,9 +94,20 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>({ on
         if (!user.appsScriptId) {
             throw new Error("Not found appsScriptId");
         }
-        const { startDate, cron, to, url, amount, memo } = validateAddSubscritionRequestBody(req.body);
+        const { startDate, cron, to, url, amount, currency, memo } = validateAddSubscritionRequestBody(req.body);
         const sub = await addSubscription(
-            { startDate, cron, to, url, amount, memo },
+            {
+                startDate,
+                cron,
+                to,
+                url,
+                amount,
+                memo,
+                currency: {
+                    from: currency,
+                    to: user.defaultCurrency
+                }
+            },
             {
                 credentials: user.credentials,
                 spreadsheetId: user.spreadsheetId

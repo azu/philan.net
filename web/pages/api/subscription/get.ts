@@ -6,9 +6,9 @@ import { withSession } from "../../../api-utils/with-session";
 import nextConnect, { ErrorHandler } from "next-connect";
 import { getToken, GetTokenMeta } from "../../../api-utils/oauth/getToken";
 import dayjs from "dayjs";
-import { parseAmount } from "../../../api-utils/parseAmount";
+import { parseAmount } from "../../../api-utils/amount-util";
 import { logger } from "../../../api-utils/logger";
-import type { GetResponseBody, SubscriptionItem } from "./api-types";
+import type { SubScriptionGetResponseBody, SubscriptionItem } from "./api-types";
 
 export const getSubscriptionItems = async ({
     spreadsheetId,
@@ -91,7 +91,7 @@ const onError: ErrorHandler<any, NextApiResponse> = (error, _req, res) => {
         res.status(500).end(error.stack);
     }
 };
-const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse<GetResponseBody>>({ onError })
+const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse<SubScriptionGetResponseBody>>({ onError })
     .use(withSession())
     .use(requireLogin())
     .get(async (req, res) => {
@@ -113,4 +113,5 @@ const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse<GetRe
             items: items
         });
     });
+
 export default handler;

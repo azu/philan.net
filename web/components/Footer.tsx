@@ -60,7 +60,7 @@ export const Footer = () => (
         <Divider margin={4} />
         <Stack mt={4} direction="row" spacing="12px" justify="center">
             <Link href="https://vercel.com/?utm_source=philan-net&utm_campaign=oss" isExternal={true}>
-                <Img src="/vercel.svg" alt="Powered by Vercel" />
+                <Img width={212} height={44} loading={"lazy"} src="/vercel.svg" alt="Powered by Vercel" />
             </Link>
         </Stack>
     </Box>

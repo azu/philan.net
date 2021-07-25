@@ -1,4 +1,4 @@
-import { Box, Divider, Icon, Link, Stack } from "@chakra-ui/react";
+import { Box, Divider, Icon, Img, Link, Stack } from "@chakra-ui/react";
 import React from "react";
 import { DiGithubBadge } from "react-icons/di";
 import { IoLogoTwitter } from "react-icons/io";
@@ -44,7 +44,7 @@ const FooterLink: React.FC<FooterLinkProps> = ({ icon, href, label }) => (
 );
 export const Footer = () => (
     <Box as="footer" mt={12} textAlign="center">
-        <Divider />
+        <Divider margin={4} />
         <Stack mt={4} direction="row" spacing="12px" justify="center">
             {serviceLinks.map((link) => (
                 <Link key={link.href} display="inline-block" href={link.href} aria-label={link.label} isExternal>
@@ -56,6 +56,12 @@ export const Footer = () => (
             {links.map((link) => (
                 <FooterLink key={link.href} {...link} />
             ))}
+        </Stack>
+        <Divider margin={4} />
+        <Stack mt={4} direction="row" spacing="12px" justify="center">
+            <Link href="https://vercel.com/?utm_source=philan-net&utm_campaign=oss" isExternal={true}>
+                <Img src="/vercel.svg" alt="Powered by Vercel" />
+            </Link>
         </Stack>
     </Box>
 );

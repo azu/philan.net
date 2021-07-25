@@ -2,6 +2,8 @@
 
 寄付者が寄付の予算と実施した履歴を管理するツール。
 
+A donation webservice that allow you to manage your donations.
+
 ## Mission
 
 - 寄付が特別な状態ではないことを目指す
@@ -23,12 +25,15 @@ yarn dev
 
 ## Architectures
 
-This application is based on Next.js(Vercel) +  Cloudflare Workers KV.
+See [Next.js + Vercel + Cloudflare Workers KV + Googleスプレットシートで寄付管理サービスを作った | Web Scratch](https://efcl.info/2021/03/12/next.js-vercel-cloudflare-workers-kv/)
 
-- `/*` - [Next.js](./web)
-  - `/api` - [Next.js's API(FaaS)](./web/pages/api)
-- [ ] `/worker/*` → Cloudflare Workers
-  - Not used yet
+Frontend
+
+- Next.js
+
+Backend
+
+- Vercel
 
 Storage
 
@@ -43,11 +48,8 @@ Storage
 - ユーザーID: "openid"
 - ユーザーアバター画像: "profile"
 
-## Note
+## Sponsors
 
-### KV 
+[![Powered by Vercel](./web/public/vercel.svg)](https://vercel.com/?utm_source=philan-net&utm_campaign=oss)
 
-- KVには強整合性がないため、invalid stateが発生する
-    - 保存したけど、次の読み込みに最新かが保証されない
-    - 傾向的に2回目が最新になるという感じ
-    - 更新してから、反映されるまでにラグがある感じ
+

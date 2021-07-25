@@ -23,6 +23,7 @@ yarn dev
 
 :memo: ローカルでは、統計処理など一部はモックの実装となっています
 
+
 ## Architectures
 
 See [Next.js + Vercel + Cloudflare Workers KV + Googleスプレットシートで寄付管理サービスを作った | Web Scratch](https://efcl.info/2021/03/12/next.js-vercel-cloudflare-workers-kv/)

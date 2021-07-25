@@ -5,6 +5,11 @@
     yarn install
     yarn dev
 
+`dev:local` use local storage instead of cloudflare KV.
+It is useful to test initial setup.
+
+    yarn dev:local
+
 ## Testing
 
     yarn test

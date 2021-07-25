@@ -1,9 +1,10 @@
-import { Box, Divider, Icon, Img, Link, Stack } from "@chakra-ui/react";
+import { Box, Divider, Icon, Link, Stack } from "@chakra-ui/react";
 import React from "react";
 import { DiGithubBadge } from "react-icons/di";
 import { IoLogoTwitter } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import NextImg from "next/image";
+
 type FooterLinkProps = {
     icon?: React.ElementType;
     href?: string;

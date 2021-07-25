@@ -439,6 +439,14 @@ const IndexPage = (props: { users: string[]; userStats: UserStat[] }) => {
                                         </ListItem>
                                     );
                                 })}
+                                <ListItem>
+                                    <Flex alignItems={"baseline"}>
+                                        <Box padding="2">
+                                            <ListIcon as={ArrowForwardIcon} color="green.500" />
+                                            More
+                                        </Box>
+                                    </Flex>
+                                </ListItem>
                             </List>
                         </Box>
                     </Container>

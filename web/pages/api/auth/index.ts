@@ -1,5 +1,5 @@
 import { NextApiResponse } from "next";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import nextConnect from "next-connect";
 import { NextApiRequestWithSession, withSession } from "../../../api-utils/with-session";
 import { randomBytes } from "crypto";
@@ -23,6 +23,7 @@ const handler = nextConnect<NextApiRequestWithSession, NextApiResponse>()
             prompt: "consent",
             scope: [
                 "https://www.googleapis.com/auth/drive.file", // require to create and edit sheet
+                "https://www.googleapis.com/auth/script.projects", // require to create apps script
                 "openid", // id_token
                 "profile" // aviator, default name, default id
             ],

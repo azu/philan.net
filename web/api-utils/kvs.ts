@@ -49,11 +49,7 @@ export interface KVNamespace {
 
     delete(key: string): Promise<void>;
 
-    list(options?: {
-        prefix?: string;
-        limit?: number;
-        cursor?: string;
-    }): Promise<{
+    list(options?: { prefix?: string; limit?: number; cursor?: string }): Promise<{
         keys: { name: string; expiration?: number; metadata?: unknown }[];
         list_complete: boolean;
         cursor: string;
@@ -74,15 +70,7 @@ type Storage<V> = {
      * Returns a boolean asserting whether a value has been associated to the key in the storage.
      */
     has: (key: string) => Promise<boolean>;
-    list: ({
-        prefix,
-        limit,
-        cursor
-    }: {
-        prefix: string;
-        limit: number;
-        cursor?: string;
-    }) => Promise<{
+    list: ({ prefix, limit, cursor }: { prefix: string; limit: number; cursor?: string }) => Promise<{
         keys: { name: string; expiration?: number; metadata?: unknown }[];
         list_complete: boolean;
         cursor: string;

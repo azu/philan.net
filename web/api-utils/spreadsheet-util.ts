@@ -2,8 +2,8 @@ import { sheets_v4 } from "googleapis";
 
 type Schema$RowData = sheets_v4.Schema$RowData;
 type Schema$CellData = sheets_v4.Schema$CellData;
-
-export const createRow = (rowData: (string | number)[][]): Schema$RowData[] => {
+export type CreateCellArg = string | number | Schema$CellData;
+export const createRow = (rowData: CreateCellArg[][]): Schema$RowData[] => {
     return rowData.map((line) => {
         return {
             values: line.map((cellValue) => {
@@ -28,7 +28,10 @@ export const createRow = (rowData: (string | number)[][]): Schema$RowData[] => {
  *
  * @param cell
  */
-export const createCell = (cell: string | number): Schema$CellData => {
+export const createCell = (cell: CreateCellArg): Schema$CellData => {
+    if (typeof cell === "object") {
+        return cell; // Schema$CellData
+    }
     if (typeof cell === "number") {
         return {
             userEnteredFormat: {

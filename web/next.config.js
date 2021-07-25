@@ -1,4 +1,7 @@
 module.exports = {
+    serverRuntimeConfig: {
+        PROJECT_ROOT: __dirname
+    },
     redirects() {
         return [
             process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "1"

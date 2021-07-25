@@ -1,5 +1,5 @@
 import { google, Auth } from "googleapis";
-import { env } from "./env";
+import { env } from "../env";
 
 export const createOAuthClient = (credentials?: Auth.Credentials) => {
     const CLIENT_ID = env.CLIENT_ID;

@@ -97,6 +97,9 @@ const SCHEMA = {
                 },
                 "spreadsheetUrl": {
                     "type": "string"
+                },
+                "appsScriptUrl": {
+                    "type": "string"
                 }
             },
             "required": [

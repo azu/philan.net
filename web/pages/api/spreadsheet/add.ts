@@ -3,12 +3,13 @@ import { google } from "googleapis";
 import { validateAddRequestBody } from "./api-types.validator";
 import nextConnect from "next-connect";
 import { withSession } from "../../../api-utils/with-session";
-import { createOAuthClient } from "../../../api-utils/create-OAuth";
+import { createOAuthClient } from "../../../api-utils/oauth/createOAuthClient";
 import { UserCredentials } from "../../../domain/User";
 import dayjs from "dayjs";
 import { NextApiRequestWithUserSession, requireLogin } from "../../../api-utils/requireLogin";
 import { RecordItem } from "./types";
 import { SheetTitles } from "./SpreadSheetSchema";
+import { createAmountFormula } from "../../../api-utils/amount-util";
 
 const sheets = google.sheets("v4");
 
@@ -65,9 +66,11 @@ export const addItem = async (
                                     if (typeof v === "number") {
                                         const shouldTransformCurrency = item.currency.from !== item.currency.to;
                                         if (shouldTransformCurrency) {
-                                            const date = dayjs(item.date).format("YYYY/MM/DD");
-                                            // price * finance rate
-                                            const value = `= ${v} * index(GOOGLEFINANCE("CURRENCY:${item.currency.from}${item.currency.to}", "price", "${date}"), 2, 2)`;
+                                            const value = createAmountFormula({
+                                                date: dayjs(item.date).toDate(),
+                                                value: v,
+                                                currency: item.currency
+                                            });
                                             return {
                                                 userEnteredFormat: {
                                                     numberFormat: {

@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import fetch from "node-fetch";
 import { logger } from "../api-utils/logger";
 import { UserCredentials } from "../domain/User";
-import { createOAuthClient } from "../api-utils/create-OAuth";
+import { createOAuthClient } from "../api-utils/oauth/createOAuthClient";
 import { getTestCredential, TEST_SPREADSHEET_ID } from "../test/GoogleCredential";
 import * as fs from "fs/promises";
 

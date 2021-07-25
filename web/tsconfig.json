@@ -22,7 +22,8 @@
     "target": "ES2020"
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "gas/"
   ],
   "include": [
     "**/*.ts",

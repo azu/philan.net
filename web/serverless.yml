@@ -1,0 +1,5 @@
+philan-web:
+  component: "./node_modules/@sls-next/serverless-component"
+  inputs:
+    name: philan-web # lambda
+    bucketName: philan-web # s3

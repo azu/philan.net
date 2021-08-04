@@ -49,6 +49,7 @@
     "node-fetch": "^2.6.1",
     "pino": "^6.11.1",
     "pino-logflare": "^0.3.7",
+    "pino-pretty": "^5.1.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-icons": "^4.2.0",

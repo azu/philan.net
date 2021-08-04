@@ -6,25 +6,19 @@ jobs:
   deploy:
     name: "deploy"
     runs-on: ubuntu-18.04
-    strategy:
-      matrix:
-        node-version: [ 14 ]
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - name: setup Node.js ${{ matrix.node-version }}
+      - name: setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 14
       - name: configure aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
-      - name: Install
-        run: yarn install
-        working-directory: web/
       - name: Install
         run: yarn install
         working-directory: web/

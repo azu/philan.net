@@ -176,7 +176,6 @@ const useForm = (user: LoginUser | null) => {
                 if (!user) {
                     return setSubmitError(new Error("require login"));
                 }
-                const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
                 const finalAmount = type === "checked" ? amount : 0;
                 const isoDate = date.toISOString();
                 const id = createItemId({
@@ -197,7 +196,7 @@ const useForm = (user: LoginUser | null) => {
                     }
                 };
                 setIsSubmitting(true);
-                fetch(HOST + "/api/spreadsheet/add", {
+                fetch("/api/spreadsheet/add", {
                     method: "post",
                     headers: {
                         Accept: "application/json",

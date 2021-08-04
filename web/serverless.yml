@@ -1,5 +1,10 @@
-philan-web:
+philan-net:
   component: "@sls-next/serverless-component@3.2.0"
   inputs:
-    name: philan-web # lambda
-    bucketName: philan-web # s3
+    name: "philan-net-web-serverless"
+    bucketName: "philan-net-web-serverless"
+    memory: 2048
+    timeout:
+      defaultLambda: 30
+      apiLambda: 30
+      imageLambda: 30

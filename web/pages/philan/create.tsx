@@ -64,8 +64,7 @@ function useForm() {
                 setAgreement(event.currentTarget.checked);
             },
             submit: () => {
-                const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
-                fetch(HOST + "/api/user/create", {
+                fetch("/api/user/create", {
                     method: "post",
                     headers: {
                         Accept: "application/json",

@@ -3,7 +3,6 @@ import React from "react";
 import { DiGithubBadge } from "react-icons/di";
 import { IoLogoTwitter } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import NextImg from "next/image";
 
 type FooterLinkProps = {
     icon?: React.ElementType;
@@ -45,7 +44,7 @@ const FooterLink: React.FC<FooterLinkProps> = ({ icon, href, label }) => (
 );
 export const Footer = () => (
     <Box as="footer" mt={12} textAlign="center">
-        <Divider margin={4} />
+        <Divider />
         <Stack mt={4} direction="row" spacing="12px" justify="center">
             {serviceLinks.map((link) => (
                 <Link key={link.href} display="inline-block" href={link.href} aria-label={link.label} isExternal>
@@ -57,12 +56,6 @@ export const Footer = () => (
             {links.map((link) => (
                 <FooterLink key={link.href} {...link} />
             ))}
-        </Stack>
-        <Divider margin={4} />
-        <Stack mt={4} direction="row" spacing="12px" justify="center">
-            <Link href="https://vercel.com/?utm_source=philan-net&utm_campaign=oss" isExternal={true}>
-                <NextImg width={212} height={44} loading={"lazy"} src="/vercel.svg" alt="Powered by Vercel" />
-            </Link>
         </Stack>
     </Box>
 );

@@ -2,8 +2,10 @@ const ENABLE_PRODUCTION_DATA = Boolean(process.env.APP_ENABLE_PRODUCTION_DATA);
 export const env = {
     DEBUG: process.env.APP_DEBUG!,
     FORCE_NO_USE_CF: Boolean(process.env.APP_FORCE_NO_USE_CF === "1"),
-    CLIENT_ID: ENABLE_PRODUCTION_DATA ? process.env.APP_PROD_CLIENT_ID! : process.env.APP_CLIENT_ID!,
-    CLIENT_SECRET: ENABLE_PRODUCTION_DATA ? process.env.APP_PROD_CLIENT_SECRET! : process.env.APP_CLIENT_SECRET!,
+    CLIENT_ID: ENABLE_PRODUCTION_DATA ? process.env.APP_PROD_CLIENT_ID! : process.env.APP_GOOGLE_OAUTH_CLIENT_ID!,
+    CLIENT_SECRET: ENABLE_PRODUCTION_DATA
+        ? process.env.APP_PROD_CLIENT_SECRET!
+        : process.env.APP_GOOGLE_OAUTH_CLIENT_SECRET!,
     CF_accountId: process.env.APP_CF_accountId!,
     CF_authEmail: process.env.APP_CF_authEmail!,
     CF_authKey: process.env.APP_CF_authKey!,

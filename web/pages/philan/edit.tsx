@@ -32,7 +32,7 @@ function useForm(user: LoginUser | null) {
     useEffect(() => {
         const ok = id.length > 0 && name.length > 0 && spreadsheetId.length > 0 && defaultCurrency.length === 3;
         setValid(ok);
-    }, [id, name, spreadsheetId]);
+    }, [defaultCurrency, id, name, spreadsheetId]);
     useEffect(() => {
         if (!user) {
             return;

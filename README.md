@@ -16,11 +16,11 @@ yarn install
 # first time
 yarn bootstrap
 # start server
-yarn dev
+cd web
+yarn dev:local
 ```
 
 :memo: ローカルでは、統計処理など一部はモックの実装となっています
-
 
 ## Architectures
 

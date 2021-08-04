@@ -2,19 +2,33 @@
 
 ## Development
 
+1. create `.env.development.local`
+  - `cp .env.example .env.development.local`
+2. install and run next.js
+
     yarn install
-    yarn dev
+
+3. Start Next.js app
 
 `dev:local` use local storage instead of cloudflare KV.
-It is useful to test initial setup.
+It is useful for debug in fresh env.
 
     yarn dev:local
+
+`dev` command use Cloudflare KV that is defined in `.env.development.local` file
+
+    yarn dev
+
+`dev` command use Cloudflare KV in production(`APP_PROD_CF_namespace_user`) that is defined in `.env.development.local` file
+It is useful to view production data from local.
+
+    yarn dev:prod
 
 ## Testing
 
     yarn test
 
-:memo: some testing require `TEST_GOOGLE_CREDENTIAL_BASE64`.
+:memo: some testing require `TEST_GOOGLE_CREDENTIAL_BASE64` env.
 
 ## MAINTENANCE MODE
 

@@ -1,0 +1,51 @@
+name: deploy
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    name: "deploy"
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [ 14 ]
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: configure aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - name: Install
+        run: yarn install
+        working-directory: web/
+      - name: Install
+        run: yarn install
+        working-directory: web/
+      - name: Deploy
+        run: yarn run deploy
+        working-directory: web/
+        env:
+          APP_CF_namespace_session: ${{ secrets.APP_CF_namespace_session }}
+          APP_CF_authKey: ${{ secrets.APP_CF_authKey }}
+          APP_CF_accountId: ${{ secrets.APP_CF_accountId }}
+          APP_CF_namespace_user: ${{ secrets.APP_CF_namespace_user }}
+          APP_CF_authEmail: ${{ secrets.APP_CF_authEmail }}
+          APP_LOGFLARE_API_KEY: ${{ secrets.APP_LOGFLARE_API_KEY }}
+          APP_SESSION_COOKIE_SECRET: ${{ secrets.APP_SESSION_COOKIE_SECRET }}
+          APP_STATS_ENABLED: ${{ secrets.APP_STATS_ENABLED }}
+          APP_STATS_AWS_ACCESS_KEY_ID: ${{ secrets.APP_STATS_AWS_ACCESS_KEY_ID }}
+          APP_STATS_AWS_SECRET_ACCESS_KEY: ${{ secrets.APP_STATS_AWS_SECRET_ACCESS_KEY }}
+          APP_GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.APP_GOOGLE_OAUTH_CLIENT_ID }}
+          APP_GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.APP_GOOGLE_OAUTH_CLIENT_SECRET }}
+          APP_AWS_SECRET_ACCESS_KEY: ${{ secrets.APP_AWS_SECRET_ACCESS_KEY }}
+          APP_AWS_ACCESS_KEY_ID: ${{ secrets.APP_AWS_ACCESS_KEY_ID }}
+          APP_OAUTH_REDIRECT_URL: ${{ secrets.APP_OAUTH_REDIRECT_URL }}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          NEXT_PUBLIC_MAINTENANCE_MODE: ${{ secrets.NEXT_PUBLIC_MAINTENANCE_MODE }}

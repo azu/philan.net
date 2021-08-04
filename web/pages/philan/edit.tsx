@@ -32,7 +32,7 @@ function useForm(user: LoginUser | null) {
     useEffect(() => {
         const ok = id.length > 0 && name.length > 0 && spreadsheetId.length > 0 && defaultCurrency.length === 3;
         setValid(ok);
-    }, [id, name, spreadsheetId]);
+    }, [defaultCurrency, id, name, spreadsheetId]);
     useEffect(() => {
         if (!user) {
             return;
@@ -80,8 +80,7 @@ export default function Create() {
     const [error, setError] = useState<Error | null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const submit = () => {
-        const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
-        fetch(HOST + "/api/user/update", {
+        fetch("/api/user/update", {
             method: "post",
             headers: {
                 Accept: "application/json",

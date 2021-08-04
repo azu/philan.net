@@ -1,0 +1,10 @@
+philan-net:
+  component: "./node_modules/@sls-next/serverless-component"
+  inputs:
+    name: "philan-net-web-serverless"
+    bucketName: "philan-net-web-serverless"
+    memory: 2048
+    timeout:
+      defaultLambda: 30
+      apiLambda: 30
+      imageLambda: 30

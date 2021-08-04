@@ -1,3 +1,6 @@
+require("dotenv").config({
+    path: `.env.${process.env.BUILD_ENV || ""}`
+});
 module.exports = {
     redirects() {
         return [

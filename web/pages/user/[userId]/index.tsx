@@ -27,12 +27,12 @@ import type { GetResponseBody } from "../../api/spreadsheet/api-types";
 import { getSpreadSheet } from "../../api/spreadsheet/get";
 import { createUserKvs } from "../../../api-utils/userKvs";
 import Head from "next/head";
-import { createMarkdown } from "safe-marked";
 import { Footer } from "../../../components/Footer";
 import { MarkdownStyle } from "../../../components/MarkdownStyle";
 import { useLoginUser } from "../../../components/useLoginUser";
-// const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
-const markdown = createMarkdown();
+import markdownIt from "markdown-it";
+const md = markdownIt();
+const markdown = (str: string) => md.render(str);
 const Summarize = (props: { children: string }) => {
     const body = markdown(props.children);
     return (
@@ -101,6 +101,7 @@ type UserPageContentProps = {
 };
 
 const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
+
 function UserPageContent({ response, userId, userName, userAvatarUrl, README }: UserPageContentProps) {
     const feedURL = `${HOST}/user/${userId}/feed`;
     const { colorMode } = useColorMode();
@@ -307,7 +308,6 @@ export async function getStaticProps({
             credentials: user.credentials,
             defaultCurrency: user.defaultCurrency
         });
-        const markdown = createMarkdown();
         return {
             props: {
                 ok: true,

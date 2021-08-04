@@ -7,7 +7,7 @@
     "dev:next": "next --port 3000",
     "dev:local": "FORCE_NO_USE_CF=1 next --port 3000",
     "dev:prod": "ENABLE_PRODUCTION_DATA=1 next --port 3000",
-    "build": "next build",
+    "build": "NODE_OPTIONS=--max-old-space-size=4096 next build",
     "start": "next start",
     "test": "yarn run type-check && yarn run lint && yarn run test:validator-ts && jest",
     "lint": "next lint",

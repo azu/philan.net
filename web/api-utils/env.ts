@@ -1,4 +1,7 @@
 const ENABLE_PRODUCTION_DATA = Boolean(process.env.APP_ENABLE_PRODUCTION_DATA);
+if (process.browser) {
+    throw new Error("SHOULD NOT LOAD IN BROWSER");
+}
 export const env = {
     DEBUG: process.env.APP_DEBUG!,
     FORCE_NO_USE_CF: Boolean(process.env.APP_FORCE_NO_USE_CF === "1"),

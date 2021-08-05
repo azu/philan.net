@@ -18,10 +18,10 @@ module.exports = {
         externalResolver: true
     },
     env: {
-        APP_CF_authKey: process.env.APP_CF_authKey,
-        APP_CF_accountId: process.env.APP_CF_accountId,
-        APP_CF_namespace_user: process.env.APP_CF_namespace_user,
-        APP_CF_authEmail: process.env.APP_CF_authEmail,
+        APP_CF_AUTHKEY: process.env.APP_CF_AUTHKEY,
+        APP_CF_ACCOUNT_ID: process.env.APP_CF_ACCOUNT_ID,
+        APP_CF_NAMESPACE_USER: process.env.APP_CF_NAMESPACE_USER,
+        APP_CF_AUTH_EMAIL: process.env.APP_CF_AUTH_EMAIL,
         APP_LOGFLARE_API_KEY: process.env.APP_LOGFLARE_API_KEY,
         APP_SESSION_COOKIE_SECRET: process.env.APP_SESSION_COOKIE_SECRET,
         APP_STATS_ENABLED: process.env.APP_STATS_ENABLED,

@@ -29,10 +29,10 @@ jobs:
         run: yarn run deploy:evaluation
         working-directory: web/
         env:
-          APP_CF_authKey: ${{ secrets.APP_CF_authKey }}
-          APP_CF_accountId: ${{ secrets.APP_CF_accountId }}
-          APP_CF_authEmail: ${{ secrets.APP_CF_authEmail }}
-          APP_CF_namespace_user: ${{ secrets.APP_CF_namespace_user }}
+          APP_CF_AUTHKEY: ${{ secrets.APP_CF_AUTHKEY }}
+          APP_CF_ACCOUNT_ID: ${{ secrets.APP_CF_ACCOUNT_ID }}
+          APP_CF_AUTH_EMAIL: ${{ secrets.APP_CF_AUTH_EMAIL }}
+          APP_CF_NAMESPACE_USER: ${{ secrets.APP_CF_NAMESPACE_USER }}
           APP_LOGFLARE_API_KEY: ${{ secrets.APP_LOGFLARE_API_KEY }}
           APP_SESSION_COOKIE_SECRET: ${{ secrets.APP_SESSION_COOKIE_SECRET }}
           APP_STATS_ENABLED: ${{ secrets.APP_STATS_ENABLED }}

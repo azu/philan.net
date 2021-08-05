@@ -11,12 +11,12 @@ export const env = {
     CLIENT_SECRET: ENABLE_PRODUCTION_DATA
         ? process.env.APP_PROD_GOOGLE_OAUTH_CLIENT_SECRET!
         : process.env.APP_GOOGLE_OAUTH_CLIENT_SECRET!,
-    CF_accountId: process.env.APP_CF_accountId!,
-    CF_authEmail: process.env.APP_CF_authEmail!,
-    CF_authKey: process.env.APP_CF_authKey!,
+    CF_accountId: process.env.APP_CF_ACCOUNT_ID!,
+    CF_authEmail: process.env.APP_CF_AUTH_EMAIL!,
+    CF_authKey: process.env.APP_CF_AUTHKEY!,
     CF_namespace_user: ENABLE_PRODUCTION_DATA
         ? process.env.APP_PROD_CF_namespace_user!
-        : process.env.APP_CF_namespace_user!,
+        : process.env.APP_CF_NAMESPACE_USER!,
     SESSION_COOKIE_SECRET: process.env.APP_SESSION_COOKIE_SECRET!,
     LOGFLARE_API_KEY: process.env.APP_LOGFLARE_API_KEY!,
     STATS_AWS_ACCESS_KEY_ID: process.env.APP_STATS_AWS_ACCESS_KEY_ID!,

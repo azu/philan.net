@@ -31,7 +31,6 @@ module.exports = {
         APP_OAUTH_REDIRECT_URL: process.env.APP_OAUTH_REDIRECT_URL,
         APP_AWS_SECRET_ACCESS_KEY: process.env.APP_AWS_SECRET_ACCESS_KEY,
         APP_AWS_ACCESS_KEY_ID: process.env.APP_AWS_ACCESS_KEY_ID,
-        NODE_ENV: process.env.NODE_ENV,
         NEXT_PUBLIC_MAINTENANCE_MODE: process.env.NEXT_PUBLIC_MAINTENANCE_MODE
     },
     async headers() {

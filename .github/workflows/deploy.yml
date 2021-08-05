@@ -41,5 +41,5 @@ jobs:
           APP_AWS_SECRET_ACCESS_KEY: ${{ secrets.APP_AWS_SECRET_ACCESS_KEY }}
           APP_AWS_ACCESS_KEY_ID: ${{ secrets.APP_AWS_ACCESS_KEY_ID }}
           APP_OAUTH_REDIRECT_URL: ${{ secrets.APP_OAUTH_REDIRECT_URL }}
-          NODE_ENV: ${{ secrets.NODE_ENV }}
-          NEXT_PUBLIC_MAINTENANCE_MODE: ${{ secrets.NEXT_PUBLIC_MAINTENANCE_MODE }}
+          NODE_ENV: "production"
+          NEXT_PUBLIC_MAINTENANCE_MODE: 0

@@ -44,6 +44,13 @@ Leave MAINTENANCE_MODE
 1. Change to `NEXT_PUBLIC_MAINTENANCE_MODE=0` in [.env.production](.env.production)
 2. Add announce to https://github.com/azu/philan.net/discussions/categories/maintenance
 
+## Deploy
+
+### Add Env
+
+1. Add env to GitHub Actions's secrets
+2. Map the env to [serverless.yml](serverless.yml)
+
 ## Specification
 
 ### Language and CURRENCY

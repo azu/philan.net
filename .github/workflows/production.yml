@@ -1,0 +1,47 @@
+name: deploy to production
+on:
+  push:
+    branches: [ main ]
+permissions:
+  contents: read
+jobs:
+  deploy:
+    name: "deploy to production"
+    runs-on: ubuntu-18.04
+    environment:
+      name: production
+      url: https://d25zzlzg6iw41r.cloudfront.net
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - name: configure aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+      - name: Install
+        run: yarn install
+        working-directory: web/
+      - name: Deploy
+        run: yarn run deploy:production
+        working-directory: web/
+        env:
+          APP_CF_authKey: ${{ secrets.APP_CF_authKey }}
+          APP_CF_accountId: ${{ secrets.APP_CF_accountId }}
+          APP_CF_authEmail: ${{ secrets.APP_CF_authEmail }}
+          APP_CF_namespace_user: ${{ secrets.APP_CF_namespace_user }}
+          APP_LOGFLARE_API_KEY: ${{ secrets.APP_LOGFLARE_API_KEY }}
+          APP_SESSION_COOKIE_SECRET: ${{ secrets.APP_SESSION_COOKIE_SECRET }}
+          APP_STATS_ENABLED: ${{ secrets.APP_STATS_ENABLED }}
+          APP_STATS_AWS_ACCESS_KEY_ID: ${{ secrets.APP_STATS_AWS_ACCESS_KEY_ID }}
+          APP_STATS_AWS_SECRET_ACCESS_KEY: ${{ secrets.APP_STATS_AWS_SECRET_ACCESS_KEY }}
+          APP_GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.APP_GOOGLE_OAUTH_CLIENT_ID }}
+          APP_GOOGLE_OAUTH_CLIENT_SECRET: ${{ secrets.APP_GOOGLE_OAUTH_CLIENT_SECRET }}
+          APP_OAUTH_REDIRECT_URL: ${{ secrets.APP_OAUTH_REDIRECT_URL }}
+          NODE_ENV: "production"
+          NEXT_PUBLIC_MAINTENANCE_MODE: 0

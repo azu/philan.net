@@ -1,0 +1,15 @@
+philan-net:
+  component: "./node_modules/@sls-next/serverless-component"
+  inputs:
+    cloudfront:
+      distributionId: E1090KAQNCZA9
+    domain: ["evaluation", "philan.net"]
+    name: "philan-net-web-evaluation"
+    bucketName: "philan-net-web-evaluation"
+    memory: 2048
+    timeout:
+      defaultLambda: 30
+      apiLambda: 30
+      imageLambda: 30
+    build:
+      env: ${file(./serverless.env.yml)}

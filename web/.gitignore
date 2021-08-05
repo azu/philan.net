@@ -1,8 +1,11 @@
 .env
 .env.local
 .env.production
+.env.evaluation
 .serverless
 .serverless_nextjs
+# ignore serverless.yml because coping when deploy
+serverless.yml
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies

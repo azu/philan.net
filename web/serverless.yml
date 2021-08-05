@@ -1,7 +1,8 @@
 philan-net:
   component: "./node_modules/@sls-next/serverless-component"
   inputs:
-    distributionId: E3BAOF26FT6UJU
+    cloudfront:
+      distributionId: E3BAOF26FT6UJU
     name: "philan-net-web-serverless"
     bucketName: "philan-net-web-serverless"
     memory: 2048

@@ -17,12 +17,15 @@ import {
     StatNumber,
     Text,
     useColorMode,
-    useColorModeValue
+    useColorModeValue,
+    Skeleton,
+    SkeletonCircle,
+    SkeletonText
 } from "@chakra-ui/react";
 import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import type { GetResponseBody } from "../../api/spreadsheet/api-types";
 import { getSpreadSheet } from "../../api/spreadsheet/get";
 import { createUserKvs } from "../../../api-utils/userKvs";
@@ -31,6 +34,8 @@ import { Footer } from "../../../components/Footer";
 import { MarkdownStyle } from "../../../components/MarkdownStyle";
 import { useLoginUser } from "../../../components/useLoginUser";
 import markdownIt from "markdown-it";
+import { useRouter } from "next/router";
+
 const md = markdownIt();
 const markdown = (str: string) => md.render(str);
 const Summarize = (props: { children: string }) => {
@@ -102,15 +107,32 @@ type UserPageContentProps = {
 
 const HOST = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://philan.net";
 
-function UserPageContent({ response, userId, userName, userAvatarUrl, README }: UserPageContentProps) {
-    const feedURL = `${HOST}/user/${userId}/feed`;
-    const { colorMode } = useColorMode();
-    const boxColor = useColorModeValue("gray.500", "gray.300");
-    const styleGenerator = useCallback(() => MarkdownStyle(colorMode), [colorMode]);
+const isUserPageContentProps = (props: UserPageContentProps | {}): props is UserPageContentProps => {
+    return "userId" in props;
+};
+const useUserPageContent = (props: UserPageContentProps | {}) => {
+    const router = useRouter();
+    const isFallback = router.isFallback;
     const user = useLoginUser();
-    const [records, setRecords] = useState<GetResponseBody>(response);
+    const README = isUserPageContentProps(props) ? props.README : "";
+    const userId = isUserPageContentProps(props) ? props.userId : "";
+    const userName = isUserPageContentProps(props) ? props.userName : "";
+    const userAvatarUrl = isUserPageContentProps(props) ? props.userAvatarUrl : "";
+    // @ts-expect-error this will avoid to useEffect updates
+    const response = props.response;
+    const [records, setRecords] = useState<GetResponseBody>(response ?? []);
+    const feedURL = useMemo(() => `${HOST}/user/${userId}/feed`, [userId]);
+    const isLoaded = useMemo(() => userId !== "", [userId]);
+    useEffect(() => {
+        if (response) {
+            setRecords(response);
+        }
+    }, [response]);
     useEffect(() => {
         async function main() {
+            if (isFallback) {
+                return; // fallback = fresh data
+            }
             if (!user) {
                 return; // no fetch
             }
@@ -122,11 +144,19 @@ function UserPageContent({ response, userId, userName, userAvatarUrl, README }: 
         }
 
         main();
-    }, [user, userId]);
+    }, [isFallback, user, userId]);
+    return [{ isLoaded, feedURL, records, README, userId, userName, userAvatarUrl }] as const;
+};
+
+const UserPageContent: FC<UserPageContentProps> = (props: UserPageContentProps) => {
+    const { colorMode } = useColorMode();
+    const boxColor = useColorModeValue("gray.500", "gray.300");
+    const styleGenerator = useCallback(() => MarkdownStyle(colorMode), [colorMode]);
+    const [{ isLoaded, README, feedURL, records, userAvatarUrl, userName }] = useUserPageContent(props);
     return (
         <>
             <Head>
-                <title>{userName} - philan.net</title>
+                <title>{userName || "………"} - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                 <link rel="alternate" type="application/rss+xml" href={feedURL} />
                 {/*<meta property="og:image" content={`${HOST}/api/ogp/${userId}`} />*/}
@@ -139,29 +169,35 @@ function UserPageContent({ response, userId, userName, userAvatarUrl, README }: 
                         <Box padding={12} border="1px" borderColor="gray.200" borderRadius={8}>
                             <Flex paddingY={4}>
                                 <Box>
-                                    <Img
-                                        width="96px"
-                                        height="96px"
-                                        boxSize="96px"
-                                        borderRadius="full"
-                                        objectFit="cover"
-                                        alt={userName}
-                                        src={userAvatarUrl}
-                                    />
+                                    <Skeleton isLoaded={isLoaded}>
+                                        <Img
+                                            width="96px"
+                                            height="96px"
+                                            boxSize="96px"
+                                            borderRadius="full"
+                                            objectFit="cover"
+                                            alt={userName}
+                                            src={userAvatarUrl}
+                                        />
+                                    </Skeleton>
                                 </Box>
                                 <Box paddingX={4}>
-                                    <Heading as="h1" size="xl" mt="1em" mb="0.5em">
-                                        {userName}
-                                    </Heading>
+                                    <Skeleton isLoaded={isLoaded} height="40px" width="80px">
+                                        <Heading as="h1" size="xl" mt="1em" mb="0.5em">
+                                            {userName}
+                                        </Heading>
+                                    </Skeleton>
                                 </Box>
                             </Flex>
                             <Box maxW="32rem">
-                                <div
-                                    className={"UserContent"}
-                                    dangerouslySetInnerHTML={{
-                                        __html: README
-                                    }}
-                                />
+                                <Skeleton isLoaded={isLoaded} height="40px">
+                                    <div
+                                        className={"UserContent"}
+                                        dangerouslySetInnerHTML={{
+                                            __html: README
+                                        }}
+                                    />
+                                </Skeleton>
                             </Box>
                         </Box>
                     </Container>
@@ -267,7 +303,7 @@ function UserPageContent({ response, userId, userName, userAvatarUrl, README }: 
             </Box>
         </>
     );
-}
+};
 
 type UserPageProps = ErrorUserPageProps | UserPageContentProps;
 const isErrorUserPageProps = (props: UserPageProps): props is ErrorUserPageProps => {
@@ -283,7 +319,7 @@ function UserPage(props: UserPageProps) {
 }
 
 export async function getStaticPaths() {
-    return { paths: [], fallback: "blocking" };
+    return { paths: [], fallback: true }; // props will be {}
 }
 
 // This function gets called at build time on server-side.

@@ -33,6 +33,7 @@ import { MarkdownStyle } from "../../../components/MarkdownStyle";
 import { useLoginUser } from "../../../components/useLoginUser";
 import markdownIt from "markdown-it";
 import { useRouter } from "next/router";
+import Error from "next/error";
 
 const md = markdownIt();
 const markdown = (str: string) => md.render(str);
@@ -53,7 +54,7 @@ const Summarize = (props: { children: string }) => {
     );
 };
 type ErrorUserPageProps = {
-    ok: boolean;
+    errorCode: string;
     errorMessage: string;
 };
 
@@ -305,12 +306,16 @@ const UserPageContent: FC<UserPageContentProps> = (props: UserPageContentProps) 
 
 type UserPageProps = ErrorUserPageProps | UserPageContentProps;
 const isErrorUserPageProps = (props: UserPageProps): props is ErrorUserPageProps => {
-    return "ok" in props && !props.ok;
+    return "errorCode" in props;
 };
 
 function UserPage(props: UserPageProps) {
     if (isErrorUserPageProps(props)) {
-        return <ErrorUserPage ok={props.ok} errorMessage={props.errorMessage} />;
+        return (
+            <Error title={"Error"} statusCode={props.errorCode}>
+                <ErrorUserPage {...props} />
+            </Error>
+        );
     } else {
         return <UserPageContent {...props} />;
     }
@@ -334,7 +339,12 @@ export async function getStaticProps({
     const userKVS = await createUserKvs();
     const user = await userKVS.findByUserId(userId);
     if (!user) {
-        throw new Error("No user");
+        return {
+            props: {
+                errorCode: 400,
+                errorMessage: "No user"
+            }
+        };
     }
     try {
         const res = await getSpreadSheet({
@@ -359,10 +369,9 @@ export async function getStaticProps({
     } catch (error) {
         return {
             props: {
-                errorMessage: error.message,
-                ok: false
-            },
-            revalidate: 1 // In seconds
+                errorCode: 500,
+                errorMessage: error.message
+            }
         };
     }
 }

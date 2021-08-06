@@ -20,6 +20,7 @@ import {
     useColorModeValue,
     Skeleton
 } from "@chakra-ui/react";
+import NextError from "next/error";
 import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";
 import dayjs from "dayjs";
@@ -33,7 +34,6 @@ import { MarkdownStyle } from "../../../components/MarkdownStyle";
 import { useLoginUser } from "../../../components/useLoginUser";
 import markdownIt from "markdown-it";
 import { useRouter } from "next/router";
-import Error from "next/error";
 
 const md = markdownIt();
 const markdown = (str: string) => md.render(str);
@@ -54,7 +54,7 @@ const Summarize = (props: { children: string }) => {
     );
 };
 type ErrorUserPageProps = {
-    errorCode: string;
+    errorCode: number;
     errorMessage: string;
 };
 
@@ -312,9 +312,9 @@ const isErrorUserPageProps = (props: UserPageProps): props is ErrorUserPageProps
 function UserPage(props: UserPageProps) {
     if (isErrorUserPageProps(props)) {
         return (
-            <Error title={"Error"} statusCode={props.errorCode}>
+            <NextError title={"Error"} statusCode={props.errorCode}>
                 <ErrorUserPage {...props} />
-            </Error>
+            </NextError>
         );
     } else {
         return <UserPageContent {...props} />;

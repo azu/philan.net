@@ -18,9 +18,7 @@ import {
     Text,
     useColorMode,
     useColorModeValue,
-    Skeleton,
-    SkeletonCircle,
-    SkeletonText
+    Skeleton
 } from "@chakra-ui/react";
 import { Header } from "../../../components/Header";
 import { BellIcon, CheckCircleIcon, ChevronUpIcon } from "@chakra-ui/icons";

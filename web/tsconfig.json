@@ -29,10 +29,7 @@
     ".serverless_nextjs"
   ],
   "include": [
-    "api-utils/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
-    "domain/**/*.{ts,tsx}",
-    "pages/**/*.{ts,tsx}",
-    "test/**/*.{ts,tsx}"
+    "/**/*.ts",
+    "/**/*.tsx"
   ]
 }

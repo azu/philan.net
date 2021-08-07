@@ -37,7 +37,7 @@ import { useRouter } from "next/router";
 
 const md = markdownIt();
 const markdown = (str: string) => md.render(str);
-const Summarize = (props: { children: string }) => {
+const Summarize: FC = (props) => {
     const body = markdown(props.children);
     return (
         <Box>

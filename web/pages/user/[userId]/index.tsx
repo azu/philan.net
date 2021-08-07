@@ -9,6 +9,7 @@ import {
     List,
     ListIcon,
     ListItem,
+    Skeleton,
     Spacer,
     Stat,
     StatGroup,
@@ -17,8 +18,7 @@ import {
     StatNumber,
     Text,
     useColorMode,
-    useColorModeValue,
-    Skeleton
+    useColorModeValue
 } from "@chakra-ui/react";
 import NextError from "next/error";
 import { Header } from "../../../components/Header";
@@ -175,17 +175,17 @@ const UserPageContent: FC<UserPageContentProps> = (props: UserPageContentProps) 
                                             boxSize="96px"
                                             borderRadius="full"
                                             objectFit="cover"
-                                            alt={userName}
+                                            alt={""}
                                             src={userAvatarUrl}
+                                            loading={"eager"}
                                         />
                                     </Skeleton>
                                 </Box>
                                 <Box paddingX={4}>
-                                    <Skeleton isLoaded={isLoaded} height="40px" width="80px">
-                                        <Heading as="h1" size="xl" mt="1em" mb="0.5em">
-                                            {userName}
-                                        </Heading>
-                                    </Skeleton>
+                                    <Heading as="h1" size="xl" mt="1em" mb="0.5em">
+                                        {!isLoaded && <Skeleton height="40px" width="120px" />}
+                                        {userName}
+                                    </Heading>
                                 </Box>
                             </Flex>
                             <Box maxW="32rem">
@@ -312,7 +312,7 @@ const isErrorUserPageProps = (props: UserPageProps): props is ErrorUserPageProps
 function UserPage(props: UserPageProps) {
     if (isErrorUserPageProps(props)) {
         return (
-            <NextError title={"Error"} statusCode={props.errorCode}>
+            <NextError title={"Error:" + props.errorMessage} statusCode={props.errorCode}>
                 <ErrorUserPage {...props} />
             </NextError>
         );

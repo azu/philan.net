@@ -325,9 +325,6 @@ export async function getStaticPaths() {
     return { paths: [], fallback: true }; // props will be {}
 }
 
-// This function gets called at build time on server-side.
-// It may be called again, on a serverless function, if
-// revalidation is enabled and a new request comes in
 export async function getStaticProps({
     params
 }: {

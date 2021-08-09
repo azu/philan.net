@@ -13,3 +13,12 @@ philan-net:
       imageLambda: 30
     build:
       env: ${file(./serverless.env.yml)}
+    /:
+      minTTL: 1
+      maxTTL: 1
+      defaultTTL: 1
+
+    /*:
+      minTTL: 1
+      maxTTL: 1
+      defaultTTL: 1

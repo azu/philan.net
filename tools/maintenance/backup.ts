@@ -1,7 +1,7 @@
 // @ts-ignore
 import KvStorage from "cloudflare-kv-storage-rest";
 import { KVNamespace } from "@philan-net/web/api-utils/kvs";
-import { env } from "@philan-net/web/api-utils/env";
+// @ts-ignore
 import fetch from "node-fetch";
 
 import FormData from "form-data";
@@ -11,10 +11,10 @@ import dayjs from "dayjs";
 
 async function backup() {
     const kvStorage = new KvStorage({
-        namespace: env.CF_namespace_user!,
-        accountId: env.CF_accountId!,
-        authEmail: env.CF_authEmail,
-        authKey: env.CF_authKey!,
+        namespace: process.env.CF_namespace_user!,
+        accountId: process.env.CF_accountId!,
+        authEmail: process.env.CF_authEmail,
+        authKey: process.env.CF_authKey!,
         fetch,
         FormData
     }) as KVNamespace;

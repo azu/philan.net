@@ -6,14 +6,18 @@
     "backup": "ts-node --require dotenv/config backup.ts"
   },
   "dependencies": {
-    "dayjs": "^1.10.4",
-    "express-session-cloudflare-kv": "^1.0.1",
     "@philan-net/web": "file:../../web",
+    "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
+    "express-session-cloudflare-kv": "^1.0.1",
+    "form-data": "^4.0.0",
+    "node-fetch": "^2.6.5",
     "npm-run-all": "^4.1.5",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.5"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node-fetch": "^2.5.12"
+  },
   "license": "MIT"
 }

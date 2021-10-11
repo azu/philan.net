@@ -340,7 +340,8 @@ export async function getStaticProps({
             props: {
                 errorCode: 400,
                 errorMessage: "No user"
-            }
+            },
+            revalidate: 1
         };
     }
     try {
@@ -368,7 +369,8 @@ export async function getStaticProps({
             props: {
                 errorCode: 500,
                 errorMessage: error.message
-            }
+            },
+            revalidate: 1
         };
     }
 }

@@ -150,9 +150,7 @@ export function validateAddBudgetRequest(payload: unknown): apiTypes.AddBudgetRe
 export function isAddBudgetRequest(payload: unknown): payload is apiTypes.AddBudgetRequest {
   /** Schema is defined in {@link SCHEMA.definitions.AddBudgetRequest } **/
   const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddBudgetRequest" });
-  const r = ajvValidate(payload);
-    console.log(ajvValidate.errors);
-    return r;
+  return ajvValidate(payload);
 }
 
 export function validateAddBudgetResponse(payload: unknown): apiTypes.AddBudgetResponse {

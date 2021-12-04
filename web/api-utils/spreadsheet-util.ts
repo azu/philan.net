@@ -3,6 +3,9 @@ import { sheets_v4 } from "googleapis";
 type Schema$RowData = sheets_v4.Schema$RowData;
 type Schema$CellData = sheets_v4.Schema$CellData;
 
+// number to currency
+// string to string
+// = is fomura
 export const createRow = (rowData: (string | number)[][]): Schema$RowData[] => {
     return rowData.map((line) => {
         return {

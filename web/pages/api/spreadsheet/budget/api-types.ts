@@ -15,3 +15,12 @@ export type BudgetItem = {
         value: string;
     };
 };
+
+// POST /add
+export type AddBudgetRequest = {
+    year: number;
+    budget: number;
+};
+export type AddBudgetResponse = {
+    ok: true;
+};

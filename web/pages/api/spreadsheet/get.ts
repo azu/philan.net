@@ -14,6 +14,9 @@ import { SheetTitles } from "./SpreadSheetSchema";
 const sheets = google.sheets("v4");
 
 const parseAmount = (amount: string | number, defaultCurrency: string) => {
+    if (amount === undefined) {
+        throw new Error("amount is undefined. Please check your spreadsheet");
+    }
     if (typeof amount === "number") {
         return {
             amount,

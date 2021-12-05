@@ -21,13 +21,13 @@ import {
     Tooltip,
     useColorModeValue,
     useRadio,
-    useRadioGroup
+    useRadioGroup,
+    UseRadioProps
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { AddRequestBody, GetResponseBody, SpreadSheetItem } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
-import { UseRadioProps } from "@chakra-ui/radio/dist/types/use-radio";
 import COUNTRY_CURRENCY from "country-to-currency";
 import { LoginUser, useLoginUser } from "../../components/useLoginUser";
 import dayjs from "dayjs";

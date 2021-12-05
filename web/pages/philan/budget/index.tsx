@@ -24,13 +24,13 @@ import {
     Th,
     Thead,
     Tooltip,
-    Tr
+    Tr,
+    UseCounterProps
 } from "@chakra-ui/react";
 import Head from "next/head";
 import { Footer } from "../../../components/Footer";
 import { AddBudgetRequest, BudgetItem } from "../../api/spreadsheet/budget/api-types";
 import React, { FC, MouseEventHandler, useCallback, useEffect, useMemo, useState } from "react";
-import { UseCounterProps } from "@chakra-ui/counter/dist/types/use-counter";
 import { useRouter } from "next/router";
 import { Header } from "../../../components/Header";
 import { useLoginUser } from "../../../components/useLoginUser";

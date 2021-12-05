@@ -157,6 +157,7 @@ function HeaderContent() {
             <MenuList>
                 <MenuItem onClick={() => (location.href = `/user/${user.id}`)}>Open My Page</MenuItem>
                 <MenuItem onClick={() => window.open(user.spreadsheetUrl, "_blank")}>Open SpreadSheet</MenuItem>
+                <MenuItem onClick={() => (location.href = `/philan/budget`)}>View Budgets</MenuItem>
                 <MenuItem onClick={() => (location.href = `/philan/edit`)}>Edit Profile</MenuItem>
             </MenuList>
         </Menu>
@@ -229,7 +230,7 @@ export function Header(props: HeaderProps) {
             ref={ref}
             shadow={y > height ? "sm" : undefined}
             transition="box-shadow 0.2s"
-            pos="fixed"
+            pos="sticky"
             top="0"
             zIndex="3"
             bg={bg}

@@ -4,6 +4,7 @@ import {
     AlertTitle,
     Box,
     Button,
+    Center,
     chakra,
     Container,
     Flex,
@@ -48,6 +49,32 @@ const options = [
 ] as const;
 
 type StateType = typeof options[number]["value"];
+export const TopBanner = () => {
+    return (
+        <Center py="2" px="3" bgGradient="linear(to-r,cyan.700, purple.500)" color="white" textAlign="center">
+            <Flex align="center" fontSize="sm">
+                <Text fontWeight="medium" maxW={{ base: "32ch", md: "unset" }}>
+                    2022年の予算は
+                </Text>
+                <chakra.a
+                    flexShrink={0}
+                    href={"/philan/budget?year=2022"}
+                    marginLeft="4"
+                    marginRight="4"
+                    bg="blackAlpha.300"
+                    color="whiteAlpha.900"
+                    fontWeight="semibold"
+                    px="3"
+                    py="1"
+                    rounded="base"
+                >
+                    予算ページ
+                </chakra.a>
+                から入力できます。
+            </Flex>
+        </Center>
+    );
+};
 
 function RadioCard(props: UseRadioProps & { children: string }) {
     const { getInputProps, getCheckboxProps } = useRadio(props);
@@ -314,6 +341,7 @@ export default function Create() {
                 <title>新しい寄付の記録を追加する - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
+            <TopBanner />
             <Header />
             <Box mb={20}>
                 <Box as="section" pt={{ base: "10rem", md: "12rem" }} pb={{ base: "0", md: "1rem" }}>

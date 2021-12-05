@@ -42,8 +42,14 @@ export default function Created() {
                 backgroundColor={"transparent"}
             />
             <MenuList>
-                <MenuItem onClick={() => (location.href = `/user/${user.id}`)}>Open My Page</MenuItem>
-                <MenuItem onClick={() => window.open(user.spreadsheetUrl, "_blank")}>Open SpreadSheet</MenuItem>
+                <MenuItem>
+                    <Link href={`/user/${user.id}`}>Open My Page</Link>
+                </MenuItem>
+                <MenuItem>
+                    <Link href={user.spreadsheetUrl} isExternal={true}>
+                        Open SpreadSheet
+                    </Link>
+                </MenuItem>
             </MenuList>
         </Menu>
     ) : null;

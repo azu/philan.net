@@ -155,10 +155,20 @@ function HeaderContent() {
                 backgroundColor={"transparent"}
             />
             <MenuList>
-                <MenuItem onClick={() => (location.href = `/user/${user.id}`)}>Open My Page</MenuItem>
-                <MenuItem onClick={() => window.open(user.spreadsheetUrl, "_blank")}>Open SpreadSheet</MenuItem>
-                <MenuItem onClick={() => (location.href = `/philan/budget`)}>View Budgets</MenuItem>
-                <MenuItem onClick={() => (location.href = `/philan/edit`)}>Edit Profile</MenuItem>
+                <MenuItem>
+                    <Link href={`/user/${user.id}`}>Open My Page</Link>
+                </MenuItem>
+                <MenuItem>
+                    <Link href={user.spreadsheetUrl} isExternal={true}>
+                        Open SpreadSheet
+                    </Link>
+                </MenuItem>
+                <MenuItem>
+                    <Link href={`/philan/budget`}>View Budgets</Link>
+                </MenuItem>
+                <MenuItem>
+                    <Link href={`/philan/edit`}>Edit Profile</Link>
+                </MenuItem>
             </MenuList>
         </Menu>
     ) : null;

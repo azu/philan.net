@@ -8,6 +8,7 @@ import { NextApiRequestWithUserSession, requireLogin } from "../../../../api-uti
 import { BudgetItem, GetBudgetResponse } from "./api-types";
 import { SheetTitles } from "../SpreadSheetSchema";
 import { isBudgetItem } from "./api-types.validator";
+
 type Schema$Sheet = sheets_v4.Schema$Sheet;
 
 const sheets = google.sheets("v4");
@@ -40,7 +41,8 @@ export const parseBudgetsFromBudgetsSheet = (budgetsSheet: Schema$Sheet): Budget
         })
         .filter((item) => {
             return isBudgetItem(item);
-        }) as BudgetItem[];
+        })
+        .sort((a, b) => Number(a.year) - Number(b.year)) as BudgetItem[];
 };
 export const getBudgets = async ({
     spreadsheetId,

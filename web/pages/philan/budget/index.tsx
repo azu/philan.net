@@ -41,7 +41,7 @@ type BudgetTableProps = {
 const BudgetTable: FC<BudgetTableProps> = (props) => {
     return (
         <Table variant="simple">
-            <TableCaption>予算一覧</TableCaption>
+            <TableCaption placement={"top"}>予算一覧</TableCaption>
             <Thead>
                 <Tr>
                     <Th>Year</Th>

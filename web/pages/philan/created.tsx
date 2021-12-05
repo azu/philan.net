@@ -42,13 +42,11 @@ export default function Created() {
                 backgroundColor={"transparent"}
             />
             <MenuList>
-                <MenuItem>
-                    <Link href={`/user/${user.id}`}>Open My Page</Link>
+                <MenuItem as={Link} href={`/user/${user.id}`}>
+                    Open My Page
                 </MenuItem>
-                <MenuItem>
-                    <Link href={user.spreadsheetUrl} isExternal={true}>
-                        Open SpreadSheet
-                    </Link>
+                <MenuItem as={Link} href={user.spreadsheetUrl} isExternal={true}>
+                    Open SpreadSheet
                 </MenuItem>
             </MenuList>
         </Menu>

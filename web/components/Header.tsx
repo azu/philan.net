@@ -155,19 +155,17 @@ function HeaderContent() {
                 backgroundColor={"transparent"}
             />
             <MenuList>
-                <MenuItem>
-                    <Link href={`/user/${user.id}`}>Open My Page</Link>
+                <MenuItem as={Link} href={`/user/${user.id}`}>
+                    Open My Page
                 </MenuItem>
-                <MenuItem>
-                    <Link href={user.spreadsheetUrl} isExternal={true}>
-                        Open SpreadSheet
-                    </Link>
+                <MenuItem as={Link} href={user.spreadsheetUrl} isExternal={true}>
+                    Open SpreadSheet
                 </MenuItem>
-                <MenuItem>
-                    <Link href={`/philan/budget`}>View Budgets</Link>
+                <MenuItem as={Link} href={`/philan/budget`}>
+                    View Budgets
                 </MenuItem>
-                <MenuItem>
-                    <Link href={`/philan/edit`}>Edit Profile</Link>
+                <MenuItem as={Link} href={`/philan/edit`}>
+                    Edit Profile
                 </MenuItem>
             </MenuList>
         </Menu>

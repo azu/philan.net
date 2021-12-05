@@ -10,6 +10,7 @@ import { createItemId } from "../../../api-utils/create-item-id";
 import { GetResponseBody } from "./api-types";
 import groupBy from "lodash/groupBy";
 import { SheetTitles } from "./SpreadSheetSchema";
+import { parseBudgetsFromBudgetsSheet } from "./budget/get";
 
 const sheets = google.sheets("v4");
 
@@ -77,9 +78,17 @@ export const getSpreadSheet = async ({
         // TODO: OLD_Records is for backward-compatible
         return sheet?.properties?.title === SheetTitles.Records || sheet?.properties?.title === SheetTitles.OLD_Records;
     });
+    const budgetsSheet = spreadsheet?.data?.sheets?.find((sheet) => {
+        return sheet?.properties?.title === SheetTitles.Budgets;
+    });
     if (!recordSheet) {
         throw new Error(
-            "Records Spreadsheet is not found.\n" + "\n" + "Can you rename record spreadsheet to 'Records'?"
+            "Records Spreadsheet is not found.\n" + "\n" + "Your spreadsheet does not have 'Records' sheet"
+        );
+    }
+    if (!budgetsSheet) {
+        throw new Error(
+            "Budgets Spreadsheet is not found.\n" + "\n" + "Your spreadsheet does not have 'Budgets' sheet?"
         );
     }
     const recordAllCells = recordSheet?.data?.[0].rowData;
@@ -131,28 +140,35 @@ export const getSpreadSheet = async ({
         throw new Error("statsRow is not defined");
     }
     const README = statsRow?.values?.[3]?.formattedValue! ?? "";
-    // TODO: stats should be different by year
-    // TODO: README should be a single
-    const stats = {
-        budget: {
-            raw: statsRow?.values?.[0]?.effectiveValue?.numberValue!,
-            value: statsRow?.values?.[0]?.formattedValue!
-        },
-        used: {
-            raw: statsRow?.values?.[1]?.effectiveValue?.numberValue!,
-            value: statsRow?.values?.[1]?.formattedValue!
-        },
-        balance: {
-            raw: statsRow?.values?.[2]?.effectiveValue?.numberValue!,
-            value: statsRow?.values?.[2]?.formattedValue!
+    const budgets = parseBudgetsFromBudgetsSheet(budgetsSheet);
+    const matchBudget = (year: number) => {
+        const matchedBudget = budgets.find((budget) => budget.year === year);
+        if (matchedBudget) {
+            return matchedBudget;
         }
+        return {
+            year: year,
+            budget: {
+                raw: 0,
+                value: "None"
+            },
+            used: {
+                raw: 0,
+                value: "None"
+            },
+            balance: {
+                raw: 0,
+                value: "None"
+            }
+        };
     };
     if (recordItems.length === 0) {
         const currentYear = dayjs().format("YYYY");
+        const budget = matchBudget(Number(currentYear));
         return [
             {
                 year: currentYear,
-                stats,
+                stats: budget,
                 README,
                 items: []
             }
@@ -163,9 +179,10 @@ export const getSpreadSheet = async ({
     return Object.keys(itemsByYear)
         .sort((a, b) => Number(b) - Number(a))
         .map((year) => {
+            const budget = matchBudget(Number(year));
             return {
                 year,
-                stats,
+                stats: budget,
                 README,
                 items: itemsByYear[year]
             };

@@ -1,5 +1,5 @@
 import { NextApiResponse } from "next";
-import { google } from "googleapis";
+import { google, sheets_v4 } from "googleapis";
 import { UserCredentials } from "../../../../domain/User";
 import { createOAuthClient } from "../../../../api-utils/create-OAuth";
 import nextConnect from "next-connect";
@@ -8,8 +8,40 @@ import { NextApiRequestWithUserSession, requireLogin } from "../../../../api-uti
 import { BudgetItem, GetBudgetResponse } from "./api-types";
 import { SheetTitles } from "../SpreadSheetSchema";
 import { isBudgetItem } from "./api-types.validator";
+type Schema$Sheet = sheets_v4.Schema$Sheet;
 
 const sheets = google.sheets("v4");
+export const parseBudgetsFromBudgetsSheet = (budgetsSheet: Schema$Sheet): BudgetItem[] => {
+    const START_OF_USER_DATA = 1;
+    const recordAllCells = budgetsSheet?.data?.[0].rowData;
+    const recordDataCells = recordAllCells?.slice(START_OF_USER_DATA) ?? [];
+    return recordDataCells
+        .filter((cell) => {
+            return cell.values !== undefined;
+        })
+        .map((cell) => {
+            // Year	Budget	Used	Balance
+            const [Year, Budget, Used, Balance] = cell.values!;
+            return {
+                year: Number(Year.userEnteredValue?.stringValue),
+                budget: {
+                    raw: Budget.effectiveValue?.numberValue,
+                    value: Budget.formattedValue
+                },
+                used: {
+                    raw: Used.effectiveValue?.numberValue,
+                    value: Used.formattedValue
+                },
+                balance: {
+                    raw: Balance.effectiveValue?.numberValue,
+                    value: Balance.formattedValue
+                }
+            };
+        })
+        .filter((item) => {
+            return isBudgetItem(item);
+        }) as BudgetItem[];
+};
 export const getBudgets = async ({
     spreadsheetId,
     credentials
@@ -40,35 +72,7 @@ export const getBudgets = async ({
             "Records Spreadsheet is not found.\n" + "\n" + "Can you rename record spreadsheet to 'Records'?"
         );
     }
-    const START_OF_USER_DATA = 1;
-    const recordAllCells = budgetsSheet?.data?.[0].rowData;
-    const recordDataCells = recordAllCells?.slice(START_OF_USER_DATA) ?? [];
-    return recordDataCells
-        .filter((cell) => {
-            return cell.values !== undefined;
-        })
-        .map((cell) => {
-            // Year	Budget	Used	Balance
-            const [Year, Budget, Used, Balance] = cell.values!;
-            return {
-                year: Number(Year.userEnteredValue?.stringValue),
-                budget: {
-                    raw: Budget.effectiveValue?.numberValue,
-                    value: Budget.formattedValue
-                },
-                used: {
-                    raw: Used.effectiveValue?.numberValue,
-                    value: Used.formattedValue
-                },
-                balance: {
-                    raw: Balance.effectiveValue?.numberValue,
-                    value: Balance.formattedValue
-                }
-            };
-        })
-        .filter((item) => {
-            return isBudgetItem(item);
-        }) as BudgetItem[];
+    return parseBudgetsFromBudgetsSheet(budgetsSheet);
 };
 
 const handler = nextConnect<NextApiRequestWithUserSession, NextApiResponse>()

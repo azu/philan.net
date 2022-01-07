@@ -15,7 +15,7 @@ export const safeParseBudgetsFromBudgetsSheet = (budgetsSheet: Schema$Sheet): Bu
     try {
         return parseBudgetsFromBudgetsSheet(budgetsSheet);
     } catch (error) {
-        console.log("parseBudgetsFromBudgetsSheetWithLog", error, JSON.stringify(budgetsSheet));
+        console.error("parseBudgetsFromBudgetsSheetWithLog", error, JSON.stringify(budgetsSheet));
         return [];
     }
 };

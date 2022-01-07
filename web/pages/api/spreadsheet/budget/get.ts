@@ -10,18 +10,25 @@ import { SheetTitles } from "../SpreadSheetSchema";
 import { isBudgetItem } from "./api-types.validator";
 
 type Schema$Sheet = sheets_v4.Schema$Sheet;
-
 const sheets = google.sheets("v4");
+export const safeParseBudgetsFromBudgetsSheet = (budgetsSheet: Schema$Sheet): BudgetItem[] => {
+    try {
+        return parseBudgetsFromBudgetsSheet(budgetsSheet);
+    } catch (error) {
+        console.log("parseBudgetsFromBudgetsSheetWithLog", error, JSON.stringify(budgetsSheet));
+        return [];
+    }
+};
 export const parseBudgetsFromBudgetsSheet = (budgetsSheet: Schema$Sheet): BudgetItem[] => {
     const START_OF_USER_DATA = 1;
     const recordAllCells = budgetsSheet?.data?.[0].rowData;
     const recordDataCells = recordAllCells?.slice(START_OF_USER_DATA) ?? [];
     return recordDataCells
         .filter((cell) => {
-            return cell.values !== undefined;
+            const [Year, Budget, Used, Balance] = cell.values!;
+            return Year !== undefined && Budget !== undefined && Used !== undefined && Balance !== undefined;
         })
         .map((cell) => {
-            console.log("cell.values", cell.values);
             // Year	Budget	Used	Balance
             const [Year, Budget, Used, Balance] = cell.values!;
             return {

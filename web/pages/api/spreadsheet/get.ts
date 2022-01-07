@@ -10,7 +10,7 @@ import { createItemId } from "../../../api-utils/create-item-id";
 import { GetResponseBody } from "./api-types";
 import groupBy from "lodash/groupBy";
 import { SheetTitles } from "./SpreadSheetSchema";
-import { parseBudgetsFromBudgetsSheet } from "./budget/get";
+import { safeParseBudgetsFromBudgetsSheet } from "./budget/get";
 
 const sheets = google.sheets("v4");
 
@@ -140,7 +140,7 @@ export const getSpreadSheet = async ({
         throw new Error("statsRow is not defined");
     }
     const README = statsRow?.values?.[3]?.formattedValue! ?? "";
-    const budgets = parseBudgetsFromBudgetsSheet(budgetsSheet);
+    const budgets = safeParseBudgetsFromBudgetsSheet(budgetsSheet);
     const matchBudget = (year: number) => {
         const matchedBudget = budgets.find((budget) => budget.year === year);
         if (matchedBudget) {

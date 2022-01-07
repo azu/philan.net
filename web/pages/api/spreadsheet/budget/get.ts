@@ -21,6 +21,7 @@ export const parseBudgetsFromBudgetsSheet = (budgetsSheet: Schema$Sheet): Budget
             return cell.values !== undefined;
         })
         .map((cell) => {
+            console.log("cell.values", cell.values);
             // Year	Budget	Used	Balance
             const [Year, Budget, Used, Balance] = cell.values!;
             return {

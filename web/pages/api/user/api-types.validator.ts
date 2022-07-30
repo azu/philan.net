@@ -4,7 +4,7 @@
 import Ajv from 'ajv';
 import * as apiTypes from './api-types';
 
-const SCHEMA = {
+export const SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "CreateUserRequestBody": {
@@ -132,8 +132,11 @@ const SCHEMA = {
 };
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA");
 export function validateCreateUserRequestBody(payload: unknown): apiTypes.CreateUserRequestBody {
-  if (!isCreateUserRequestBody(payload)) {
-    const error = new Error('invalid payload: CreateUserRequestBody');
+  /** Schema is defined in {@link SCHEMA.definitions.CreateUserRequestBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/CreateUserRequestBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid CreateUserRequestBody: ' + ajv.errorsText(validator.errors, {dataVar: "CreateUserRequestBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -141,14 +144,20 @@ export function validateCreateUserRequestBody(payload: unknown): apiTypes.Create
 }
 
 export function isCreateUserRequestBody(payload: unknown): payload is apiTypes.CreateUserRequestBody {
-  /** Schema is defined in {@link SCHEMA.definitions.CreateUserRequestBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/CreateUserRequestBody" });
-  return ajvValidate(payload);
+  try {
+    validateCreateUserRequestBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateCreateUserResponseBody(payload: unknown): apiTypes.CreateUserResponseBody {
-  if (!isCreateUserResponseBody(payload)) {
-    const error = new Error('invalid payload: CreateUserResponseBody');
+  /** Schema is defined in {@link SCHEMA.definitions.CreateUserResponseBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/CreateUserResponseBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid CreateUserResponseBody: ' + ajv.errorsText(validator.errors, {dataVar: "CreateUserResponseBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -156,14 +165,20 @@ export function validateCreateUserResponseBody(payload: unknown): apiTypes.Creat
 }
 
 export function isCreateUserResponseBody(payload: unknown): payload is apiTypes.CreateUserResponseBody {
-  /** Schema is defined in {@link SCHEMA.definitions.CreateUserResponseBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/CreateUserResponseBody" });
-  return ajvValidate(payload);
+  try {
+    validateCreateUserResponseBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateUpdateUserRequestBody(payload: unknown): apiTypes.UpdateUserRequestBody {
-  if (!isUpdateUserRequestBody(payload)) {
-    const error = new Error('invalid payload: UpdateUserRequestBody');
+  /** Schema is defined in {@link SCHEMA.definitions.UpdateUserRequestBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/UpdateUserRequestBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid UpdateUserRequestBody: ' + ajv.errorsText(validator.errors, {dataVar: "UpdateUserRequestBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -171,14 +186,20 @@ export function validateUpdateUserRequestBody(payload: unknown): apiTypes.Update
 }
 
 export function isUpdateUserRequestBody(payload: unknown): payload is apiTypes.UpdateUserRequestBody {
-  /** Schema is defined in {@link SCHEMA.definitions.UpdateUserRequestBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/UpdateUserRequestBody" });
-  return ajvValidate(payload);
+  try {
+    validateUpdateUserRequestBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateUserResponseObject(payload: unknown): apiTypes.UserResponseObject {
-  if (!isUserResponseObject(payload)) {
-    const error = new Error('invalid payload: UserResponseObject');
+  /** Schema is defined in {@link SCHEMA.definitions.UserResponseObject } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/UserResponseObject");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid UserResponseObject: ' + ajv.errorsText(validator.errors, {dataVar: "UserResponseObject"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -186,14 +207,20 @@ export function validateUserResponseObject(payload: unknown): apiTypes.UserRespo
 }
 
 export function isUserResponseObject(payload: unknown): payload is apiTypes.UserResponseObject {
-  /** Schema is defined in {@link SCHEMA.definitions.UserResponseObject } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/UserResponseObject" });
-  return ajvValidate(payload);
+  try {
+    validateUserResponseObject(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateGetUserResponseBody(payload: unknown): apiTypes.GetUserResponseBody {
-  if (!isGetUserResponseBody(payload)) {
-    const error = new Error('invalid payload: GetUserResponseBody');
+  /** Schema is defined in {@link SCHEMA.definitions.GetUserResponseBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/GetUserResponseBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid GetUserResponseBody: ' + ajv.errorsText(validator.errors, {dataVar: "GetUserResponseBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -201,7 +228,10 @@ export function validateGetUserResponseBody(payload: unknown): apiTypes.GetUserR
 }
 
 export function isGetUserResponseBody(payload: unknown): payload is apiTypes.GetUserResponseBody {
-  /** Schema is defined in {@link SCHEMA.definitions.GetUserResponseBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetUserResponseBody" });
-  return ajvValidate(payload);
+  try {
+    validateGetUserResponseBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

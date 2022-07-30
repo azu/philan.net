@@ -4,7 +4,7 @@
 import Ajv from 'ajv';
 import * as apiTypes from './api-types';
 
-const SCHEMA = {
+export const SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "CreateRequestQuery": {
@@ -296,8 +296,11 @@ const SCHEMA = {
 };
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA");
 export function validateCreateRequestQuery(payload: unknown): apiTypes.CreateRequestQuery {
-  if (!isCreateRequestQuery(payload)) {
-    const error = new Error('invalid payload: CreateRequestQuery');
+  /** Schema is defined in {@link SCHEMA.definitions.CreateRequestQuery } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/CreateRequestQuery");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid CreateRequestQuery: ' + ajv.errorsText(validator.errors, {dataVar: "CreateRequestQuery"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -305,14 +308,20 @@ export function validateCreateRequestQuery(payload: unknown): apiTypes.CreateReq
 }
 
 export function isCreateRequestQuery(payload: unknown): payload is apiTypes.CreateRequestQuery {
-  /** Schema is defined in {@link SCHEMA.definitions.CreateRequestQuery } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/CreateRequestQuery" });
-  return ajvValidate(payload);
+  try {
+    validateCreateRequestQuery(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateCreateRequestBody(payload: unknown): apiTypes.CreateRequestBody {
-  if (!isCreateRequestBody(payload)) {
-    const error = new Error('invalid payload: CreateRequestBody');
+  /** Schema is defined in {@link SCHEMA.definitions.CreateRequestBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/CreateRequestBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid CreateRequestBody: ' + ajv.errorsText(validator.errors, {dataVar: "CreateRequestBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -320,14 +329,20 @@ export function validateCreateRequestBody(payload: unknown): apiTypes.CreateRequ
 }
 
 export function isCreateRequestBody(payload: unknown): payload is apiTypes.CreateRequestBody {
-  /** Schema is defined in {@link SCHEMA.definitions.CreateRequestBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/CreateRequestBody" });
-  return ajvValidate(payload);
+  try {
+    validateCreateRequestBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateAddRequestQuery(payload: unknown): apiTypes.AddRequestQuery {
-  if (!isAddRequestQuery(payload)) {
-    const error = new Error('invalid payload: AddRequestQuery');
+  /** Schema is defined in {@link SCHEMA.definitions.AddRequestQuery } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/AddRequestQuery");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid AddRequestQuery: ' + ajv.errorsText(validator.errors, {dataVar: "AddRequestQuery"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -335,14 +350,20 @@ export function validateAddRequestQuery(payload: unknown): apiTypes.AddRequestQu
 }
 
 export function isAddRequestQuery(payload: unknown): payload is apiTypes.AddRequestQuery {
-  /** Schema is defined in {@link SCHEMA.definitions.AddRequestQuery } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddRequestQuery" });
-  return ajvValidate(payload);
+  try {
+    validateAddRequestQuery(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateAddRequestBody(payload: unknown): apiTypes.AddRequestBody {
-  if (!isAddRequestBody(payload)) {
-    const error = new Error('invalid payload: AddRequestBody');
+  /** Schema is defined in {@link SCHEMA.definitions.AddRequestBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/AddRequestBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid AddRequestBody: ' + ajv.errorsText(validator.errors, {dataVar: "AddRequestBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -350,14 +371,20 @@ export function validateAddRequestBody(payload: unknown): apiTypes.AddRequestBod
 }
 
 export function isAddRequestBody(payload: unknown): payload is apiTypes.AddRequestBody {
-  /** Schema is defined in {@link SCHEMA.definitions.AddRequestBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddRequestBody" });
-  return ajvValidate(payload);
+  try {
+    validateAddRequestBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateAddResponseBody(payload: unknown): apiTypes.AddResponseBody {
-  if (!isAddResponseBody(payload)) {
-    const error = new Error('invalid payload: AddResponseBody');
+  /** Schema is defined in {@link SCHEMA.definitions.AddResponseBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/AddResponseBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid AddResponseBody: ' + ajv.errorsText(validator.errors, {dataVar: "AddResponseBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -365,14 +392,20 @@ export function validateAddResponseBody(payload: unknown): apiTypes.AddResponseB
 }
 
 export function isAddResponseBody(payload: unknown): payload is apiTypes.AddResponseBody {
-  /** Schema is defined in {@link SCHEMA.definitions.AddResponseBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddResponseBody" });
-  return ajvValidate(payload);
+  try {
+    validateAddResponseBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateGetRequestQuery(payload: unknown): apiTypes.GetRequestQuery {
-  if (!isGetRequestQuery(payload)) {
-    const error = new Error('invalid payload: GetRequestQuery');
+  /** Schema is defined in {@link SCHEMA.definitions.GetRequestQuery } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/GetRequestQuery");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid GetRequestQuery: ' + ajv.errorsText(validator.errors, {dataVar: "GetRequestQuery"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -380,14 +413,20 @@ export function validateGetRequestQuery(payload: unknown): apiTypes.GetRequestQu
 }
 
 export function isGetRequestQuery(payload: unknown): payload is apiTypes.GetRequestQuery {
-  /** Schema is defined in {@link SCHEMA.definitions.GetRequestQuery } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetRequestQuery" });
-  return ajvValidate(payload);
+  try {
+    validateGetRequestQuery(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateSpreadSheetItem(payload: unknown): apiTypes.SpreadSheetItem {
-  if (!isSpreadSheetItem(payload)) {
-    const error = new Error('invalid payload: SpreadSheetItem');
+  /** Schema is defined in {@link SCHEMA.definitions.SpreadSheetItem } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/SpreadSheetItem");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid SpreadSheetItem: ' + ajv.errorsText(validator.errors, {dataVar: "SpreadSheetItem"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -395,14 +434,20 @@ export function validateSpreadSheetItem(payload: unknown): apiTypes.SpreadSheetI
 }
 
 export function isSpreadSheetItem(payload: unknown): payload is apiTypes.SpreadSheetItem {
-  /** Schema is defined in {@link SCHEMA.definitions.SpreadSheetItem } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/SpreadSheetItem" });
-  return ajvValidate(payload);
+  try {
+    validateSpreadSheetItem(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateSpreadSheetStats(payload: unknown): apiTypes.SpreadSheetStats {
-  if (!isSpreadSheetStats(payload)) {
-    const error = new Error('invalid payload: SpreadSheetStats');
+  /** Schema is defined in {@link SCHEMA.definitions.SpreadSheetStats } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/SpreadSheetStats");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid SpreadSheetStats: ' + ajv.errorsText(validator.errors, {dataVar: "SpreadSheetStats"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -410,14 +455,20 @@ export function validateSpreadSheetStats(payload: unknown): apiTypes.SpreadSheet
 }
 
 export function isSpreadSheetStats(payload: unknown): payload is apiTypes.SpreadSheetStats {
-  /** Schema is defined in {@link SCHEMA.definitions.SpreadSheetStats } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/SpreadSheetStats" });
-  return ajvValidate(payload);
+  try {
+    validateSpreadSheetStats(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateGetResponseBody(payload: unknown): apiTypes.GetResponseBody {
-  if (!isGetResponseBody(payload)) {
-    const error = new Error('invalid payload: GetResponseBody');
+  /** Schema is defined in {@link SCHEMA.definitions.GetResponseBody } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/GetResponseBody");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid GetResponseBody: ' + ajv.errorsText(validator.errors, {dataVar: "GetResponseBody"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -425,7 +476,10 @@ export function validateGetResponseBody(payload: unknown): apiTypes.GetResponseB
 }
 
 export function isGetResponseBody(payload: unknown): payload is apiTypes.GetResponseBody {
-  /** Schema is defined in {@link SCHEMA.definitions.GetResponseBody } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetResponseBody" });
-  return ajvValidate(payload);
+  try {
+    validateGetResponseBody(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

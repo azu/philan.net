@@ -4,7 +4,7 @@
 import Ajv from 'ajv';
 import * as apiTypes from './api-types';
 
-const SCHEMA = {
+export const SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
         "GetBudgetResponse": {
@@ -109,8 +109,11 @@ const SCHEMA = {
 };
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA");
 export function validateGetBudgetResponse(payload: unknown): apiTypes.GetBudgetResponse {
-  if (!isGetBudgetResponse(payload)) {
-    const error = new Error('invalid payload: GetBudgetResponse');
+  /** Schema is defined in {@link SCHEMA.definitions.GetBudgetResponse } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/GetBudgetResponse");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid GetBudgetResponse: ' + ajv.errorsText(validator.errors, {dataVar: "GetBudgetResponse"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -118,14 +121,20 @@ export function validateGetBudgetResponse(payload: unknown): apiTypes.GetBudgetR
 }
 
 export function isGetBudgetResponse(payload: unknown): payload is apiTypes.GetBudgetResponse {
-  /** Schema is defined in {@link SCHEMA.definitions.GetBudgetResponse } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/GetBudgetResponse" });
-  return ajvValidate(payload);
+  try {
+    validateGetBudgetResponse(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateBudgetItem(payload: unknown): apiTypes.BudgetItem {
-  if (!isBudgetItem(payload)) {
-    const error = new Error('invalid payload: BudgetItem');
+  /** Schema is defined in {@link SCHEMA.definitions.BudgetItem } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/BudgetItem");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid BudgetItem: ' + ajv.errorsText(validator.errors, {dataVar: "BudgetItem"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -133,14 +142,20 @@ export function validateBudgetItem(payload: unknown): apiTypes.BudgetItem {
 }
 
 export function isBudgetItem(payload: unknown): payload is apiTypes.BudgetItem {
-  /** Schema is defined in {@link SCHEMA.definitions.BudgetItem } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/BudgetItem" });
-  return ajvValidate(payload);
+  try {
+    validateBudgetItem(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateAddBudgetRequest(payload: unknown): apiTypes.AddBudgetRequest {
-  if (!isAddBudgetRequest(payload)) {
-    const error = new Error('invalid payload: AddBudgetRequest');
+  /** Schema is defined in {@link SCHEMA.definitions.AddBudgetRequest } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/AddBudgetRequest");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid AddBudgetRequest: ' + ajv.errorsText(validator.errors, {dataVar: "AddBudgetRequest"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -148,14 +163,20 @@ export function validateAddBudgetRequest(payload: unknown): apiTypes.AddBudgetRe
 }
 
 export function isAddBudgetRequest(payload: unknown): payload is apiTypes.AddBudgetRequest {
-  /** Schema is defined in {@link SCHEMA.definitions.AddBudgetRequest } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddBudgetRequest" });
-  return ajvValidate(payload);
+  try {
+    validateAddBudgetRequest(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 export function validateAddBudgetResponse(payload: unknown): apiTypes.AddBudgetResponse {
-  if (!isAddBudgetResponse(payload)) {
-    const error = new Error('invalid payload: AddBudgetResponse');
+  /** Schema is defined in {@link SCHEMA.definitions.AddBudgetResponse } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/AddBudgetResponse");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid AddBudgetResponse: ' + ajv.errorsText(validator.errors, {dataVar: "AddBudgetResponse"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -163,7 +184,10 @@ export function validateAddBudgetResponse(payload: unknown): apiTypes.AddBudgetR
 }
 
 export function isAddBudgetResponse(payload: unknown): payload is apiTypes.AddBudgetResponse {
-  /** Schema is defined in {@link SCHEMA.definitions.AddBudgetResponse } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AddBudgetResponse" });
-  return ajvValidate(payload);
+  try {
+    validateAddBudgetResponse(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

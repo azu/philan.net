@@ -4,7 +4,7 @@
 import Ajv from 'ajv';
 import * as apiTypes from './api-types';
 
-const SCHEMA = {
+export const SCHEMA = {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$ref": "#/definitions/AuthorizedRequestQuery",
     "definitions": {
@@ -28,8 +28,11 @@ const SCHEMA = {
 };
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA");
 export function validateAuthorizedRequestQuery(payload: unknown): apiTypes.AuthorizedRequestQuery {
-  if (!isAuthorizedRequestQuery(payload)) {
-    const error = new Error('invalid payload: AuthorizedRequestQuery');
+  /** Schema is defined in {@link SCHEMA.definitions.AuthorizedRequestQuery } **/
+  const validator = ajv.getSchema("SCHEMA#/definitions/AuthorizedRequestQuery");
+  const valid = validator(payload);
+  if (!valid) {
+    const error = new Error('Invalid AuthorizedRequestQuery: ' + ajv.errorsText(validator.errors, {dataVar: "AuthorizedRequestQuery"}));
     error.name = "ValidationError";
     throw error;
   }
@@ -37,7 +40,10 @@ export function validateAuthorizedRequestQuery(payload: unknown): apiTypes.Autho
 }
 
 export function isAuthorizedRequestQuery(payload: unknown): payload is apiTypes.AuthorizedRequestQuery {
-  /** Schema is defined in {@link SCHEMA.definitions.AuthorizedRequestQuery } **/
-  const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/AuthorizedRequestQuery" });
-  return ajvValidate(payload);
+  try {
+    validateAuthorizedRequestQuery(payload);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }

@@ -7,7 +7,7 @@ permissions:
 jobs:
   deploy:
     name: "deploy to production"
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     environment:
       name: Production
       url: https://d25zzlzg6iw41r.cloudfront.net

@@ -363,7 +363,7 @@ export async function getStaticProps({
             // - At most once x second
             revalidate: 60 // In seconds
         };
-    } catch (error) {
+    } catch (error: any) {
         return {
             props: {
                 errorCode: 500,

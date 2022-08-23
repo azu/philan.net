@@ -35,7 +35,7 @@ export const withError = (handler: (req: NextApiRequest, res: NextApiResponse) =
     return async function errorHandler(req: NextApiRequest, res: NextApiResponse) {
         try {
             return await handler(req, res);
-        } catch (error) {
+        } catch (error: any) {
             const e = getError(error);
             return res.status(e.status).json({
                 ok: false,

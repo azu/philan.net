@@ -58,7 +58,7 @@ export const migrateWithBackup = async (meta: { spreadsheetId: string; credentia
             revisionId: currentRevisionId
         });
         console.log("OK");
-    } catch (error) {
+    } catch (error: any) {
         logger.error(error);
         throw error;
     }

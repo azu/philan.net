@@ -181,7 +181,7 @@ export const migrateToRecordsSheet = async (meta: { spreadsheetId: string; crede
         }
         // Complete!
         await completeOperation(SheetTitles.Records);
-    } catch (error) {
+    } catch (error: any) {
         logger.error(error);
         // delete copy and budget
         // → stay original sheet

@@ -14,7 +14,7 @@ const Messages = [
             reveal motives for charitable donations. Science, 2007, 316.5831: 1622-1625.
         </Link>
     </Box>,
-    <Box align={"left"} key={"2"}>
+    <Box textAlign={"left"} key={"2"}>
         寄付が難しいという感覚は、稼いだお金を手放さないといけないとう苦痛から来ている。
         <br />
         寄付をするという長期的な目標を満たすためには、事前に寄付する額を決めておくプレコミットメントが有効とされている。

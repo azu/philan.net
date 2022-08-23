@@ -4,7 +4,7 @@ import type { GetUserResponseBody, UserResponseObject } from "../pages/api/user/
 // https://blog.stin.ink/articles/do-not-export-react-context
 export type LoginUser = UserResponseObject;
 const userContext = createContext<LoginUser | null>(null);
-export const UserProvider: React.FC = ({ children }) => {
+export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<LoginUser | null>(null);
     useEffect(() => {
         const abortController = new AbortController();

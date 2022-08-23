@@ -152,10 +152,11 @@ const UserPageContent: FC<UserPageContentProps> = (props: UserPageContentProps) 
     const boxColor = useColorModeValue("gray.500", "gray.300");
     const styleGenerator = useCallback(() => MarkdownStyle(colorMode), [colorMode]);
     const [{ isLoaded, README, feedURL, records, userAvatarUrl, userName }] = useUserPageContent(props);
+    const title = userName || "………";
     return (
         <>
             <Head>
-                <title>{userName || "………"} - philan.net</title>
+                <title>{`${title} - philan.net`}</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
                 <link rel="alternate" type="application/rss+xml" href={feedURL} />
                 {/*<meta property="og:image" content={`${HOST}/api/ogp/${userId}`} />*/}

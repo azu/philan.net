@@ -15,7 +15,7 @@ export const env = {
     CF_authEmail: process.env.APP_CF_AUTH_EMAIL!,
     CF_authKey: process.env.APP_CF_AUTHKEY!,
     CF_namespace_user: ENABLE_PRODUCTION_DATA
-        ? process.env.APP_PROD_CF_namespace_user!
+        ? process.env.APP_PROD_CF_NAMESPACE_USER!
         : process.env.APP_CF_NAMESPACE_USER!,
     SESSION_COOKIE_SECRET: process.env.APP_SESSION_COOKIE_SECRET!,
     LOGFLARE_API_KEY: process.env.APP_LOGFLARE_API_KEY!,

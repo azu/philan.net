@@ -2,8 +2,8 @@
 
 ## Development
 
-1. create `.env.development.local`
-  - `cp .env.example .env.development.local`
+1. create `.env`
+  - `cp .env.example .env`
 2. install and run next.js
 
     yarn install

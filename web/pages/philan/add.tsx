@@ -54,11 +54,11 @@ export const TopBanner = () => {
         <Center py="2" px="3" bgGradient="linear(to-r,cyan.700, purple.500)" color="white" textAlign="center">
             <Flex align="center" fontSize="sm">
                 <Text fontWeight="medium" maxW={{ base: "32ch", md: "unset" }}>
-                    2022年の予算は
+                    2023年の予算は
                 </Text>
                 <chakra.a
                     flexShrink={0}
-                    href={"/philan/budget?year=2022"}
+                    href={"/philan/budget?year=2023"}
                     marginLeft="4"
                     marginRight="4"
                     bg="blackAlpha.300"

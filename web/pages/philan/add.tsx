@@ -25,7 +25,7 @@ import {
     UseRadioProps
 } from "@chakra-ui/react";
 import React, { SyntheticEvent, useEffect, useMemo, useState } from "react";
-import { AddRequestBody, GetResponseBody, SpreadSheetItem } from "../api/spreadsheet/api-types";
+import { AddRequestBody, GetResponseBody, SpreadSheetItem, SpreadSheetStats } from "../api/spreadsheet/api-types";
 import Head from "next/head";
 import { Header } from "../../components/Header";
 import COUNTRY_CURRENCY from "country-to-currency";
@@ -49,28 +49,54 @@ const options = [
 ] as const;
 
 type StateType = typeof options[number]["value"];
-export const TopBanner = () => {
+export const TopBanner = (props: { year: string; currentStat: SpreadSheetStats | null }) => {
+    const message = props.currentStat ? (
+        <>
+            <Text fontWeight="medium" maxW={{ base: "32ch", md: "unset" }}>
+                {props.year}年の予算は
+            </Text>
+            <chakra.a
+                flexShrink={0}
+                href={`/philan/budget?year=${props.year}`}
+                marginLeft="4"
+                marginRight="4"
+                bg="blackAlpha.300"
+                color="whiteAlpha.900"
+                fontWeight="semibold"
+                px="3"
+                py="1"
+                rounded="base"
+            >
+                {props.currentStat.budget.value}
+            </chakra.a>
+            です。
+        </>
+    ) : (
+        <>
+            <Text fontWeight="medium" maxW={{ base: "32ch", md: "unset" }}>
+                {props.year}年の予算は
+            </Text>
+            <chakra.a
+                flexShrink={0}
+                href={`/philan/budget?year=${props.year}`}
+                marginLeft="4"
+                marginRight="4"
+                bg="blackAlpha.300"
+                color="whiteAlpha.900"
+                fontWeight="semibold"
+                px="3"
+                py="1"
+                rounded="base"
+            >
+                予算ページ
+            </chakra.a>
+            から入力できます。
+        </>
+    );
     return (
         <Center py="2" px="3" bgGradient="linear(to-r,cyan.700, purple.500)" color="white" textAlign="center">
             <Flex align="center" fontSize="sm">
-                <Text fontWeight="medium" maxW={{ base: "32ch", md: "unset" }}>
-                    2023年の予算は
-                </Text>
-                <chakra.a
-                    flexShrink={0}
-                    href={"/philan/budget?year=2023"}
-                    marginLeft="4"
-                    marginRight="4"
-                    bg="blackAlpha.300"
-                    color="whiteAlpha.900"
-                    fontWeight="semibold"
-                    px="3"
-                    py="1"
-                    rounded="base"
-                >
-                    予算ページ
-                </chakra.a>
-                から入力できます。
+                {message}
             </Flex>
         </Center>
     );
@@ -119,6 +145,7 @@ const useForm = (user: LoginUser | null) => {
     const [currency, setCurrencyCode] = useState<string>("JPY");
 
     const [selectOptions, setSelectOptions] = useState<SelectItem[]>([]);
+    const [currentStat, setCurrentStat] = useState<SpreadSheetStats | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     useEffect(() => {
         (async function loadSelect() {
@@ -145,6 +172,10 @@ const useForm = (user: LoginUser | null) => {
                     });
                 });
             });
+            const currentYear = json.find((yearDate) => yearDate.year === String(new Date().getFullYear()));
+            if (currentYear) {
+                setCurrentStat(currentYear.stats);
+            }
             setSelectOptions(items);
             setIsLoading(false);
         })();
@@ -274,7 +305,8 @@ const useForm = (user: LoginUser | null) => {
         isSubmitting,
         submitError,
         submitSuccess,
-        handlers
+        handlers,
+        currentStat
     };
 };
 
@@ -295,7 +327,8 @@ export default function Create() {
         isSubmitting,
         submitError,
         submitSuccess,
-        handlers
+        handlers,
+        currentStat
     } = useForm(user);
     const formattedAmount = useMemo(() => {
         return new Intl.NumberFormat(new Intl.NumberFormat().resolvedOptions().locale, {
@@ -335,13 +368,14 @@ export default function Create() {
                 <AlertTitle mr={2}>Success to update!</AlertTitle>
             </Alert>
         ) : null;
+    const currentYear = useMemo(() => String(new Date().getFullYear()), []);
     return (
         <>
             <Head>
                 <title>新しい寄付の記録を追加する - philan.net</title>
                 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             </Head>
-            <TopBanner />
+            <TopBanner year={currentYear} currentStat={currentStat} />
             <Header />
             <Box mb={20}>
                 <Box as="section" pt={{ base: "10rem", md: "12rem" }} pb={{ base: "0", md: "1rem" }}>
